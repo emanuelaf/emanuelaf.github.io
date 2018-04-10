@@ -1,0 +1,63 @@
+---
+title: ""
+author: "Emanuela"
+date: "April 7, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Age Pyramid
+
+A common representation in demography is the so-called _age pyramid_.
+
+This is basically a bar graph where each bar represent the frequency of an age class (usually of 5 years) and bars are horizontal. This is done separately for females and males so that the bar starts from the middle and goes to the right for females and to the left for males. 
+
+It is easy to picture that in a society where there are lots of children and few elderly, like most of Western countries back in the early twentieth century, this representation would look like a pyramid with bars that get smaller and smaller as we up on the pyramid. Nowadays the situation is fairly different and the age pyramid, though preserving its name, looks like a trepezoid.
+
+I am pretty sure there are `R` packages that do such representation. However every time I have to do it, I get crazy trying to find the right one for my data or trying to fit reshape my data into the format other users' functions like.
+
+Hence, finding inspiration online here and there, I have found my favourite routine.
+
+I decided to do this in two steps: first I calculate the frequency distribution of the age class for men and women separately and then I represent them in a plot.
+
+
+```{r}
+
+require(tidyverse)
+require(readxl)
+
+variables_width <- read_excel("dati-ita/variables-width.xlsx")
+mydata <- read.fwf("dati-ita/AVQ_2012_A_new/file_stdA_12.dat", widths = variables_width$width)
+
+mydata$age_group <- cut(mydata$V13, 
+                        c(seq(-1, 109, 5), Inf), labels = FALSE)
+
+mydata <- mydata %>% mutate(sex = V15) %>% select(sex, age_group)
+
+tab_age_pyramid <- mydata %>%
+  group_by(age_group, sex) %>%
+  summarise(freq = n()) %>%
+  ungroup() %>%
+  mutate(age_gruop = factor(age_group))
+
+age_group_labels <- c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", 
+                      "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", 
+                      "75-79", "80-84", "85-89", "90-94", "95-99", "100-104", "105-109", "110+")
+
+ggplot() + 
+  geom_bar(data = tab_age_pyramid %>% filter(sex == 1), 
+           aes(age_group, freq), stat = "identity", fill = "pink", col = "hotpink") +
+  geom_bar(data = tab_age_pyramid %>%filter(sex == 2),  
+           aes(age_group, -freq), stat = "identity", fill = "lightblue", col = "blue") +
+  scale_x_continuous(breaks = 1:23, labels = age_group_labels) +
+#  scale_y_continuous(breaks = seq()) add sequence che dica qualcosa + labels
+  labs(y = "Frequency", x = "Age group") + 
+  coord_flip()+
+  theme_bw() 
+
+
+```
+
