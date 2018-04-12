@@ -53,7 +53,7 @@ ggplot() +
   geom_bar(data = tab_age_pyramid %>%filter(sex == 2),  
            aes(age_group, -freq), stat = "identity", fill = "lightblue", col = "blue") +
   scale_x_continuous(breaks = 1:23, labels = age_group_labels) +
-#  scale_y_continuous(breaks = seq()) add sequence che dica qualcosa + labels
+  scale_y_continuous(labels=abs) +
   labs(y = "Frequency", x = "Age group") + 
   coord_flip()+
   theme_bw() 
