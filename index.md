@@ -10,9 +10,7 @@ Suppose we are rolling a dice with 6 faces. What is the probability of obtaining
 
 Hence we may say that the probability of obtaining six is the number of _successes_ (only one event corresponds to the number 6) divided by the number of all possible events:
 
-\[
-P(6) = \frac{\text{number of successes}}{\text{number of possible events}} = \frac{1}{6}
-\]
+$P(6) = \frac{\text{number of successes}}{\text{number of possible events}} = \frac{1}{6}$
 
 What is then the probability of obtaining a number higher than 4? Well here two are the success: either 5 or 6 and we are in the same expriment settings as before. Hence the probability will be given by:
 
