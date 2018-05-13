@@ -10,41 +10,68 @@ require(tidyverse)
 require(devtools)
 require(readxl)
 require(ggrepel)
-require(mapIT)
 ```
 
-In one of my lessons I was to give students an overview on how to compile reports with rmarkdown. As Italians, when it gets to elections time, elections is the only thing we hear about in the news for months. So I was inspired by the news, and decided to get them to work on the results of our elections.
+In one of my lessons I was to give students an overview on how to compile reports with rmarkdown. As Italians, when it gets to elections time, elections is the only thing we hear about in the news for months and decided to get them to work on the results of our elections.
 
 This year's data results is not ready for download yet. Hence I decided to work on the previous elections, that is the 2013 elections.
 
 The report is completely parametrized, so it is not hard to make it work on the new year's elections.
 
 
-## Introduction
+## Data manipulation
 
 <!-- Forse dati migliori qui http://www.camera.it/leg17/1209,
 oppure versione già aggregata qui http://elezionistorico.interno.gov.it/index.php?tpel=C&dtel=24/02/2013&tpa=I&tpe=A&lev0=0&levsut0=0&es0=S&ms=S
 -->
 
 
-I downloaded the data from ... (apis?). As it seems that the website does not have good apis, I uploaded the data on my github so that you can access it too without having to trouble too much like I did. The file is a semi-colon separated file so we import it with the `read_delim()` and then we easily manipulate the dataset:
+<!--I downloaded the data from ... (apis?). As it seems that the website does not have good apis, I uploaded the data on my github so that you can access it too without having to trouble too much like I did. --> The file is a semi-colon separated file so we import it with the `read_delim()` and then we easily manipulate the dataset:
 
 ```{r intro}
 elections <- read_delim("data/camera_2013_liste_italia.csv", delim = ";") %>%
   mutate_all(funs(tolower(.))) 
-
-names(elections) <- tolower(names(elections))
-
 ```
 
-So that the datset looks like this:
+and we make all letters lower cases:
 
 ```{r}
-head(elections)
+names(elections) <- tolower(names(elections))
+```
+
+So that the dataset looks like this:
+
+```{r, echo=FALSE}
+knitr::kable(head(elections), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 ```
 
 with info on `r nrow(elections)` sections.
 
+Here we have got some data manipulation to do in order to have data which is easier to treat.
+
+1. The column `circoscrizione`, contains the name of the section in which votes were counted. Each section is called region_name and a number. We want to get rid of such number and just keep the info on the region, so that we can aggregate by region and then come out with region level information.
+
+2. We want to aggragate data at region level and calculate the percentage of votes received by each party
+
+
+```{r}
+elections <- elections %>%
+  separate(circoscrizione, c("region", "other"), " ") %>%
+  group_by(region, lista) %>%
+  mutate(votilista = as.numeric(votilista)) %>%
+  summarise(votes = sum(votilista)) %>%
+  mutate(perc_votes = round(votes/sum(votes)*100, 2))
+
+```
+
+
+So that the final dataset looks as follows:
+
+```{r, echo=FALSE}
+knitr::kable(head(elections), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
+```
 
 
 ## How many votes for the Democratic Party?
@@ -57,29 +84,26 @@ First let us see what was the percentage of votes that it got in each region
 ```{r analisi partito}
 
 tab1 <- elections %>%
-  separate(circoscrizione, c("regione", "altro"), " ") %>%
-  group_by(regione, lista) %>%
-  mutate(votilista = as.numeric(votilista)) %>%
-  summarise(votes = sum(votilista)) %>%
-  mutate(perc_votes = round(votes/sum(votes)*100, 2)) %>%
   filter(lista == "partito democratico") %>%
   select(-lista) %>%
   arrange(desc(perc_votes))  %>%
   ungroup()
 
-knitr::kable(tab1, col.names = c("Region", "Num. of votes", "Percentage of votes"))
+knitr::kable(tab1, col.names = c("Region", "Num. of votes", "Percentage of votes"), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 
 ```
 
-It seems that the democratic party is strong in central Italy, a bit less strong in the north of Italy, and definately not that appealing for the South of Italy. For those that do not know the geography of Italy that well, let us join the information on the macro area near each region:
+It seems that the democratic party is strong in central Italy, a bit less strong in the north of Italy, and definately not that appealing for the Southern Italy. For those that do not know the geography of Italy that well, let us join the information on the macro area near each region:
 
 ```{r}
 
 macro_area <- read_csv("data/macro-area")
   
-tab1 <- left_join(tab1, macro_area, by = c("regione"))
+tab1 <- left_join(tab1, macro_area, by = c("region"))
 
-knitr::kable(tab1, col.names = c("Region", "Num. of votes", "Percentage of votes", "Macroarea"))
+knitr::kable(tab1, col.names = c("Region", "Num. of votes", "Percentage of votes", "Macroarea"), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 
 ```
 
@@ -93,21 +117,16 @@ At the time, the second biggest left wing party was called "ecologia sinistra li
 ```{r analisi partito2}
 
 tab2 <- elections %>%
-  separate(circoscrizione, c("regione", "altro"), " ") %>%
-  group_by(regione, lista) %>%
-  mutate(votilista = as.numeric(votilista)) %>%
-  summarise(votes = sum(votilista)) %>%
-  mutate(perc_votes_sel = round(votes/sum(votes)*100, 2)) %>%
   filter(lista == "sinistra ecologia liberta'") %>%
   select(-lista) %>%
   ungroup()
 
-tab2 <- left_join(tab1, tab2, by = "regione") 
+tab2 <- left_join(tab1, tab2, by = "region", suffix = c(".party1", ".party2")) 
 
-ggplot(data = tab2, aes(x = perc_votes, y = perc_votes_sel)) +
+ggplot(data = tab2, aes(x = perc_votes.party1, y = perc_votes.party2)) +
   geom_point(aes(col = macroarea), size = 1) +
   labs(y = "Other left wing party", x = "Democratic Party") +
-  geom_label_repel(aes(label = regione, col = macroarea), size = 3) +
+  geom_label_repel(aes(label = region, col = macroarea), size = 3) +
   theme_bw()
   
 ```
@@ -120,21 +139,20 @@ The plot returns what we expected. Central Italian regions such as Tuscany and E
 
 Last let us visualise on a map what is happening to the Italian peninsula. Using the development version of the package `mapIT` available on github, we plot the data. Notice that the `mapIT` function works with regions id, hence we better make sure that the regions are correctly identified. 
 
-Problems may arise with special characters, capital letters and with region names with more than one word, such as Emilia Romagna for example. Apostrophes, ticks and capital letters are ignored by the `mapIT` function, but unfortuntaley we trunctaed some of the region names. So let us manually complete those and then we plot it:
 
-
-```{r, fig.height= 5, fig.width=5}
-
+```{r, echo = FALSE}
 tab1 <- tab1 %>%
-  mutate(regione = ifelse(regione == "emilia","emilia romagna",
-                          ifelse(regione == "friuli-venezia", "friuli-venezia giulia",
-                                 ifelse(regione == "trentino-alto", "trentino-alto adige", regione))))
+  mutate(region = ifelse(region == "emilia","emilia romagna",
+                          ifelse(region == "friuli-venezia", "friuli-venezia giulia",
+                                 ifelse(region == "trentino-alto", "trentino-alto adige", region))))
 ```
 
-And finally plot the percentage of votes obtained by the Democratic Party on the Italian map:
+Here is the percentage of votes obtained by the Democratic Party on the Italian map:
 
 ```{r, fig.height = 5, fiq.width = 3.5}
-mapIT(perc_votes, regione, data = data.frame(tab1),
+require(mapIT)
+
+mapIT(perc_votes, region, data = data.frame(tab1),
       graphPar = list(low = "#F5A9A9", high = "#DF0101",
       show_guide = "Percentage of votes"))
 ```
@@ -185,7 +203,7 @@ If you want to analyse a different party you just modify party1 or party2 and th
 
 If you click on `Knit with parameters` a user interface, based on Shiny, will open up and you will be able to enter and modify the parameters. At this point it may be nice to provide a list of all the possible values for that parameter: so for instance you may add the main parties:
   
-  ```
+```
 ---
   title: ""
 author: ""
@@ -218,7 +236,6 @@ input: select
 label: 'Comparison party:'
 value: sinistra ecologia liberta'
 ---
-
 ```
 
 This code will open up an interface in which you can enter the year, then you can choose the main party from a list of 6 possible values and then a comparison party from a drop down menu with 6 different alternatives.
