@@ -9,9 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Emanuela" />
 
-<meta name="date" content="2018-03-23" />
 
 <title>Elections report</title>
 
@@ -183,11 +181,38 @@ $(document).ready(function () {
 <li>
   <a href="about.html">About</a>
 </li>
-<li>
-  <a href="elections.html">Data analysis</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Heading 1</li>
+    <li>
+      <a href="elections.html">Elections</a>
+    </li>
+    <li>
+      <a href="restaurants.html">Restaurant rating</a>
+    </li>
+    <li class="dropdown-header">Data visualisation</li>
+    <li>
+      <a href="age-pyramid.html">Age pyramid</a>
+    </li>
+  </ul>
 </li>
-<li>
-  <a href="lln.html">Statistics</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Statistics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Heading 1</li>
+    <li>
+      <a href="lln.html">Page A</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -202,13 +227,11 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Elections report</h1>
-<h4 class="author"><em>Emanuela</em></h4>
-<h4 class="date"><em>March 23, 2018</em></h4>
 
 </div>
 
 
-<p>In one of my lessons I was to give students an overview on how to compile reports with rmarkdown. As Italians, when it gets to elections time, elections is the only thing we here about in the news for months. So I was inspired by the news, and decided to get them to work on the results of our elections.</p>
+<p>In one of my lessons I was to give students an overview on how to compile reports with rmarkdown. As Italians, when it gets to elections time, elections is the only thing we hear about in the news for months. So I was inspired by the news, and decided to get them to work on the results of our elections.</p>
 <p>This year’s data results is not ready for download yet. Hence I decided to work on the previous elections, that is the 2013 elections.</p>
 <p>The report is completely parametrized, so it is not hard to make it work on the new year’s elections.</p>
 <div id="introduction" class="section level2">
@@ -526,10 +549,10 @@ ggplot(data = tab2, aes(x = perc_votes, y = perc_votes_sel)) +
 <pre class="r"><code>mapIT(perc_votes, regione, data = data.frame(tab1),
       graphPar = list(low = &quot;#F5A9A9&quot;, high = &quot;#DF0101&quot;,
       show_guide = &quot;Percentage of votes&quot;))</code></pre>
-<p><img src="elections_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="elections_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="paramtrize-your-report-with-rmarkdown" class="section level2">
-<h2>Paramtrize your report with <code>Rmarkdown</code></h2>
+<div id="parametrize-your-report-with-rmarkdown" class="section level2">
+<h2>Parametrize your report with <code>Rmarkdown</code></h2>
 <p>All the above analysis is focused on the situation of the Italian left wing party in the 2013 elections. However one may be interested in a different year or different parties.</p>
 <p>You can do that by paramtrising your report with Rmarkdown and here is how you can do that.</p>
 <p>At the very beginning of your <code>.Rmd</code> file you find</p>

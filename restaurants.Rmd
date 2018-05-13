@@ -1,0 +1,100 @@
+---
+title: "Joining tables using dplyr: case study"
+author: "Emanuela"
+date: "May 2, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+require(tidyverse)
+
+chefmozcuisine <- read_delim("data/chefmozcuisine.csv", delim = ",", col_names = T)
+userprofile <- read_delim("data/userprofile.csv", delim = ",", col_names = T)
+rating_final <- read_delim("data/rating_final.csv", delim = ",", col_names = T)
+```
+
+Let us explore the strcture of the three tables we just imported:
+
+```{r}
+str(userprofile)
+str(chefmozcuisine)
+str(rating_final)
+```
+
+And now focus on the three variables of rating contained in the `rating_final` table:
+
+```{r}
+rating_final %>% distinct(rating)
+rating_final %>% distinct(food_rating)
+rating_final %>% distinct(service_rating)
+```
+
+
+First we need to manipulate the data a bit. For example we want to make sure that IDs are character instead of numeric so that we do not accidentally calculate anything on them:
+
+```{r}
+rating_final <- rating_final %>% mutate(placeID = as.character(placeID))
+chefmozcuisine <- chefmozcuisine %>% mutate(placeID = as.character(placeID))
+```
+
+Another frequent issue is missing data. In these tabes missingness is coded as "?" which is not the missingness symbol in `R`. Hence with a small additional manipulation:
+
+```{r}
+userprofile <- userprofile %>% na_if("?")
+```
+
+Now we are ready to combine all the tables and use them to answer questions. 
+
+Which restaurant has got the best reviews?
+
+```{r}
+rating_final %>% 
+  group_by(placeID) %>% 
+  count(rating) %>% mutate(prop = prop.table(n))
+```
+
+Which restaurant has got the best reviews in terms of average rating?
+
+```{r}
+rating_final %>% 
+  group_by(placeID) %>%
+  summarise_at(vars(rating, food_rating, service_rating), 
+               funs(mean, n())) %>%
+  arrange(desc(rating_n), desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
+  left_join(chefmozcuisine) 
+```
+
+What is the favourite restaurant for smokers?
+
+```{r}
+userprofile%>% 
+  filter(smoker == "true") %>%
+  left_join(rating_final) %>%
+  group_by(placeID) %>%
+  summarise_at(vars(rating_mean = rating, food_rating_mean = food_rating, 
+                    service_rating_mean = service_rating), 
+               funs(mean, n())) %>%
+  arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
+  left_join(chefmozcuisine) 
+
+```
+
+What is the favourite restaurant for people with a low budget?
+
+```{r}
+userprofile %>% 
+  filter(budget == "low") %>%
+  left_join(rating_final) %>%
+  group_by(placeID) %>%
+  summarise_at(vars(rating_mean = rating, food_rating_mean = food_rating, 
+                    service_rating_mean = service_rating), 
+               funs(mean, n())) %>%
+  arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
+  left_join(chefmozcuisine) 
+```

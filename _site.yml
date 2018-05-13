@@ -6,3 +6,19 @@ navbar:
      href: index.html
    - text: "About"
      href: about.html
+   - text: "Data analysis"
+     menu:
+      - text: "Heading 1"
+      - text: "Elections"
+        href: elections.html
+      - text: "Restaurant rating"
+        href: restaurants.html
+      - text: "Data visualisation"
+      - text: "Age pyramid"
+        href: age-pyramid.html
+   - text: "Statistics"
+     menu:
+      - text: "Heading 1"
+      - text: "Page A"
+        href: lln.html
+        
