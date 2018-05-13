@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>The Law of Large Numbers</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Heading 1</li>
+    <li>
+      <a href="elections.html">Elections</a>
+    </li>
+    <li>
+      <a href="restaurants.html">Restaurant rating</a>
+    </li>
+    <li class="dropdown-header">Data visualisation</li>
+    <li>
+      <a href="age-pyramid.html">Age pyramid</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Statistics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Heading 1</li>
+    <li>
+      <a href="lln.html">Page A</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">The Law of Large Numbers</h1>
+
+</div>
+
+
+<p>This year I was asked to give classes of statistical inference to sociology undergrats. Thier little enthusiasm in my subject forced me to find nice words explanation to most of the topics I taught them, leaving out lots of techicalities.</p>
+<div id="the-definition-of-probability" class="section level2">
+<h2>The definition of probability</h2>
+<p>Suppose we are rolling a dice with 6 faces. What is the probability of obtaining 6? Anyone would answer that this is 1/6. Behind this simple answer is the heart of the (classical) definition of probability. Our mind just worked out that the possible outcomes of the roll of a dice are six and we are interested on solely one of them. We may call the outcome we are interested in <em>success</em>, hence the probability of obtaining six is the probability of obtaining a success. The roll of the dice is called <em>random experiment</em> and all the possible outcomes are the <em>events</em>.</p>
+<p>Hence we may say that the probability of obtaining six is the number of <em>successes</em> (only one event corresponds to the number 6) divided by the number of all possible events:</p>
+<p><span class="math display">\[
+P(6) = \frac{\text{number of successes}}{\text{number of possible events}} = \frac{1}{6}
+\]</span></p>
+<p>What is then the probability of obtaining a number higher than 4? Well here two are the success: either 5 or 6 and we are in the same expriment settings as before. Hence the probability will be given by:</p>
+<p><span class="math display">\[
+P(5,6) = \frac{\text{number of successes}}{\text{number of possible events}} = \frac{2}{6} = \frac{1}{3}
+\]</span></p>
+<p>and so on.</p>
+</div>
+<div id="the-law-of-large-numbers-in-words" class="section level2">
+<h2>The law of large numbers in words</h2>
+<p>Let us now start with some more fun stuff :)</p>
+<p>Suppose that we do not know what is the probability of observing 6 in the roll of a dice. We roll it once: we may obtain 6 or we may obtain another number. Suppose we roll it 6 times: we may observe 6 a few times, or we may obtain it none. And what if we roll it 100 times?</p>
+<p>Well it seems natural that the more we roll the dice, the closer we’ll get to observe six 16.6% of the times.</p>
+<p>This means that after a few rolls, for example 10 rolls, the percentage of six may be 9%, but then after 100 rolls we expect it to be closer to 16.66%, it may be 15% for example. After 10000 rolls, it is very unlikely that we observe a percentage far from 16.66%! And the more we roll the dice, the closer to 16.66% we’ll get</p>
+<p>In general, the law of large numbers tells us that, for an increasing number of identical and independent trials the observed data will give us information that is closer to the truth. In our example, the more we roll the dice, the more the percentage of observed 6s will be close to the real value. Hence if we do not know what the real probability of obtaining 6 in the roll of a dice and we roll it 10000 times, we can trust that the observed percentage of 6s is close enough to the real value of the probability. If we cannot observe more than, for example 10 rolls, than we have to aknowledge that we cannot trust that much the observed percentage.</p>
+<p>Thanks to the law of large numbers, we can trust the observed mean/percentage that we calculate based on a large enough sample is close enough to the rea real mean/percentage.</p>
+<p>Let us visualise this through <code>R</code> with a small simulation study.</p>
+<p>The code below shows one way to simulate the rolls of a dice <span class="math inline">\(n\)</span> times with <span class="math inline">\(n = 50, ..., 10000\)</span>, and how to represent the percentage of 6 observed.</p>
+<p>The red line indicates the theoretical value of the probability of obtaining <span class="math inline">\(6\)</span>. In the first blue rectangle the observed value is close to the real value but you may notice that the observations are less reliable than in the second rectangle, where the dice has been rolled around 25000 times.</p>
+<pre class="r"><code>require(tidyverse)
+
+set.seed(5)
+n &lt;- c(1, seq(50, 30000, by = 50))
+obs_proportion &lt;- numeric()
+res &lt;- numeric()
+
+for (i in 1:length(n)) {
+  res &lt;- replicate(n[i], sample(1:6, size = 1))
+  obs_proportion[i] &lt;- length(res[res == 6])/n[i]
+  }
+
+sim &lt;- tibble(n = n, obs_proportion = obs_proportion*100)
+
+ggplot(data = sim, aes(x = n, y = obs_proportion))+
+  geom_line() + geom_hline(yintercept = 1/6*100, linetype = 2, colour = &quot;red&quot;) +
+  geom_rect(aes(xmin = 4000, ymin = 0.14*100, xmax = 6000, ymax = 0.18*100), fill = NA, col = 4)+
+  geom_rect(aes(xmin = 24000, ymin = 0.14*100, xmax = 26000, ymax = 0.18*100), fill = NA, col = 4)+
+  labs(y = &quot;Observed percentage of 6 in n rolls&quot;, x = &quot;Number of rolls&quot;) +
+  scale_y_continuous(limits=c(0, 30)) +
+  theme_bw()</code></pre>
+<p><img src="lln_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
