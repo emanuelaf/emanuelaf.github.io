@@ -32,7 +32,7 @@ and so on.
 
 ## The law of large numbers in words
 
-Let us now start with some more fun stuff :)
+The law of large numbers is feared my many. However it is extremely intuitive and it is the theorem that allows us to trust that the conclusions we make on sampled data can be valid for the whole population.
 
 Suppose that we do not know what is the probability of observing 6 in the roll of a dice. We roll it once: we may obtain 6 or we may obtain another number. Suppose we roll it 6 times: we may observe 6 a few times, or we may obtain it none. And what if we roll it 100 times?
 

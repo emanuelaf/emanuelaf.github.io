@@ -178,9 +178,6 @@ $(document).ready(function () {
         <li>
   <a href="index.html">Home</a>
 </li>
-<li>
-  <a href="about.html">About</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Data analysis
@@ -188,14 +185,15 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Heading 1</li>
+    <li>
+      <a href="data-an-workflow.html">The Data Workflow</a>
+    </li>
     <li>
       <a href="elections.html">Elections</a>
     </li>
     <li>
       <a href="restaurants.html">Restaurant rating</a>
     </li>
-    <li class="dropdown-header">Data visualisation</li>
     <li>
       <a href="age-pyramid.html">Age pyramid</a>
     </li>
@@ -208,9 +206,12 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Heading 1</li>
+    <li class="dropdown-header">Asymptotic Theorems</li>
     <li>
-      <a href="lln.html">Page A</a>
+      <a href="lln.html">The Law of Large numbers</a>
+    </li>
+    <li>
+      <a href="tcl.html">The Central Limit Theorem</a>
     </li>
   </ul>
 </li>
@@ -247,7 +248,7 @@ P(5,6) = \frac{\text{number of successes}}{\text{number of possible events}} = \
 </div>
 <div id="the-law-of-large-numbers-in-words" class="section level2">
 <h2>The law of large numbers in words</h2>
-<p>Let us now start with some more fun stuff :)</p>
+<p>The law of large numbers is feared my many. However it is extremely intuitive and it is the theorem that allows us to trust that the conclusions we make on sampled data can be valid for the whole population.</p>
 <p>Suppose that we do not know what is the probability of observing 6 in the roll of a dice. We roll it once: we may obtain 6 or we may obtain another number. Suppose we roll it 6 times: we may observe 6 a few times, or we may obtain it none. And what if we roll it 100 times?</p>
 <p>Well it seems natural that the more we roll the dice, the closer we’ll get to observe six 16.6% of the times.</p>
 <p>This means that after a few rolls, for example 10 rolls, the percentage of six may be 9%, but then after 100 rolls we expect it to be closer to 16.66%, it may be 15% for example. After 10000 rolls, it is very unlikely that we observe a percentage far from 16.66%! And the more we roll the dice, the closer to 16.66% we’ll get</p>
