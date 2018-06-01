@@ -1,25 +1,24 @@
-name: "Emanuela Furfaro"
+name: "my-website"
 output_dir: "."
 navbar:
   title: "Emanuela Furfaro"
   left:
    - text: "Home"
      href: index.html
-   - text: "About"
-     href: about.html
    - text: "Data analysis"
      menu:
-      - text: "Heading 1"
+      - text: "The Data Workflow"
+        href: data-an-workflow.html
       - text: "Elections"
         href: elections.html
       - text: "Restaurant rating"
         href: restaurants.html
-      - text: "Data visualisation"
       - text: "Age pyramid"
         href: age-pyramid.html
    - text: "Statistics"
      menu:
-      - text: "Heading 1"
-      - text: "Page A"
+      - text: "Asymptotic Theorems"
+      - text: "The Law of Large numbers"
         href: lln.html
-        
+      - text: "The Central Limit Theorem"  
+        href: tcl.html
