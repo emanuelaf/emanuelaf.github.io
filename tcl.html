@@ -189,7 +189,7 @@ $(document).ready(function () {
       <a href="data-an-workflow.html">The Data Workflow</a>
     </li>
     <li>
-      <a href="elections.html">Elections</a>
+      <a href="elections2.html">Elections</a>
     </li>
     <li>
       <a href="restaurants.html">Restaurant rating</a>
@@ -261,7 +261,7 @@ ggplot(mean_x) +
   geom_histogram(aes(x = sample_mean), alpha = 0.5) +
   xlab(&quot;Sample mean&quot;) +
   theme_bw()</code></pre>
-<p><img src="tcl_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="tcl_files/figure-html/unnamed-chunk-2-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>The distribution is fairly simmetrical, however it is far from being gaussian. Let us try what happens with <span class="math inline">\(n=5, 10, 30, 50\)</span> draws:</p>
 <pre class="r"><code>mean_x &lt;- data.frame(sample_size = c(), sample_mean = c())
 n &lt;- c(5, 10, 30, 50)

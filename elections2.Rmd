@@ -1,0 +1,161 @@
+---
+title: "Elections report"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align ='center', warning = FALSE, message = FALSE)
+```
+
+In one of my lessons I was to give students an overview on how to compile reports with rmarkdown. As Italians, when it gets to elections time, elections is the only thing we hear about in the news for months and decided to get them to work on the results of our elections.
+
+
+
+## Data Preparation
+
+The data I will be using was downloaded from the [data section on the website of the Italian Interior Ministry](http://dait.interno.gov.it/elezioni/open-data/dati-elezioni-politiche-4-marzo-2018). 
+
+I then translated into English the variables' names and the so modified daaset is now available on my github repo `emanuelaf.github.io`. 
+
+
+### Import data from online github repo
+
+First of all we need to load the packages we'll be using throughout the analysis:
+
+```{r}
+require(tidyverse)
+require(devtools)
+require(readxl)
+require(ggrepel)
+```
+
+Then we can download the data. The files can be downloaded straight from github and parsed to R as follows:
+
+```{r}
+urlfile <- "https://raw.githubusercontent.com/emanuelaf/emanuelaf.github.io/master/camera_2018_italy.csv"
+elections <- read_csv(urlfile)
+
+urlfile2 <- "https://raw.githubusercontent.com/emanuelaf/emanuelaf.github.io/master/macro-area"
+macroarea <- read_csv(urlfile2)
+```
+
+
+### Data manipulation
+
+The longest part in the data workflow is to get the data the way we want it. So first, let us put to lower cases the whole dataset:
+
+```{r}
+elections <- elections %>%
+  mutate_all(funs(tolower(.)))
+
+colnames(elections) <- tolower(colnames(elections))
+```
+
+So that the dataset (with its first few columns) looks like this:
+
+```{r, echo=FALSE}
+knitr::kable(head(elections[, 1:9]), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
+```
+
+with `r ncol(elections)` variables collected on the `r nrow(elections)` Italian electoral districts.
+
+We need some more data manipulation in order to have data which is easier to treat.
+
+1. The column `electoral_district`, contains the name of the discrict in which votes were counted. Each district is called by the region name and a number. We cam to extrapolate the info on the region, so that we can aggregate by region and then come up with region level information.
+
+2. Instead of looking at electoral district level data, we may want to aggragate data at region level and calculate the percentage of votes received by each party. 
+
+
+```{r}
+elections_region <- elections %>%
+  separate(electoral_district, c("region", "other"), " ") %>%
+  group_by(region, party) %>%
+  summarise(votes = sum(as.numeric(numvotes))) %>%
+  mutate(perc_votes = round(votes/sum(votes)*100, 2)) %>% 
+  ungroup() %>%
+  left_join(macroarea)
+
+```
+
+So that our final dataset looks like this:
+
+```{r, echo=FALSE}
+knitr::kable(head(elections_region), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
+```
+
+
+## How many votes for the Democratic Party?
+
+Let us now focus on one party. For example we may focus on the Democratic Party that "won" the 2013 elections, but that did not do well in 2018.
+
+The percentage of votes the Democratic Party got in each region is the following:
+
+
+```{r analisi partito}
+
+tab1 <- elections_region %>%
+  filter(party == "partito democratico") %>%
+  select(-party) %>%
+  arrange(desc(perc_votes))  %>%
+  ungroup()
+
+knitr::kable(tab1, col.names = c("Region", "Num. of votes", "Percentage of votes", "Macroarea"), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
+```
+
+It seems that the democratic party is strong in central Italy, a bit less strong in the north of Italy, and definately not that appealing for the Southern Italy. 
+
+
+### Those that did not vote for the democratic party, did they vote for another left wing party?
+
+In other words, I would like to find out whether there are regions in which both the percentage of votes to the democratic party and the percentage of votes to another left wing party are high. By doing so I should identify left-wing regions where both percentages are high and righ wing regions in which both percentage are low. Or regions in which one of the two party has attracted most votes leavig the other one with none.
+
+At the time, the second biggest left wing party was called "liberi e uguali".
+
+```{r analisi partito2}
+
+tab2 <- elections_region %>%
+  filter(party == "liberi e uguali") %>%
+  select(-party) %>%
+  ungroup()
+
+tab2 <- left_join(tab1, tab2, by = "region", suffix = c(".party1", ".party2")) 
+
+ggplot(data = tab2, aes(x = perc_votes.party1, y = perc_votes.party2)) +
+  geom_point(aes(col = macroarea.party1), size = 1) +
+  labs(y = "Other left wing party", x = "Democratic Party") +
+  scale_color_discrete(name="Macroarea") +
+  geom_label_repel(aes(label = region, col = macroarea.party1), size = 3, show_guide=F) +
+  theme_bw() +
+  theme(legend.position="bottom")
+  
+```
+
+The plot returns what we expected. Central Italian regions such as Tuscany and Emilia-Romagna are well known for being left wing regions and in fact both the Democratic Party and the second largest left wing party got quite a good percentage of votes, while other regions, such as Molise and Sicily, both left parties did not go well. Basilicata seems to play an exception and the other left wing party seems to have attracted the left wing voters.
+
+
+
+## Mapping the votes
+
+Last let us visualise on a map what is happening to the Italian peninsula. Using the development version of the package `mapIT` available on github, we plot the data. Notice that the `mapIT` function works with regions id, hence we better make sure that the regions are correctly identified. 
+
+
+```{r, echo = FALSE}
+tab1 <- tab1 %>%
+  mutate(region = ifelse(region == "friuli-venezia", "friuli-venezia giulia",
+                                 ifelse(region == "trentino-alto", "trentino-alto adige", region)))
+```
+
+Here is the percentage of votes obtained by the Democratic Party on the Italian map:
+
+```{r, fig.height = 5, fiq.width = 3.5}
+require(mapIT)
+
+mapIT(perc_votes, region, data = data.frame(tab1),
+      graphPar = list(low = "#F5A9A9", high = "#DF0101",
+      show_guide = "Percentage of votes"))
+```
+
+

@@ -9,7 +9,6 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Emanuela" />
 
 
 <title>Age pyramid from microdata</title>
@@ -190,7 +189,7 @@ $(document).ready(function () {
       <a href="data-an-workflow.html">The Data Workflow</a>
     </li>
     <li>
-      <a href="elections.html">Elections</a>
+      <a href="elections2.html">Elections</a>
     </li>
     <li>
       <a href="restaurants.html">Restaurant rating</a>
@@ -229,14 +228,10 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Age pyramid from microdata</h1>
-<h4 class="author"><em>Emanuela</em></h4>
-<h4 class="date"><em>April 7, 2018</em></h4>
 
 </div>
 
 
-<div id="age-pyramid" class="section level2">
-<h2>Age Pyramid</h2>
 <p>A common representation in demography is the so-called <em>age pyramid</em>.</p>
 <p>This is basically a bar graph where each bar represent the frequency of an age class (usually of 5 years) and bars are horizontal. This is done separately for females and males so that the bar starts from the middle and goes to the right for females and to the left for males.</p>
 <p>It is easy to picture that in a society where there are lots of children and few elderly, like most of Western countries back in the early twentieth century, this representation would look like a pyramid with bars that get smaller and smaller as we up on the pyramid. Nowadays the situation is fairly different and the age pyramid, though preserving its name, looks like a trepezoid.</p>
@@ -244,52 +239,141 @@ $(document).ready(function () {
 <p>Hence, finding inspiration online here and there, I have found my favourite routine.</p>
 <p>Suppose the initial data is a file of microdata. Here I simulated a dataset with 15000 observations and two variables: age and gender of each interviewed inidividual.</p>
 <p>I decided to do this in two steps: first I calculate the frequency distribution of the age class for men and women separately and then I represent them in a plot.</p>
-<pre class="r"><code>require(tidyverse)</code></pre>
-<pre><code>## Loading required package: tidyverse</code></pre>
-<pre><code>## Loading tidyverse: ggplot2
-## Loading tidyverse: tibble
-## Loading tidyverse: tidyr
-## Loading tidyverse: readr
-## Loading tidyverse: purrr
-## Loading tidyverse: dplyr</code></pre>
-<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
-<pre><code>## filter(): dplyr, stats
-## lag():    dplyr, stats</code></pre>
-<pre class="r"><code>require(readxl)</code></pre>
-<pre><code>## Loading required package: readxl</code></pre>
-<pre class="r"><code>my_microdata &lt;- read_csv(&quot;data/sim_microdata&quot;) </code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   age = col_integer(),
-##   sex = col_integer()
-## )</code></pre>
-<pre class="r"><code>my_microdata$age_group &lt;- cut(my_microdata$age, 
-                              c(seq(-1, 109, 5), Inf), labels = FALSE)
-
-my_microdata &lt;- my_microdata %&gt;% select(sex, age_group)
-
-tab_age_pyramid &lt;- my_microdata %&gt;%
+<p>As usual, let us load the required packages and the data:</p>
+<pre class="r"><code>require(tidyverse)
+my_microdata &lt;- read_csv(&quot;data/sim_microdata&quot;) </code></pre>
+<p>And then we do some data preparation/manipulation, in order to set the labels:</p>
+<pre class="r"><code>my_microdata$age_group &lt;- cut(my_microdata$age, c(seq(-1, 109, 5), Inf), labels = FALSE)
+age_group_labels &lt;- c(&quot;0-4&quot;, &quot;5-9&quot;, &quot;10-14&quot;, &quot;15-19&quot;, &quot;20-24&quot;, &quot;25-29&quot;, &quot;30-34&quot;, &quot;35-39&quot;, 
+                      &quot;40-44&quot;, &quot;45-49&quot;, &quot;50-54&quot;, &quot;55-59&quot;, &quot;60-64&quot;, &quot;65-69&quot;, &quot;70-74&quot;, 
+                      &quot;75-79&quot;, &quot;80-84&quot;, &quot;85-89&quot;, &quot;90-94&quot;, &quot;95-99&quot;, &quot;100-104&quot;, &quot;105-109&quot;, &quot;110+&quot;)</code></pre>
+<p>select the variables we are interested in:</p>
+<pre class="r"><code>my_microdata &lt;- my_microdata %&gt;% select(sex, age_group)</code></pre>
+<p>and calculate the frequency distribution of the age class for men and women separately:</p>
+<pre class="r"><code>tab_age_pyramid &lt;- my_microdata %&gt;%
   group_by(age_group, sex) %&gt;%
   summarise(freq = n()) %&gt;%
   ungroup() %&gt;%
   mutate(age_gruop = factor(age_group))
 
-age_group_labels &lt;- c(&quot;0-4&quot;, &quot;5-9&quot;, &quot;10-14&quot;, &quot;15-19&quot;, &quot;20-24&quot;, &quot;25-29&quot;, &quot;30-34&quot;, &quot;35-39&quot;, 
-                      &quot;40-44&quot;, &quot;45-49&quot;, &quot;50-54&quot;, &quot;55-59&quot;, &quot;60-64&quot;, &quot;65-69&quot;, &quot;70-74&quot;, 
-                      &quot;75-79&quot;, &quot;80-84&quot;, &quot;85-89&quot;, &quot;90-94&quot;, &quot;95-99&quot;, &quot;100-104&quot;, &quot;105-109&quot;, &quot;110+&quot;)
-
-ggplot() + 
+knitr::kable(head(tab_age_pyramid), &quot;html&quot;) %&gt;%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = &quot;center&quot;)</code></pre>
+<?xml version="1.0" encoding="UTF-8"?>
+<table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+age_group
+</th>
+<th style="text-align:right;">
+sex
+</th>
+<th style="text-align:right;">
+freq
+</th>
+<th style="text-align:left;">
+age_gruop
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+342
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+299
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+326
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+373
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+346
+</td>
+<td style="text-align:left;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+372
+</td>
+<td style="text-align:left;">
+3
+</td>
+</tr>
+</tbody>
+</table>
+<p>Last we can finally plot and visualise the data:</p>
+<pre class="r"><code>ggplot() + 
   geom_bar(data = tab_age_pyramid %&gt;% filter(sex == 1), 
            aes(age_group, freq), stat = &quot;identity&quot;, fill = &quot;lightblue&quot;, col = &quot;blue&quot;) +
   geom_bar(data = tab_age_pyramid %&gt;%filter(sex == 2),  
            aes(age_group, -freq), stat = &quot;identity&quot;, fill = &quot;lightpink&quot;, col = &quot;hotpink&quot;) +
   scale_x_continuous(breaks = 1:23, labels = age_group_labels) +
-  scale_y_continuous(labels=abs) +
   labs(y = &quot;Frequency&quot;, x = &quot;Age group&quot;) + 
   coord_flip()+
   theme_bw() </code></pre>
-<p><img src="age-pyramid_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-</div>
+<p><img src="age-pyramid_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 
 
 

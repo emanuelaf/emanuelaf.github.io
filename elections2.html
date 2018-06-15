@@ -233,201 +233,256 @@ $(document).ready(function () {
 
 
 <p>In one of my lessons I was to give students an overview on how to compile reports with rmarkdown. As Italians, when it gets to elections time, elections is the only thing we hear about in the news for months and decided to get them to work on the results of our elections.</p>
-<p>This year’s data results is not ready for download yet. Hence I decided to work on the previous elections, that is the 2013 elections.</p>
-<p>The report is completely parametrized, so it is not hard to make it work on the new year’s elections.</p>
-<div id="data-manipulation" class="section level2">
-<h2>Data manipulation</h2>
-<!-- Forse dati migliori qui http://www.camera.it/leg17/1209,
-oppure versione già aggregata qui http://elezionistorico.interno.gov.it/index.php?tpel=C&dtel=24/02/2013&tpa=I&tpe=A&lev0=0&levsut0=0&es0=S&ms=S
--->
-<!--I downloaded the data from ... (apis?). As it seems that the website does not have good apis, I uploaded the data on my github so that you can access it too without having to trouble too much like I did. -->
-<p>The file is a semi-colon separated file so we import it with the <code>read_delim()</code> and then we easily manipulate the dataset:</p>
-<pre class="r"><code>elections &lt;- read_delim(&quot;data/camera_2013_liste_italia.csv&quot;, delim = &quot;;&quot;) %&gt;%
-  mutate_all(funs(tolower(.))) </code></pre>
-<p>and we make all letters lower cases:</p>
-<pre class="r"><code>names(elections) &lt;- tolower(names(elections))</code></pre>
-<p>So that the dataset looks like this:</p>
+<div id="data-preparation" class="section level2">
+<h2>Data Preparation</h2>
+<p>The data I will be using was downloaded from the <a href="http://dait.interno.gov.it/elezioni/open-data/dati-elezioni-politiche-4-marzo-2018">data section on the website of the Italian Interior Ministry</a>.</p>
+<p>I then translated into English the variables’ names and the so modified daaset is now available on my github repo <code>emanuelaf.github.io</code>.</p>
+<div id="import-data-from-online-github-repo" class="section level3">
+<h3>Import data from online github repo</h3>
+<p>First of all we need to load the packages we’ll be using throughout the analysis:</p>
+<pre class="r"><code>require(tidyverse)
+require(devtools)
+require(readxl)
+require(ggrepel)</code></pre>
+<p>Then we can download the data. The files can be downloaded straight from github and parsed to R as follows:</p>
+<pre class="r"><code>urlfile &lt;- &quot;https://raw.githubusercontent.com/emanuelaf/emanuelaf.github.io/master/camera_2018_italy.csv&quot;
+elections &lt;- read_csv(urlfile)
+
+urlfile2 &lt;- &quot;https://raw.githubusercontent.com/emanuelaf/emanuelaf.github.io/master/macro-area&quot;
+macroarea &lt;- read_csv(urlfile2)</code></pre>
+</div>
+<div id="data-manipulation" class="section level3">
+<h3>Data manipulation</h3>
+<p>The longest part in the data workflow is to get the data the way we want it. So first, let us put to lower cases the whole dataset:</p>
+<pre class="r"><code>elections &lt;- elections %&gt;%
+  mutate_all(funs(tolower(.)))
+
+colnames(elections) &lt;- tolower(colnames(elections))</code></pre>
+<p>So that the dataset (with its first few columns) looks like this:</p>
 <?xml version="1.0" encoding="UTF-8"?>
 <table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
-dataelezione
+electoral_district
 </th>
 <th style="text-align:left;">
-numlista
+plurinominal
 </th>
 <th style="text-align:left;">
-circoscrizione
+uninominal
 </th>
 <th style="text-align:left;">
-provincia
+province
 </th>
 <th style="text-align:left;">
-comune
+municipality
 </th>
 <th style="text-align:left;">
-lista
+name
 </th>
 <th style="text-align:left;">
-votilista
+surname
+</th>
+<th style="text-align:left;">
+party
+</th>
+<th style="text-align:left;">
+electors
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-24/02/2013
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
 piemonte 1
+</td>
+<td style="text-align:left;">
+piemonte 1 - 01
+</td>
+<td style="text-align:left;">
+06 collegno
 </td>
 <td style="text-align:left;">
 torino
 </td>
 <td style="text-align:left;">
-aglie’
+alpignano
 </td>
 <td style="text-align:left;">
-sinistra ecologia liberta’
+celeste
 </td>
 <td style="text-align:left;">
-38
+d’arrando
+</td>
+<td style="text-align:left;">
+movimento 5 stelle
+</td>
+<td style="text-align:left;">
+13746
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-24/02/2013
-</td>
-<td style="text-align:left;">
-2
-</td>
-<td style="text-align:left;">
 piemonte 1
+</td>
+<td style="text-align:left;">
+piemonte 1 - 01
+</td>
+<td style="text-align:left;">
+06 collegno
 </td>
 <td style="text-align:left;">
 torino
 </td>
 <td style="text-align:left;">
-aglie’
+alpignano
 </td>
 <td style="text-align:left;">
-centro democratico
+sara
 </td>
 <td style="text-align:left;">
-0
+zambaia
+</td>
+<td style="text-align:left;">
+lega
+</td>
+<td style="text-align:left;">
+13746
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-24/02/2013
-</td>
-<td style="text-align:left;">
-3
-</td>
-<td style="text-align:left;">
 piemonte 1
+</td>
+<td style="text-align:left;">
+piemonte 1 - 01
+</td>
+<td style="text-align:left;">
+06 collegno
 </td>
 <td style="text-align:left;">
 torino
 </td>
 <td style="text-align:left;">
-aglie’
+alpignano
+</td>
+<td style="text-align:left;">
+sara
+</td>
+<td style="text-align:left;">
+zambaia
+</td>
+<td style="text-align:left;">
+forza italia
+</td>
+<td style="text-align:left;">
+13746
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+piemonte 1
+</td>
+<td style="text-align:left;">
+piemonte 1 - 01
+</td>
+<td style="text-align:left;">
+06 collegno
+</td>
+<td style="text-align:left;">
+torino
+</td>
+<td style="text-align:left;">
+alpignano
+</td>
+<td style="text-align:left;">
+sara
+</td>
+<td style="text-align:left;">
+zambaia
+</td>
+<td style="text-align:left;">
+fratelli d’italia con giorgia meloni
+</td>
+<td style="text-align:left;">
+13746
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+piemonte 1
+</td>
+<td style="text-align:left;">
+piemonte 1 - 01
+</td>
+<td style="text-align:left;">
+06 collegno
+</td>
+<td style="text-align:left;">
+torino
+</td>
+<td style="text-align:left;">
+alpignano
+</td>
+<td style="text-align:left;">
+sara
+</td>
+<td style="text-align:left;">
+zambaia
+</td>
+<td style="text-align:left;">
+noi con l’italia - udc
+</td>
+<td style="text-align:left;">
+13746
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+piemonte 1
+</td>
+<td style="text-align:left;">
+piemonte 1 - 01
+</td>
+<td style="text-align:left;">
+06 collegno
+</td>
+<td style="text-align:left;">
+torino
+</td>
+<td style="text-align:left;">
+alpignano
+</td>
+<td style="text-align:left;">
+umberto
+</td>
+<td style="text-align:left;">
+d’ottavio
 </td>
 <td style="text-align:left;">
 partito democratico
 </td>
 <td style="text-align:left;">
-368
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-24/02/2013
-</td>
-<td style="text-align:left;">
-4
-</td>
-<td style="text-align:left;">
-piemonte 1
-</td>
-<td style="text-align:left;">
-torino
-</td>
-<td style="text-align:left;">
-aglie’
-</td>
-<td style="text-align:left;">
-rivoluzione civile
-</td>
-<td style="text-align:left;">
-23
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-24/02/2013
-</td>
-<td style="text-align:left;">
-5
-</td>
-<td style="text-align:left;">
-piemonte 1
-</td>
-<td style="text-align:left;">
-torino
-</td>
-<td style="text-align:left;">
-aglie’
-</td>
-<td style="text-align:left;">
-mir - moderati in rivoluzione
-</td>
-<td style="text-align:left;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-24/02/2013
-</td>
-<td style="text-align:left;">
-6
-</td>
-<td style="text-align:left;">
-piemonte 1
-</td>
-<td style="text-align:left;">
-torino
-</td>
-<td style="text-align:left;">
-aglie’
-</td>
-<td style="text-align:left;">
-fratelli d’italia
-</td>
-<td style="text-align:left;">
-34
+13746
 </td>
 </tr>
 </tbody>
 </table>
-<p>with info on 152621 sections.</p>
-<p>Here we have got some data manipulation to do in order to have data which is easier to treat.</p>
+<p>with 20 variables collected on the 133068 Italian electoral districts.</p>
+<p>We need some more data manipulation in order to have data which is easier to treat.</p>
 <ol style="list-style-type: decimal">
-<li><p>The column <code>circoscrizione</code>, contains the name of the section in which votes were counted. Each section is called region_name and a number. We want to get rid of such number and just keep the info on the region, so that we can aggregate by region and then come out with region level information.</p></li>
-<li><p>We want to aggragate data at region level and calculate the percentage of votes received by each party</p></li>
+<li><p>The column <code>electoral_district</code>, contains the name of the discrict in which votes were counted. Each district is called by the region name and a number. We cam to extrapolate the info on the region, so that we can aggregate by region and then come up with region level information.</p></li>
+<li><p>Instead of looking at electoral district level data, we may want to aggragate data at region level and calculate the percentage of votes received by each party.</p></li>
 </ol>
-<pre class="r"><code>elections &lt;- elections %&gt;%
-  separate(circoscrizione, c(&quot;region&quot;, &quot;other&quot;), &quot; &quot;) %&gt;%
-  group_by(region, lista) %&gt;%
-  mutate(votilista = as.numeric(votilista)) %&gt;%
-  summarise(votes = sum(votilista)) %&gt;%
-  mutate(perc_votes = round(votes/sum(votes)*100, 2))</code></pre>
-<p>So that the final dataset looks as follows:</p>
+<pre class="r"><code>elections_region &lt;- elections %&gt;%
+  separate(electoral_district, c(&quot;region&quot;, &quot;other&quot;), &quot; &quot;) %&gt;%
+  group_by(region, party) %&gt;%
+  summarise(votes = sum(as.numeric(numvotes))) %&gt;%
+  mutate(perc_votes = round(votes/sum(votes)*100, 2)) %&gt;% 
+  ungroup() %&gt;%
+  left_join(macroarea)</code></pre>
+<p>So that our final dataset looks like this:</p>
 <?xml version="1.0" encoding="UTF-8"?>
 <table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -436,7 +491,7 @@ fratelli d’italia
 region
 </th>
 <th style="text-align:left;">
-lista
+party
 </th>
 <th style="text-align:right;">
 votes
@@ -444,9 +499,29 @@ votes
 <th style="text-align:right;">
 perc_votes
 </th>
+<th style="text-align:left;">
+macroarea
+</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+abruzzo
+</td>
+<td style="text-align:left;">
+10 volte meglio
+</td>
+<td style="text-align:right;">
+1186
+</td>
+<td style="text-align:right;">
+0.16
+</td>
+<td style="text-align:left;">
+centre
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 abruzzo
@@ -455,10 +530,13 @@ abruzzo
 casapound italia
 </td>
 <td style="text-align:right;">
-2580
+7393
 </td>
 <td style="text-align:right;">
-0.33
+1.01
+</td>
+<td style="text-align:left;">
+centre
 </td>
 </tr>
 <tr>
@@ -466,13 +544,16 @@ casapound italia
 abruzzo
 </td>
 <td style="text-align:left;">
-centro democratico
+civica popolare lorenzin
 </td>
 <td style="text-align:right;">
-4492
+6938
 </td>
 <td style="text-align:right;">
-0.58
+0.95
+</td>
+<td style="text-align:left;">
+centre
 </td>
 </tr>
 <tr>
@@ -480,13 +561,16 @@ centro democratico
 abruzzo
 </td>
 <td style="text-align:left;">
-fare per fermare il declino
++europa
 </td>
 <td style="text-align:right;">
-4452
+13754
 </td>
 <td style="text-align:right;">
-0.57
+1.89
+</td>
+<td style="text-align:left;">
+centre
 </td>
 </tr>
 <tr>
@@ -494,13 +578,16 @@ fare per fermare il declino
 abruzzo
 </td>
 <td style="text-align:left;">
-forza nuova
+forza italia
 </td>
 <td style="text-align:right;">
-2964
+107573
 </td>
 <td style="text-align:right;">
-0.38
+14.75
+</td>
+<td style="text-align:left;">
+centre
 </td>
 </tr>
 <tr>
@@ -508,275 +595,31 @@ forza nuova
 abruzzo
 </td>
 <td style="text-align:left;">
-fratelli d’italia
+fratelli d’italia con giorgia meloni
 </td>
 <td style="text-align:right;">
-27693
+36629
 </td>
 <td style="text-align:right;">
-3.56
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-abruzzo
+5.02
 </td>
 <td style="text-align:left;">
-futuro e liberta’
-</td>
-<td style="text-align:right;">
-5703
-</td>
-<td style="text-align:right;">
-0.73
+centre
 </td>
 </tr>
 </tbody>
 </table>
 </div>
+</div>
 <div id="how-many-votes-for-the-democratic-party" class="section level2">
 <h2>How many votes for the Democratic Party?</h2>
-<p>Let us now focus on one party. For example we may focus on the Democratic Party that “won” the 2013 elections.</p>
-<p>First let us see what was the percentage of votes that it got in each region</p>
-<pre class="r"><code>tab1 &lt;- elections %&gt;%
-  filter(lista == &quot;partito democratico&quot;) %&gt;%
-  select(-lista) %&gt;%
+<p>Let us now focus on one party. For example we may focus on the Democratic Party that “won” the 2013 elections, but that did not do well in 2018.</p>
+<p>The percentage of votes the Democratic Party got in each region is the following:</p>
+<pre class="r"><code>tab1 &lt;- elections_region %&gt;%
+  filter(party == &quot;partito democratico&quot;) %&gt;%
+  select(-party) %&gt;%
   arrange(desc(perc_votes))  %&gt;%
   ungroup()
-
-knitr::kable(tab1, col.names = c(&quot;Region&quot;, &quot;Num. of votes&quot;, &quot;Percentage of votes&quot;), &quot;html&quot;) %&gt;%
-  kableExtra::kable_styling(full_width = F, font_size = 11, position = &quot;center&quot;)</code></pre>
-<?xml version="1.0" encoding="UTF-8"?>
-<table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;">
-Region
-</th>
-<th style="text-align:right;">
-Num. of votes
-</th>
-<th style="text-align:right;">
-Percentage of votes
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-toscana
-</td>
-<td style="text-align:right;">
-831546
-</td>
-<td style="text-align:right;">
-37.47
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-emilia
-</td>
-<td style="text-align:right;">
-989660
-</td>
-<td style="text-align:right;">
-37.04
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-umbria
-</td>
-<td style="text-align:right;">
-168820
-</td>
-<td style="text-align:right;">
-32.07
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-liguria
-</td>
-<td style="text-align:right;">
-258763
-</td>
-<td style="text-align:right;">
-27.69
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-marche
-</td>
-<td style="text-align:right;">
-256968
-</td>
-<td style="text-align:right;">
-27.69
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-basilicata
-</td>
-<td style="text-align:right;">
-79696
-</td>
-<td style="text-align:right;">
-25.70
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lazio
-</td>
-<td style="text-align:right;">
-850784
-</td>
-<td style="text-align:right;">
-25.70
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lombardia
-</td>
-<td style="text-align:right;">
-1467161
-</td>
-<td style="text-align:right;">
-25.60
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sardegna
-</td>
-<td style="text-align:right;">
-232895
-</td>
-<td style="text-align:right;">
-25.16
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-piemonte
-</td>
-<td style="text-align:right;">
-643835
-</td>
-<td style="text-align:right;">
-25.10
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-friuli-venezia
-</td>
-<td style="text-align:right;">
-178149
-</td>
-<td style="text-align:right;">
-24.72
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-molise
-</td>
-<td style="text-align:right;">
-42599
-</td>
-<td style="text-align:right;">
-22.65
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-abruzzo
-</td>
-<td style="text-align:right;">
-175968
-</td>
-<td style="text-align:right;">
-22.61
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-calabria
-</td>
-<td style="text-align:right;">
-209897
-</td>
-<td style="text-align:right;">
-22.37
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-campania
-</td>
-<td style="text-align:right;">
-652883
-</td>
-<td style="text-align:right;">
-21.87
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-veneto
-</td>
-<td style="text-align:right;">
-628384
-</td>
-<td style="text-align:right;">
-21.34
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sicilia
-</td>
-<td style="text-align:right;">
-467410
-</td>
-<td style="text-align:right;">
-18.61
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-puglia
-</td>
-<td style="text-align:right;">
-407900
-</td>
-<td style="text-align:right;">
-18.49
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-trentino-alto
-</td>
-<td style="text-align:right;">
-101224
-</td>
-<td style="text-align:right;">
-16.70
-</td>
-</tr>
-</tbody>
-</table>
-<p>It seems that the democratic party is strong in central Italy, a bit less strong in the north of Italy, and definately not that appealing for the Southern Italy. For those that do not know the geography of Italy that well, let us join the information on the macro area near each region:</p>
-<pre class="r"><code>macro_area &lt;- read_csv(&quot;data/macro-area&quot;)
-  
-tab1 &lt;- left_join(tab1, macro_area, by = c(&quot;region&quot;))
 
 knitr::kable(tab1, col.names = c(&quot;Region&quot;, &quot;Num. of votes&quot;, &quot;Percentage of votes&quot;, &quot;Macroarea&quot;), &quot;html&quot;) %&gt;%
   kableExtra::kable_styling(full_width = F, font_size = 11, position = &quot;center&quot;)</code></pre>
@@ -804,27 +647,27 @@ Macroarea
 toscana
 </td>
 <td style="text-align:right;">
-831546
+609770
 </td>
 <td style="text-align:right;">
-37.47
+29.64
 </td>
 <td style="text-align:left;">
-centro
+centre
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-emilia
+emilia-romagna
 </td>
 <td style="text-align:right;">
-989660
+645082
 </td>
 <td style="text-align:right;">
-37.04
+26.44
 </td>
 <td style="text-align:left;">
-centro
+NA
 </td>
 </tr>
 <tr>
@@ -832,27 +675,13 @@ centro
 umbria
 </td>
 <td style="text-align:right;">
-168820
+122266
 </td>
 <td style="text-align:right;">
-32.07
+24.86
 </td>
 <td style="text-align:left;">
-centro
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-liguria
-</td>
-<td style="text-align:right;">
-258763
-</td>
-<td style="text-align:right;">
-27.69
-</td>
-<td style="text-align:left;">
-nord
+centre
 </td>
 </tr>
 <tr>
@@ -860,41 +689,13 @@ nord
 marche
 </td>
 <td style="text-align:right;">
-256968
+182031
 </td>
 <td style="text-align:right;">
-27.69
+21.36
 </td>
 <td style="text-align:left;">
-centro
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-basilicata
-</td>
-<td style="text-align:right;">
-79696
-</td>
-<td style="text-align:right;">
-25.70
-</td>
-<td style="text-align:left;">
-sud e isole
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lazio
-</td>
-<td style="text-align:right;">
-850784
-</td>
-<td style="text-align:right;">
-25.70
-</td>
-<td style="text-align:left;">
-centro
+centre
 </td>
 </tr>
 <tr>
@@ -902,27 +703,13 @@ centro
 lombardia
 </td>
 <td style="text-align:right;">
-1467161
+1142789
 </td>
 <td style="text-align:right;">
-25.60
+21.07
 </td>
 <td style="text-align:left;">
-nord
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sardegna
-</td>
-<td style="text-align:right;">
-232895
-</td>
-<td style="text-align:right;">
-25.16
-</td>
-<td style="text-align:left;">
-sud e isole
+north
 </td>
 </tr>
 <tr>
@@ -930,13 +717,41 @@ sud e isole
 piemonte
 </td>
 <td style="text-align:right;">
-643835
+478671
 </td>
 <td style="text-align:right;">
-25.10
+20.45
 </td>
 <td style="text-align:left;">
-nord
+north
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+liguria
+</td>
+<td style="text-align:right;">
+163564
+</td>
+<td style="text-align:right;">
+19.73
+</td>
+<td style="text-align:left;">
+north
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lazio
+</td>
+<td style="text-align:right;">
+553131
+</td>
+<td style="text-align:right;">
+18.57
+</td>
+<td style="text-align:left;">
+centre
 </td>
 </tr>
 <tr>
@@ -944,69 +759,13 @@ nord
 friuli-venezia
 </td>
 <td style="text-align:right;">
-178149
+119106
 </td>
 <td style="text-align:right;">
-24.72
+18.45
 </td>
 <td style="text-align:left;">
-nord
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-molise
-</td>
-<td style="text-align:right;">
-42599
-</td>
-<td style="text-align:right;">
-22.65
-</td>
-<td style="text-align:left;">
-sud e isole
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-abruzzo
-</td>
-<td style="text-align:right;">
-175968
-</td>
-<td style="text-align:right;">
-22.61
-</td>
-<td style="text-align:left;">
-centro
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-calabria
-</td>
-<td style="text-align:right;">
-209897
-</td>
-<td style="text-align:right;">
-22.37
-</td>
-<td style="text-align:left;">
-sud e isole
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-campania
-</td>
-<td style="text-align:right;">
-652883
-</td>
-<td style="text-align:right;">
-21.87
-</td>
-<td style="text-align:left;">
-sud e isole
+north
 </td>
 </tr>
 <tr>
@@ -1014,41 +773,41 @@ sud e isole
 veneto
 </td>
 <td style="text-align:right;">
-628384
+456727
 </td>
 <td style="text-align:right;">
-21.34
+16.68
 </td>
 <td style="text-align:left;">
-nord
+north
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-sicilia
+basilicata
 </td>
 <td style="text-align:right;">
-467410
+49603
 </td>
 <td style="text-align:right;">
-18.61
+16.38
 </td>
 <td style="text-align:left;">
-sud e isole
+south and islands
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-puglia
+sardegna
 </td>
 <td style="text-align:right;">
-407900
+122717
 </td>
 <td style="text-align:right;">
-18.49
+14.71
 </td>
 <td style="text-align:left;">
-sud e isole
+south and islands
 </td>
 </tr>
 <tr>
@@ -1056,35 +815,122 @@ sud e isole
 trentino-alto
 </td>
 <td style="text-align:right;">
-101224
+76874
 </td>
 <td style="text-align:right;">
-16.70
+14.61
 </td>
 <td style="text-align:left;">
-nord
+north
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+calabria
+</td>
+<td style="text-align:right;">
+127939
+</td>
+<td style="text-align:right;">
+14.13
+</td>
+<td style="text-align:left;">
+south and islands
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abruzzo
+</td>
+<td style="text-align:right;">
+102984
+</td>
+<td style="text-align:right;">
+14.12
+</td>
+<td style="text-align:left;">
+centre
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+puglia
+</td>
+<td style="text-align:right;">
+279251
+</td>
+<td style="text-align:right;">
+13.04
+</td>
+<td style="text-align:left;">
+south and islands
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+campania
+</td>
+<td style="text-align:right;">
+370299
+</td>
+<td style="text-align:right;">
+12.80
+</td>
+<td style="text-align:left;">
+south and islands
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sicilia
+</td>
+<td style="text-align:right;">
+261479
+</td>
+<td style="text-align:right;">
+11.17
+</td>
+<td style="text-align:left;">
+south and islands
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+molise
+</td>
+<td style="text-align:right;">
+22963
+</td>
+<td style="text-align:right;">
+11.08
+</td>
+<td style="text-align:left;">
+south and islands
 </td>
 </tr>
 </tbody>
 </table>
+<p>It seems that the democratic party is strong in central Italy, a bit less strong in the north of Italy, and definately not that appealing for the Southern Italy.</p>
 <div id="those-that-did-not-vote-for-the-democratic-party-did-they-vote-for-another-left-wing-party" class="section level3">
 <h3>Those that did not vote for the democratic party, did they vote for another left wing party?</h3>
 <p>In other words, I would like to find out whether there are regions in which both the percentage of votes to the democratic party and the percentage of votes to another left wing party are high. By doing so I should identify left-wing regions where both percentages are high and righ wing regions in which both percentage are low. Or regions in which one of the two party has attracted most votes leavig the other one with none.</p>
-<p>At the time, the second biggest left wing party was called “ecologia sinistra liberta’”.</p>
-<pre class="r"><code>tab2 &lt;- elections %&gt;%
-  filter(lista == &quot;sinistra ecologia liberta&#39;&quot;) %&gt;%
-  select(-lista) %&gt;%
+<p>At the time, the second biggest left wing party was called “liberi e uguali”.</p>
+<pre class="r"><code>tab2 &lt;- elections_region %&gt;%
+  filter(party == &quot;liberi e uguali&quot;) %&gt;%
+  select(-party) %&gt;%
   ungroup()
 
 tab2 &lt;- left_join(tab1, tab2, by = &quot;region&quot;, suffix = c(&quot;.party1&quot;, &quot;.party2&quot;)) 
 
 ggplot(data = tab2, aes(x = perc_votes.party1, y = perc_votes.party2)) +
-  geom_point(aes(col = macroarea), size = 1) +
+  geom_point(aes(col = macroarea.party1), size = 1) +
   labs(y = &quot;Other left wing party&quot;, x = &quot;Democratic Party&quot;) +
-  geom_label_repel(aes(label = region, col = macroarea), size = 3) +
-  theme_bw()</code></pre>
-<p><img src="elections_files/figure-html/analisi%20partito2-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>The plot returns what we expected. Central Italian regions such as Tuscany and Emilia-Romagna are well known for being left wing regions and in fact both the Democratic Party and the second largest left wing party got quite a good percentage of votes, while other regions, such as Veneto and Sicily, both left parties did not go well. Puglia at the time had a governor of “sinistra ecologia liberta’”, hence the left party votes in that region went mainly to it, disadvantaging the Democratic Party.</p>
+  scale_color_discrete(name=&quot;Macroarea&quot;) +
+  geom_label_repel(aes(label = region, col = macroarea.party1), size = 3, show_guide=F) +
+  theme_bw() +
+  theme(legend.position=&quot;bottom&quot;)</code></pre>
+<p><img src="elections2_files/figure-html/analisi%20partito2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The plot returns what we expected. Central Italian regions such as Tuscany and Emilia-Romagna are well known for being left wing regions and in fact both the Democratic Party and the second largest left wing party got quite a good percentage of votes, while other regions, such as Molise and Sicily, both left parties did not go well. Basilicata seems to play an exception and the other left wing party seems to have attracted the left wing voters.</p>
 </div>
 </div>
 <div id="mapping-the-votes" class="section level2">
@@ -1096,70 +942,7 @@ ggplot(data = tab2, aes(x = perc_votes.party1, y = perc_votes.party2)) +
 mapIT(perc_votes, region, data = data.frame(tab1),
       graphPar = list(low = &quot;#F5A9A9&quot;, high = &quot;#DF0101&quot;,
       show_guide = &quot;Percentage of votes&quot;))</code></pre>
-<p><img src="elections_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
-<div id="parametrize-your-report-with-rmarkdown" class="section level2">
-<h2>Parametrize your report with <code>Rmarkdown</code></h2>
-<p>All the above analysis is focused on the situation of the Italian left wing party in the 2013 elections. However one may be interested in a different year or different parties.</p>
-<p>You can do that by paramtrising your report with Rmarkdown and here is how you can do that.</p>
-<p>At the very beginning of your <code>.Rmd</code> file you find</p>
-<pre><code>---
-  title: &quot;Title&quot;
-author: &quot;Author&quot;
-date: &quot;&quot;
-output:
-  pdf_document: default
-html_document: default</code></pre>
-<p>Here you may add your parameters:</p>
-<pre><code>---
-  title: &quot;Title&quot;
-author: &quot;Author&quot;
-date: &quot;&quot;
-output:
-  pdf_document: default
-html_document: default
-params:
-  party1: partito democratico
-  party2: sinistra ecologia liberta&#39;
-  year: 2013
----</code></pre>
-<p>We have added 3 parameters: one indicating the year, that in this case may only be 2013 as data on other year’s elections is not included in the file, one indictaing the main party we analyse and the second one indicating the second party with whom we want to compare it.</p>
-<p>Then, every tim you want to mention the democratic party, you should write <code>r params$party1</code> and so on.</p>
-<p>If you want to analyse a different party you just modify party1 or party2 and then compile your report by clicking on the <code>Knit</code> botton.</p>
-<p>If you click on <code>Knit with parameters</code> a user interface, based on Shiny, will open up and you will be able to enter and modify the parameters. At this point it may be nice to provide a list of all the possible values for that parameter: so for instance you may add the main parties:</p>
-<pre><code>---
-  title: &quot;&quot;
-author: &quot;&quot;
-date: &quot;&quot;
-output:
-  html_document: default
-pdf_document: default
-params:
-  year: 2013
-party1:
-  choices:
-  - partito democratico
-- sinistra ecologia liberta&#39;
-- popolo delle liberta&#39;
-- lega nord
-- fratelli d&#39;italia
-    - movimento 5 stelle beppegrillo.it
-    input: select
-    label: &#39;Main party:&#39;
-    value: partito democratico
-  party2:
-    choices:
-    - partito democratico
-    - sinistra ecologia liberta&#39;
-- popolo delle liberta&#39;
-    - lega nord
-    - fratelli d&#39;italia
-- movimento 5 stelle beppegrillo.it
-input: select
-label: &#39;Comparison party:&#39;
-value: sinistra ecologia liberta&#39;
----</code></pre>
-<p>This code will open up an interface in which you can enter the year, then you can choose the main party from a list of 6 possible values and then a comparison party from a drop down menu with 6 different alternatives.</p>
+<p><img src="elections2_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 
 

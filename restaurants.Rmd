@@ -1,38 +1,30 @@
 ---
-title: "Joining tables using dplyr: case study"
-author: "Emanuela"
-date: "May 2, 2018"
+title: "Discovering users' eating preferences"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.align ='center', warning = FALSE, message = FALSE)
 ```
 
+In this post I play around with `R` to investigate the users' preferences on restaurants. Somewhere on the net, I found a set of 3 datasets containing information on users, restaurants on the users' ratings on those restaurants. In my `R` lessons, they often serve as an example of data manipulation using the `tidyverse` tools.
 
+
+
+## Data Preparation
+
+After we load the `R` packages we will need:
 
 ```{r}
 require(tidyverse)
+```
 
+and the datasets:
+
+```{r}
 chefmozcuisine <- read_delim("data/chefmozcuisine.csv", delim = ",", col_names = T)
 userprofile <- read_delim("data/userprofile.csv", delim = ",", col_names = T)
 rating_final <- read_delim("data/rating_final.csv", delim = ",", col_names = T)
-```
-
-Let us explore the strcture of the three tables we just imported:
-
-```{r}
-str(userprofile)
-str(chefmozcuisine)
-str(rating_final)
-```
-
-And now focus on the three variables of rating contained in the `rating_final` table:
-
-```{r}
-rating_final %>% distinct(rating)
-rating_final %>% distinct(food_rating)
-rating_final %>% distinct(service_rating)
 ```
 
 
@@ -49,31 +41,95 @@ Another frequent issue is missing data. In these tabes missingness is coded as "
 userprofile <- userprofile %>% na_if("?")
 ```
 
+## Data exploration
+
+In order to be able to better understand and interpret the answers to our questions, in this section we may start understanding what kind of data we are working with is available: what kind of users and what kind of restaurants do we have in the datasets?
+
+Let us first focus on restaurants. The dataset contains the restaurants' id and the type of cusine. It contains info on `r nrow(chefmozcuisine)` different restaurants and there are `r unique(chefmozcuisine$Rcuisine)` different types of cuisine. Let us focus only on the 10 most frequent types of cusine:
+
+```{r}
+top10_cuisine <- chefmozcuisine %>% group_by(Rcuisine) %>%
+  summarise(freq = n()) %>%
+  arrange(desc(freq)) %>%
+  slice(1:10)
+
+ggplot(data = top10_cuisine) +
+  geom_bar(aes(x=Rcuisine, y = freq, fill = Rcuisine), stat = "identity") +
+  labs(x = "Type of cuisine", y = "frequency") +
+  theme_bw() +
+  theme(legend.position="")
+```
+
+Mexican seems much more popular than any other type of cusine as there are nearly 250 different restaurants.
+
+The users' dataset contains info on `r nrow(userprofile)` users. Most of the users are students, either low or medium budget, does not smoke and like drinking when they go out:
+
+```{r}
+ggplot(data = userprofile) +
+  geom_bar(aes(x = activity, fill = activity)) +
+  theme_bw() +
+  theme(legend.position="")
+```
+
+```{r}
+ggplot(data = userprofile) +
+  geom_bar(aes(x = budget, fill = budget)) +
+  theme_bw() +
+  theme(legend.position="")
+```
+
+```{r}
+ggplot(data = userprofile) +
+  geom_bar(aes(x = smoker, fill = smoker)) +
+  theme_bw() +
+  theme(legend.position="")
+```
+
+```{r}
+ggplot(data = userprofile) +
+  geom_bar(aes(x = drink_level, fill = drink_level)) +
+  theme_bw() +
+  theme(legend.position="")
+```
+
+
+## Answering questions
+
 Now we are ready to combine all the tables and use them to answer questions. 
 
 Which restaurant has got the best reviews?
 
 ```{r}
-rating_final %>% 
+tab <- rating_final %>% 
   group_by(placeID) %>% 
-  count(rating) %>% mutate(prop = prop.table(n))
+  count(rating) %>% 
+    mutate(prop = prop.table(n)) 
+
+knitr::kable(tab %>%
+    head(10), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 ```
 
 Which restaurant has got the best reviews in terms of average rating?
 
 ```{r}
-rating_final %>% 
+tab <- rating_final %>% 
   group_by(placeID) %>%
   summarise_at(vars(rating, food_rating, service_rating), 
                funs(mean, n())) %>%
   arrange(desc(rating_n), desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
   left_join(chefmozcuisine) 
+
+knitr::kable(tab %>%
+    head(10), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
+
 ```
 
 What is the favourite restaurant for smokers?
 
 ```{r}
-userprofile%>% 
+tab <- userprofile%>% 
   filter(smoker == "true") %>%
   left_join(rating_final) %>%
   group_by(placeID) %>%
@@ -83,12 +139,15 @@ userprofile%>%
   arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
   left_join(chefmozcuisine) 
 
+knitr::kable(tab %>%
+    head(10), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 ```
 
 What is the favourite restaurant for people with a low budget?
 
 ```{r}
-userprofile %>% 
+tab <- userprofile %>% 
   filter(budget == "low") %>%
   left_join(rating_final) %>%
   group_by(placeID) %>%
@@ -97,4 +156,8 @@ userprofile %>%
                funs(mean, n())) %>%
   arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
   left_join(chefmozcuisine) 
+
+knitr::kable(tab %>%
+    head(10), "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 ```

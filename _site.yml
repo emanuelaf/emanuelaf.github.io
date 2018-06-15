@@ -10,7 +10,7 @@ navbar:
       - text: "The Data Workflow"
         href: data-an-workflow.html
       - text: "Elections"
-        href: elections.html
+        href: elections2.html
       - text: "Restaurant rating"
         href: restaurants.html
       - text: "Age pyramid"

@@ -3,7 +3,7 @@ title: "The Central Limit Theorem"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align ='center')
 ```
 
 
@@ -47,7 +47,7 @@ mean_x <- mean(x)
 
 Now `mean_x` is just a one value, but we know it is a realisation of a random variable. In order to simulate its distribution, we will make the same routine, $r=1000$ times. 
 
-```{r}
+```{r, fig.width = 5, fig.height = 3.5}
 require(dplyr)
 require(ggplot2)
 
@@ -63,7 +63,7 @@ ggplot(mean_x) +
 
 The distribution is fairly simmetrical, however it is far from being gaussian. Let us try what happens with $n=5, 10, 30, 50$ draws:
 
-```{r, fig.align = 'center'}
+```{r}
 
 mean_x <- data.frame(sample_size = c(), sample_mean = c())
 n <- c(5, 10, 30, 50)

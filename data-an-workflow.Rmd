@@ -1,5 +1,5 @@
 ---
-title: "Answering questions through Data Analysis: The Workflow"
+title: 'Answering questions through data: The Workflow'
 ---
 
 ```{r setup, include=FALSE}
@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 When I perform research and I work with data, I follow a simple and natural data analysis workflow which I like to divide in three main phases.
 
 
-## Data Preparation
+## 1) Data Preparation
 
 The first thing to do is to import your data and get it in the right shape and format. Both parts may take a fair bit of time.
 
@@ -31,7 +31,7 @@ Moreover, data may not be all on the same files, so you may have to deal with di
 Note that this part may be fairle time consuming, but it is extremely important. This will be the base of your analysis and as many say "grabase in, garbage out", so one should pay lots of attention to this part.
 
 
-## Data Analysis
+## 2) Data Analysis
 
 Data Analysis is the fun part! Here is where your analytical skills come out the most.
 
@@ -40,7 +40,7 @@ First you need to understand the data by for instance printing tables and visual
 Once data has been vizualized and understood, it is time to model the data in order to complete your analysis and answer more complicated questions that involve the interaction between more variables. The model may be simple comparison between the means of two or more groups or may be more sophisticated model.
 
 
-## Reporting
+## 3) Reporting and Communicating
 
 Once you have finished the analysis you need to communicate what you have learned, to others in order to answer a research question. You may do so by builind a static or an interactive report, according to your needs. It is important to include plots and also explanation of what is being done.
 

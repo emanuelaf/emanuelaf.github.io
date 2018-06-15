@@ -3,7 +3,7 @@ title: "The Law of Large Numbers"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.align ='center')
 ```
 
 This year I was asked to give classes of statistical inference to sociology undergrats. Thier little enthusiasm in my subject forced me to find nice words explanation to most of the topics I taught them, leaving out lots of techicalities. 
