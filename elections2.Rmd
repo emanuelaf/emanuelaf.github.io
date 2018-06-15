@@ -85,8 +85,9 @@ knitr::kable(head(elections_region), "html") %>%
   kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 ```
 
+## Data analysis
 
-## How many votes for the Democratic Party?
+### How many votes for the Democratic Party?
 
 Let us now focus on one party. For example we may focus on the Democratic Party that "won" the 2013 elections, but that did not do well in 2018.
 
@@ -101,8 +102,16 @@ tab1 <- elections_region %>%
   arrange(desc(perc_votes))  %>%
   ungroup()
 
-knitr::kable(tab1, col.names = c("Region", "Num. of votes", "Percentage of votes", "Macroarea"), "html") %>%
-  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
+tab1$region <- reorder(tab1$region, tab1$perc_votes)
+
+ggplot(tab1) +
+  geom_bar(aes(x = region, y = perc_votes, fill = macroarea), 
+           stat = "identity", col = "black", alpha = 0.5) +
+   scale_y_continuous(labels = function(perc_votes) paste0(perc_votes, "%")) +
+  coord_flip() +
+  theme_bw() +
+  theme(legend.position="bottom", axis.text.x=element_text(angle=45, hjust=1))
+
 ```
 
 It seems that the democratic party is strong in central Italy, a bit less strong in the north of Italy, and definately not that appealing for the Southern Italy. 
