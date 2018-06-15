@@ -250,220 +250,58 @@ chefmozcuisine &lt;- chefmozcuisine %&gt;% mutate(placeID = as.character(placeID
 <div id="data-exploration" class="section level2">
 <h2>Data exploration</h2>
 <p>In order to be able to better understand and interpret the answers to our questions, in this section we may start understanding what kind of data we are working with is available: what kind of users and what kind of restaurants do we have in the datasets?</p>
-<p>Let us first focus on restaurants. The dataset contains the restaurants’ id and the type of cusine. It contains info on 916 different restaurants and there are Spanish, Italian, Latin_American, Mexican, Fast_Food, Burgers, Dessert-Ice_Cream, Hot_Dogs, Steaks, Asian, International, Mongolian, Vegetarian, Brazilian, Cafe-Coffee_Shop, Cafeteria, Contemporary, Deli-Sandwiches, Diner, Japanese, Sushi, Seafood, Chinese, Bar, Bar_Pub_Brewery, Pizzeria, Mediterranean, American, Family, Caribbean, African, Breakfast-Brunch, Regional, Afghan, Bakery, Game, Armenian, Vietnamese, Korean, Thai, Barbecue, Polish, Dutch-Belgian, French, German, Southwestern, Persian, Ethiopian, Juice, Soup, Continental-European, Greek, Southern, Eastern_European, California, Bagels, Turkish, Organic-Healthy, Fine_Dining different types of cuisine. Let us focus only on the 10 most frequent types of cusine:</p>
-<pre class="r"><code>top10_cuisine &lt;- chefmozcuisine %&gt;% group_by(Rcuisine) %&gt;%
+<p>Let us first focus on restaurants. The dataset contains the restaurants’ id and the type of cusine. It contains info on 916 different restaurants and there are 59 different types of cuisine. Let us focus only on the 10 most frequent types of cusine:</p>
+<pre class="r"><code>top10_cuisine &lt;- chefmozcuisine %&gt;% 
+  group_by(Rcuisine) %&gt;%
   summarise(freq = n()) %&gt;%
   arrange(desc(freq)) %&gt;%
-  slice(1:10)
+  slice(1:10) 
+
+top10_cuisine$Rcuisine &lt;- reorder(top10_cuisine$Rcuisine, -top10_cuisine$freq)
 
 ggplot(data = top10_cuisine) +
-  geom_bar(aes(x=Rcuisine, y = freq, fill = Rcuisine), stat = &quot;identity&quot;) +
+  geom_bar(aes(x=Rcuisine, y = freq, fill = Rcuisine), col = &quot;black&quot;, alpha = 0.5, stat = &quot;identity&quot;) +
   labs(x = &quot;Type of cuisine&quot;, y = &quot;frequency&quot;) +
   theme_bw() +
-  theme(legend.position=&quot;&quot;)</code></pre>
+  theme(legend.position=&quot;&quot;, axis.text.x=element_text(angle=45, hjust=1))</code></pre>
 <p><img src="restaurants_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Mexican seems much more popular than any other type of cusine as there are nearly 250 different restaurants.</p>
-<p>The users’ dataset contains info on 138 users. Most of the users are students, either low or medium budget, does not smoke and like drinking when they go out:</p>
+<p>The users’ dataset contains info on 138 users. Most of the users are students, either low or medium budget, does not smoke and like drinking when they go out. Let us visualise this information:</p>
 <pre class="r"><code>ggplot(data = userprofile) +
-  geom_bar(aes(x = activity, fill = activity)) +
+  geom_bar(aes(x = activity, fill = activity), col = &quot;black&quot;, alpha = 0.5)+
+  labs(y = &quot;frequency&quot;)+
   theme_bw() +
-  theme(legend.position=&quot;&quot;)</code></pre>
+  theme(legend.position=&quot;&quot;, axis.text.x=element_text(angle=45, hjust=1))</code></pre>
 <p><img src="restaurants_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(data = userprofile) +
-  geom_bar(aes(x = budget, fill = budget)) +
+  geom_bar(aes(x = budget, fill = budget), col = &quot;black&quot;, alpha = 0.5) +
+  labs(y = &quot;frequency&quot;)+
   theme_bw() +
-  theme(legend.position=&quot;&quot;)</code></pre>
+  theme(legend.position=&quot;&quot;, axis.text.x=element_text(angle=45, hjust=1))</code></pre>
 <p><img src="restaurants_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(data = userprofile) +
-  geom_bar(aes(x = smoker, fill = smoker)) +
+  geom_bar(aes(x = smoker, fill = smoker), col = &quot;black&quot;, alpha = 0.5) +
+  labs(y = &quot;frequency&quot;)+
   theme_bw() +
-  theme(legend.position=&quot;&quot;)</code></pre>
+  theme(legend.position=&quot;&quot;, axis.text.x=element_text(angle=45, hjust=1))</code></pre>
 <p><img src="restaurants_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(data = userprofile) +
-  geom_bar(aes(x = drink_level, fill = drink_level)) +
+  geom_bar(aes(x = drink_level, fill = drink_level), col = &quot;black&quot;, alpha = 0.5) +
+  labs(x = &quot;&quot;, y = &quot;frequency&quot;) +
   theme_bw() +
-  theme(legend.position=&quot;&quot;)</code></pre>
+  theme(legend.position=&quot;&quot;, axis.text.x=element_text(angle=45, hjust=1))</code></pre>
 <p><img src="restaurants_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="answering-questions" class="section level2">
 <h2>Answering questions</h2>
 <p>Now we are ready to combine all the tables and use them to answer questions.</p>
-<p>Which restaurant has got the best reviews?</p>
-<pre class="r"><code>tab &lt;- rating_final %&gt;% 
-  group_by(placeID) %&gt;% 
-  count(rating) %&gt;% 
-    mutate(prop = prop.table(n)) 
-
-knitr::kable(tab %&gt;%
-    head(10), &quot;html&quot;) %&gt;%
-  kableExtra::kable_styling(full_width = F, font_size = 11, position = &quot;center&quot;)</code></pre>
-<?xml version="1.0" encoding="UTF-8"?>
-<table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;">
-placeID
-</th>
-<th style="text-align:right;">
-rating
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-prop
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-132560
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0.50
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132560
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0.50
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132561
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0.25
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132561
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0.75
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132564
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0.75
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132564
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0.25
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132572
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0.20
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132572
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-0.60
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132572
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0.20
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132583
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0.25
-</td>
-</tr>
-</tbody>
-</table>
-<p>Which restaurant has got the best reviews in terms of average rating?</p>
+<p>Which cuisine is the best restaurant? (in terms of average rating)</p>
 <pre class="r"><code>tab &lt;- rating_final %&gt;% 
   group_by(placeID) %&gt;%
   summarise_at(vars(rating, food_rating, service_rating), 
                funs(mean, n())) %&gt;%
-  arrange(desc(rating_n), desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %&gt;%
+  filter(rating_n &gt;= 20) %&gt;%
+  arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %&gt;%
   left_join(chefmozcuisine) 
 
 knitr::kable(tab %&gt;%
@@ -554,58 +392,6 @@ Mexican
 </tr>
 <tr>
 <td style="text-align:left;">
-135032
-</td>
-<td style="text-align:right;">
-1.178571
-</td>
-<td style="text-align:right;">
-1.071429
-</td>
-<td style="text-align:right;">
-1.0714286
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:left;">
-Cafeteria
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-135032
-</td>
-<td style="text-align:right;">
-1.178571
-</td>
-<td style="text-align:right;">
-1.071429
-</td>
-<td style="text-align:right;">
-1.0714286
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:left;">
-Contemporary
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 135052
 </td>
 <td style="text-align:right;">
@@ -658,28 +444,54 @@ Bar_Pub_Brewery
 </tr>
 <tr>
 <td style="text-align:left;">
-132834
+135042
 </td>
 <td style="text-align:right;">
-1.000000
+1.250000
 </td>
 <td style="text-align:right;">
-1.120000
+1.250000
 </td>
 <td style="text-align:right;">
-0.8800000
+1.1500000
 </td>
 <td style="text-align:right;">
-25
+20
 </td>
 <td style="text-align:right;">
-25
+20
 </td>
 <td style="text-align:right;">
-25
+20
 </td>
 <td style="text-align:left;">
-Mexican
+Chinese
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+135062
+</td>
+<td style="text-align:right;">
+1.238095
+</td>
+<td style="text-align:right;">
+1.238095
+</td>
+<td style="text-align:right;">
+1.0952381
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -710,6 +522,58 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
+135032
+</td>
+<td style="text-align:right;">
+1.178571
+</td>
+<td style="text-align:right;">
+1.071429
+</td>
+<td style="text-align:right;">
+1.0714286
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:left;">
+Cafeteria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+135032
+</td>
+<td style="text-align:right;">
+1.178571
+</td>
+<td style="text-align:right;">
+1.071429
+</td>
+<td style="text-align:right;">
+1.0714286
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:left;">
+Contemporary
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 135060
 </td>
 <td style="text-align:right;">
@@ -734,35 +598,9 @@ NA
 Seafood
 </td>
 </tr>
-<tr>
-<td style="text-align:left;">
-135062
-</td>
-<td style="text-align:right;">
-1.238095
-</td>
-<td style="text-align:right;">
-1.238095
-</td>
-<td style="text-align:right;">
-1.0952381
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
 </tbody>
 </table>
-<p>What is the favourite restaurant for smokers?</p>
+<p>What is the best restaurant for smokers?</p>
 <pre class="r"><code>tab &lt;- userprofile%&gt;% 
   filter(smoker == &quot;true&quot;) %&gt;%
   left_join(rating_final) %&gt;%
@@ -770,6 +608,7 @@ NA
   summarise_at(vars(rating_mean = rating, food_rating_mean = food_rating, 
                     service_rating_mean = service_rating), 
                funs(mean, n())) %&gt;%
+  filter(rating_n &gt;= 5) %&gt;%
   arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %&gt;%
   left_join(chefmozcuisine) 
 
@@ -809,181 +648,77 @@ Rcuisine
 <tbody>
 <tr>
 <td style="text-align:left;">
-132660
+135026
 </td>
 <td style="text-align:right;">
-2
+1.6000000
 </td>
 <td style="text-align:right;">
-2
+1.600000
 </td>
 <td style="text-align:right;">
-2
+1.6000000
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:left;">
-NA
+Bar
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-132755
+135026
 </td>
 <td style="text-align:right;">
-2
+1.6000000
 </td>
 <td style="text-align:right;">
-2
+1.600000
 </td>
 <td style="text-align:right;">
-2
+1.6000000
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:left;">
-Mexican
+Bar_Pub_Brewery
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-132767
+132862
 </td>
 <td style="text-align:right;">
-2
+1.5000000
 </td>
 <td style="text-align:right;">
-2
+1.333333
 </td>
 <td style="text-align:right;">
-2
+1.3333333
 </td>
 <td style="text-align:right;">
-1
+6
 </td>
 <td style="text-align:right;">
-1
+6
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-Vietnamese
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132830
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132884
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132958
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-American
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-134986
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
+6
 </td>
 <td style="text-align:left;">
 International
@@ -991,85 +726,85 @@ International
 </tr>
 <tr>
 <td style="text-align:left;">
-134999
+135085
 </td>
 <td style="text-align:right;">
-2
+1.4000000
 </td>
 <td style="text-align:right;">
-2
+1.400000
 </td>
 <td style="text-align:right;">
-2
+1.2000000
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:left;">
-Japanese
+Fast_Food
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-135000
+132921
 </td>
 <td style="text-align:right;">
-2
+1.2000000
 </td>
 <td style="text-align:right;">
-2
+1.000000
 </td>
 <td style="text-align:right;">
-2
+1.0000000
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-135019
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
+5
 </td>
 <td style="text-align:left;">
 Bar
 </td>
 </tr>
+<tr>
+<td style="text-align:left;">
+132834
+</td>
+<td style="text-align:right;">
+0.8571429
+</td>
+<td style="text-align:right;">
+1.142857
+</td>
+<td style="text-align:right;">
+0.8571429
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+Mexican
+</td>
+</tr>
 </tbody>
 </table>
-<p>What is the favourite restaurant for people with a low budget?</p>
+<p>What is the best restaurant for people with a low budget?</p>
 <pre class="r"><code>tab &lt;- userprofile %&gt;% 
   filter(budget == &quot;low&quot;) %&gt;%
   left_join(rating_final) %&gt;%
@@ -1077,6 +812,7 @@ Bar
   summarise_at(vars(rating_mean = rating, food_rating_mean = food_rating, 
                     service_rating_mean = service_rating), 
                funs(mean, n())) %&gt;%
+  filter(rating_n &gt;= 5) %&gt;%
   arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %&gt;%
   left_join(chefmozcuisine) 
 
@@ -1116,25 +852,129 @@ Rcuisine
 <tbody>
 <tr>
 <td style="text-align:left;">
-132884
+132862
 </td>
 <td style="text-align:right;">
-2
+1.666667
 </td>
 <td style="text-align:right;">
-2.00
+1.833333
 </td>
 <td style="text-align:right;">
-2.0
+1.8333333
 </td>
 <td style="text-align:right;">
-2
+6
 </td>
 <td style="text-align:right;">
-2
+6
 </td>
 <td style="text-align:right;">
-2
+6
+</td>
+<td style="text-align:left;">
+International
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+135057
+</td>
+<td style="text-align:right;">
+1.500000
+</td>
+<td style="text-align:right;">
+1.500000
+</td>
+<td style="text-align:right;">
+1.5000000
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+Bar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+135028
+</td>
+<td style="text-align:right;">
+1.333333
+</td>
+<td style="text-align:right;">
+1.333333
+</td>
+<td style="text-align:right;">
+1.3333333
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+Mexican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+135042
+</td>
+<td style="text-align:right;">
+1.333333
+</td>
+<td style="text-align:right;">
+1.166667
+</td>
+<td style="text-align:right;">
+1.3333333
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+Chinese
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+135062
+</td>
+<td style="text-align:right;">
+1.285714
+</td>
+<td style="text-align:right;">
+1.428571
+</td>
+<td style="text-align:right;">
+1.2857143
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+7
 </td>
 <td style="text-align:left;">
 NA
@@ -1142,236 +982,132 @@ NA
 </tr>
 <tr>
 <td style="text-align:left;">
-132958
+135108
 </td>
 <td style="text-align:right;">
-2
+1.285714
 </td>
 <td style="text-align:right;">
-2.00
+1.285714
 </td>
 <td style="text-align:right;">
-2.0
+1.1428571
 </td>
 <td style="text-align:right;">
-1
+7
 </td>
 <td style="text-align:right;">
-1
+7
 </td>
 <td style="text-align:right;">
-1
+7
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+132921
+</td>
+<td style="text-align:right;">
+1.285714
+</td>
+<td style="text-align:right;">
+1.000000
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:left;">
+Bar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+132825
+</td>
+<td style="text-align:right;">
+1.222222
+</td>
+<td style="text-align:right;">
+1.333333
+</td>
+<td style="text-align:right;">
+0.6666667
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+Mexican
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+135038
+</td>
+<td style="text-align:right;">
+1.222222
+</td>
+<td style="text-align:right;">
+1.000000
+</td>
+<td style="text-align:right;">
+0.8888889
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+132951
+</td>
+<td style="text-align:right;">
+1.200000
+</td>
+<td style="text-align:right;">
+1.000000
+</td>
+<td style="text-align:right;">
+0.8000000
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5
 </td>
 <td style="text-align:left;">
 American
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-134975
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2.00
-</td>
-<td style="text-align:right;">
-2.0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-134996
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2.00
-</td>
-<td style="text-align:right;">
-2.0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-135049
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2.00
-</td>
-<td style="text-align:right;">
-2.0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-Seafood
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-135055
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2.00
-</td>
-<td style="text-align:right;">
-2.0
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Mexican
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132608
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2.00
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Mexican
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132723
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2.00
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Mexican
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-132755
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2.00
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-Mexican
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-135075
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1.75
-</td>
-<td style="text-align:right;">
-1.5
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:left;">
-Seafood
 </td>
 </tr>
 </tbody>

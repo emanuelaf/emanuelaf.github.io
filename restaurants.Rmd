@@ -45,51 +45,59 @@ userprofile <- userprofile %>% na_if("?")
 
 In order to be able to better understand and interpret the answers to our questions, in this section we may start understanding what kind of data we are working with is available: what kind of users and what kind of restaurants do we have in the datasets?
 
-Let us first focus on restaurants. The dataset contains the restaurants' id and the type of cusine. It contains info on `r nrow(chefmozcuisine)` different restaurants and there are `r unique(chefmozcuisine$Rcuisine)` different types of cuisine. Let us focus only on the 10 most frequent types of cusine:
+Let us first focus on restaurants. The dataset contains the restaurants' id and the type of cusine. It contains info on `r nrow(chefmozcuisine)` different restaurants and there are `r length(unique(chefmozcuisine$Rcuisine))` different types of cuisine. Let us focus only on the 10 most frequent types of cusine:
 
 ```{r}
-top10_cuisine <- chefmozcuisine %>% group_by(Rcuisine) %>%
+top10_cuisine <- chefmozcuisine %>% 
+  group_by(Rcuisine) %>%
   summarise(freq = n()) %>%
   arrange(desc(freq)) %>%
-  slice(1:10)
+  slice(1:10) 
+
+top10_cuisine$Rcuisine <- reorder(top10_cuisine$Rcuisine, -top10_cuisine$freq)
 
 ggplot(data = top10_cuisine) +
-  geom_bar(aes(x=Rcuisine, y = freq, fill = Rcuisine), stat = "identity") +
+  geom_bar(aes(x=Rcuisine, y = freq, fill = Rcuisine), col = "black", alpha = 0.5, stat = "identity") +
   labs(x = "Type of cuisine", y = "frequency") +
   theme_bw() +
-  theme(legend.position="")
+  theme(legend.position="", axis.text.x=element_text(angle=45, hjust=1))
+
 ```
 
 Mexican seems much more popular than any other type of cusine as there are nearly 250 different restaurants.
 
-The users' dataset contains info on `r nrow(userprofile)` users. Most of the users are students, either low or medium budget, does not smoke and like drinking when they go out:
+The users' dataset contains info on `r nrow(userprofile)` users. Most of the users are students, either low or medium budget, does not smoke and like drinking when they go out. Let us visualise this information:
 
 ```{r}
 ggplot(data = userprofile) +
-  geom_bar(aes(x = activity, fill = activity)) +
+  geom_bar(aes(x = activity, fill = activity), col = "black", alpha = 0.5)+
+  labs(y = "frequency")+
   theme_bw() +
-  theme(legend.position="")
+  theme(legend.position="", axis.text.x=element_text(angle=45, hjust=1))
 ```
 
 ```{r}
 ggplot(data = userprofile) +
-  geom_bar(aes(x = budget, fill = budget)) +
+  geom_bar(aes(x = budget, fill = budget), col = "black", alpha = 0.5) +
+  labs(y = "frequency")+
   theme_bw() +
-  theme(legend.position="")
+  theme(legend.position="", axis.text.x=element_text(angle=45, hjust=1))
 ```
 
 ```{r}
 ggplot(data = userprofile) +
-  geom_bar(aes(x = smoker, fill = smoker)) +
+  geom_bar(aes(x = smoker, fill = smoker), col = "black", alpha = 0.5) +
+  labs(y = "frequency")+
   theme_bw() +
-  theme(legend.position="")
+  theme(legend.position="", axis.text.x=element_text(angle=45, hjust=1))
 ```
 
 ```{r}
 ggplot(data = userprofile) +
-  geom_bar(aes(x = drink_level, fill = drink_level)) +
+  geom_bar(aes(x = drink_level, fill = drink_level), col = "black", alpha = 0.5) +
+  labs(x = "", y = "frequency") +
   theme_bw() +
-  theme(legend.position="")
+  theme(legend.position="", axis.text.x=element_text(angle=45, hjust=1))
 ```
 
 
@@ -97,27 +105,15 @@ ggplot(data = userprofile) +
 
 Now we are ready to combine all the tables and use them to answer questions. 
 
-Which restaurant has got the best reviews?
-
-```{r}
-tab <- rating_final %>% 
-  group_by(placeID) %>% 
-  count(rating) %>% 
-    mutate(prop = prop.table(n)) 
-
-knitr::kable(tab %>%
-    head(10), "html") %>%
-  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
-```
-
-Which restaurant has got the best reviews in terms of average rating?
+Which cuisine is the best restaurant? (in terms of average rating)
 
 ```{r}
 tab <- rating_final %>% 
   group_by(placeID) %>%
   summarise_at(vars(rating, food_rating, service_rating), 
                funs(mean, n())) %>%
-  arrange(desc(rating_n), desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
+  filter(rating_n >= 20) %>%
+  arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
   left_join(chefmozcuisine) 
 
 knitr::kable(tab %>%
@@ -126,7 +122,8 @@ knitr::kable(tab %>%
 
 ```
 
-What is the favourite restaurant for smokers?
+
+What is the best restaurant for smokers?
 
 ```{r}
 tab <- userprofile%>% 
@@ -136,6 +133,7 @@ tab <- userprofile%>%
   summarise_at(vars(rating_mean = rating, food_rating_mean = food_rating, 
                     service_rating_mean = service_rating), 
                funs(mean, n())) %>%
+  filter(rating_n >= 5) %>%
   arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
   left_join(chefmozcuisine) 
 
@@ -144,7 +142,7 @@ knitr::kable(tab %>%
   kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 ```
 
-What is the favourite restaurant for people with a low budget?
+What is the best restaurant for people with a low budget?
 
 ```{r}
 tab <- userprofile %>% 
@@ -154,6 +152,7 @@ tab <- userprofile %>%
   summarise_at(vars(rating_mean = rating, food_rating_mean = food_rating, 
                     service_rating_mean = service_rating), 
                funs(mean, n())) %>%
+  filter(rating_n >= 5) %>%
   arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
   left_join(chefmozcuisine) 
 
