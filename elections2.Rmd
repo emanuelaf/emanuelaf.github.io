@@ -102,9 +102,11 @@ tab1 <- elections_region %>%
   arrange(desc(perc_votes))  %>%
   ungroup()
 
-tab1$region <- reorder(tab1$region, tab1$perc_votes)
+tab1_b <- tab1
 
-ggplot(tab1) +
+tab1_b$region <- reorder(tab1_b$region, tab1_b$perc_votes)
+
+ggplot(tab1_b) +
   geom_bar(aes(x = region, y = perc_votes, fill = macroarea), 
            stat = "identity", col = "black", alpha = 0.5) +
    scale_y_continuous(labels = function(perc_votes) paste0(perc_votes, "%")) +
