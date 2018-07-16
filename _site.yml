@@ -12,7 +12,11 @@ navbar:
       - text: "Elections"
         href: elections2.html
       - text: "Restaurant rating"
-        href: restaurants.html
+      	href: restaurants.html
+      - text: "Predicting Sales"
+        href: pred-sales.html
+   - text: "Data Visualisation"
+     menu:
       - text: "Age pyramid"
         href: age-pyramid.html
    - text: "Statistics"
