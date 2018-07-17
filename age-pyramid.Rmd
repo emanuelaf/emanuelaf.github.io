@@ -7,66 +7,104 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, fig.align ='center', warning = FALSE, message = FALSE)
 ```
 
+In this article, I will guide you through the construction of the _age pyramid_ which is a common plot in demography.
 
-A common representation in demography is the so-called _age pyramid_.
+### Introduction
 
-This is basically a bar graph where each bar represent the frequency of an age class (usually of 5 years) and bars are horizontal. This is done separately for females and males so that the bar starts from the middle and goes to the right for females and to the left for males. 
+A common representation in demography is the so-called _age pyramid_. This is basically a bar graph where each bar represents the frequency of an age class (usually of 5 years) and bars are horizontal. This is done separately for females and males so that the bars start from the center and go to the right for females and to the left for males. 
 
-It is easy to picture that in a society where there are lots of children and few elderly, like most of Western countries back in the early twentieth century, this representation would look like a pyramid with bars that get smaller and smaller as we up on the pyramid. Nowadays the situation is fairly different and the age pyramid, though preserving its name, looks like a trepezoid.
+It is easy to picture that in a society where there are lots of children and few elderly, like it used to be in the early twentieth century, this representation would look like a pyramid with bars that get smaller and smaller as we go up on the pyramid. Nowadays the situation is fairly different and the age pyramid, though preserving its name, looks like a trepezoid, with lots of people in mid age and only few newborns.
 
-I am pretty sure there are `R` packages that do such representation. However every time I have to do it, I get crazy trying to find the right one for my data or trying to fit reshape my data into the format other users' functions like.
+I am pretty sure there are `R` packages that do such representation. However every time I have to do it, I get crazy trying to find the right one for my data or trying to reshape my data to fit the format other users' functions work with.
 
-Hence, finding inspiration online here and there, I have found my favourite routine.
+Hence, finding inspiration online here and there, I have created my favourite routine.
 
-Suppose the initial data is a file of microdata. Here I simulated a dataset with 15000 observations and two variables: age and gender of each interviewed inidividual.
+### Building _age pyramid_ from microdata
 
-I decided to do this in two steps: first I calculate the frequency distribution of the age class for men and women separately and then I represent them in a plot.
+Suppose the initial dataset is a file of microdata. Here I simulated a dataset with 15000 observations and two variables: age and gender of each inidividual.
 
-As usual, let us load the required packages and the data:
+I create my age pyramid in two steps: first I calculate the frequency distribution of the age class for men and women separately and save it in a table, and then I represent the table with a plot. In the next few lines I will describe the code that produces a nice and kneet _age pyramid_.
+
+As usual, the required packages and data are loaded:
 
 ```{r}
 require(tidyverse)
 my_microdata <- read_csv("data/sim_microdata") 
 ```
 
-And then we do some data preparation/manipulation, in order to set the labels:
+Then I need some data preparation/manipulation. First I divide the variable containing the age into groups of five years:
 
 ```{r}
 my_microdata$age_group <- cut(my_microdata$age, c(seq(-1, 109, 5), Inf), labels = FALSE)
+```
+
+Second I manually create a vactor containing the labels of such groups:
+
+```{r}
 age_group_labels <- c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", 
                       "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", 
                       "75-79", "80-84", "85-89", "90-94", "95-99", "100-104", "105-109", "110+")
 ```
 
-select the variables we are interested in:
+Last, as the dataset contains some variables I do not need anymore, such as ungrouped age, I select the only two variables I will need to build the age pyramid, i.e. gender and age class:
 
 ```{r}
 my_microdata <- my_microdata %>% select(sex, age_group)
 ```
 
-and calculate the frequency distribution of the age class for men and women separately:
+Now that the data has been manipulated, I can start with the actual steps for creating the age pyramid.
+
+First I calculate the frequency distribution of the age class for men and women separately. Hence, using the `dplyr` package I group by age class and sex and I count how many individuals is there for each gender in each age class:
 
 ```{r}
 tab_age_pyramid <- my_microdata %>%
-  group_by(age_group, sex) %>%
+  group_by(sex, age_group) %>%
   summarise(freq = n()) %>%
-  ungroup() %>%
-  mutate(age_gruop = factor(age_group))
+  mutate(freq = freq/sum(freq)*100) %>%
+  ungroup() 
 
 knitr::kable(head(tab_age_pyramid), "html") %>%
   kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 ```
 
-Last we can finally plot and visualise the data:
+Now it is time to plot the data. I will use the `ggplot2` package, more specifically I use the `geom_bar` function. I create one bar plot for each gender and I color males in lightblue and females in lightpink so that I do not need a legend for gender: 
 
 ```{r}
-ggplot() + 
+p1 <- ggplot() + 
   geom_bar(data = tab_age_pyramid %>% filter(sex == 1), 
            aes(age_group, freq), stat = "identity", fill = "lightblue", col = "blue") +
-  geom_bar(data = tab_age_pyramid %>%filter(sex == 2),  
-           aes(age_group, -freq), stat = "identity", fill = "lightpink", col = "hotpink") +
-  scale_x_continuous(breaks = 1:23, labels = age_group_labels) +
-  labs(y = "Frequency", x = "Age group") + 
-  coord_flip()+
-  theme_bw() 
+  geom_bar(data = tab_age_pyramid %>% filter(sex == 2),  
+           aes(age_group, -freq), stat = "identity", fill = "lightpink", col = "hotpink") 
+```
+
+Then I add labels for each age class using the `scale_x_continuous()` function and the vector of labels created in the data preparation phase:
+
+```{r}
+p2 <- p1 + 
+  scale_x_continuous(breaks = 1:23, labels = age_group_labels) 
+```
+
+In order to make the plot easier to read, I add x and y labels:
+
+```{r, fig.align="center", fig.width = 6.5, fig.height = 5}
+p3 <- p2 + 
+  labs(y = "Frequency", x = "Age group") 
+p3
+```
+
+The above plot does not look like a pyramid yet, hence I flip coordinates using the `coord_flip()` function. Also, I do not like the default ggplot theme as I believe the gray background looks a bit too rich, hence I will also change the theme:
+
+
+```{r, fig.align="center", fig.width = 6.5, fig.height = 5}
+p4 <- p3 + coord_flip() + theme_bw() 
+p4
+```
+
+
+One last small change I need to make is to get rid of the negative numbers on the left hand side of the "Frequency axis". Moreover I would like to add the percentage symbol, so that it is clear we are talking about relative frequencies. I will do it by replacing the y (which is now on the x) axis with new labels. I will use the function `scale_y_continous`:
+
+```{r, fig.align="center", fig.width = 6.5, fig.height = 5}
+p_final <- p4 +
+  scale_y_continuous(labels=function(freq) paste0(abs(freq), "%"))
+p_final
 ```
