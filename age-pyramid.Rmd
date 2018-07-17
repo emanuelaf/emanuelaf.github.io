@@ -23,7 +23,7 @@ Hence, finding inspiration online here and there, I have created my favourite ro
 
 Suppose the initial dataset is a file of microdata. Here I simulated a dataset with 15000 observations and two variables: age and gender of each inidividual.
 
-I create my age pyramid in two steps: first I calculate the frequency distribution of the age class for men and women separately and save it in a table, and then I represent the table with a plot. In the next few lines I will describe the code that produces a nice and kneet age pyramid.
+I create my age pyramid in two steps: first I calculate the frequency distribution of the age class for men and women separately and save it in a table, and then I represent the table with a plot. In the next few lines I will describe the code that produces a nice and neat age pyramid.
 
 As usual, the required packages and data are loaded:
 
@@ -110,7 +110,7 @@ p_final
 ```
 
 
-So here is a nice and kneet age pyramid :)
+So here is a nice and neat age pyramid :)
 
 The next step will be to pack the routine into a function so that every time I need to do an age pyramid, that happens quite often working with demographers!, I can do it with a single line code. But this will be the topic of a different article ;)
 
