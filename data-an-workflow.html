@@ -255,6 +255,14 @@ $(document).ready(function () {
 <div id="importing-data" class="section level4">
 <h4><em>Importing data</em></h4>
 <p>Importing data may be very easy, as you have the data in some file stored somewhere on your pc, as either a flat file or some specific common data format for data collectors such as STATA, SAS, etc. But the data import process may be complicated by the fact that you may have to retrive the data by connecting to a database or by accessing an API.</p>
+<p>When it comes to <code>R</code> there is a number of packages useful for importing different file formats. Here is a small ist of the main ones, some of which are part of the <code>tidyverse</code> and some not:</p>
+<ul>
+<li><a href="https://readr.tidyverse.org/"><code>readr</code></a> for flat files</li>
+<li><a href="https://readxl.tidyverse.org/"><code>readxl</code></a> for .xls and .xlsx files</li>
+<li><a href="https://haven.tidyverse.org/"><code>haven</code></a> for SPSS, Stata, and SAS data</li>
+<li><a href="https://github.com/r-lib/httr"><code>httr</code></a> for web APIs</li>
+<li><a href="https://github.com/r-dbi/DBI"><code>DBI</code></a> for relational databases</li>
+</ul>
 </div>
 <div id="manipulating-data" class="section level4">
 <h4><em>Manipulating data</em></h4>
@@ -263,6 +271,14 @@ $(document).ready(function () {
 <p>Once you have imported data in the above shape, still many issues may occur. You may have to make small or large transformations to your data, from transformations regarding data formats to bigger transformations regarding, for instance the creation of new variables, or the substitution and identification of missing values.</p>
 <p>Moreover, data may not be all on the same files, so you may have to deal with different tables hence make sure you can match information on such tables. Or you may have to collect specific variables from here and there and create the dataset you will be working with.</p>
 <p>Note that this part may be fairly time consuming, but it is extremely important. This will be the base of your analysis and as many say “grabase in, garbage out”, so one should pay lots of attention to this part.</p>
+<p>Again, when it comes to <code>R</code> there is a number of packages that may be used. I mainly use the following:</p>
+<ul>
+<li><a href="https://dplyr.tidyverse.org/"><code>dplyr</code></a> for creating new variables, delete rows, deal with missing data</li>
+<li><a href="https://forcats.tidyverse.org/"><code>forcats</code></a> for manipulating factors</li>
+<li><a href="https://stringr.tidyverse.org/"><code>stringr</code></a> for manipulating strings</li>
+<li><a href="https://lubridate.tidyverse.org/"><code>lubridate</code></a> for manipulating dates</li>
+<li><a href="https://tidyr.tidyverse.org/"><code>tidyr</code></a> for reshaping the dataset</li>
+</ul>
 </div>
 </div>
 <div id="data-analysis" class="section level3">
@@ -271,15 +287,18 @@ $(document).ready(function () {
 <div id="data-visualisation-and-exploration" class="section level4">
 <h4><em>Data Visualisation and exploration</em></h4>
 <p>First you need to understand the data by for instance printing tables and visualising it. This part is important and may go into your final report and may already answer a number of questions.</p>
+<p>In <code>R</code> I mainly use the packages <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code></a>, for general data visualisation and <a href="https://github.com/dkahle/ggmap"><code>ggmap</code></a> for plotting maps.</p>
 </div>
 <div id="modelling" class="section level4">
 <h4><em>Modelling</em></h4>
 <p>Once data has been vizualized and understood, it is time to model the data in order to complete your analysis and answer more complicated questions that involve the interaction between more variables. The model may be simple comparison between the means of two or more groups or may be more sophisticated model.</p>
+<p>According to which model I am applying, I may use different packages. It is hard to give a list of the main ones because the models’ universe is very very variagate!</p>
 </div>
 </div>
 <div id="reporting-and-communicating" class="section level3">
 <h3><span style="color:#6fa06a"><strong>3) Reporting and Communicating</strong></span></h3>
 <p>Once you have finished the analysis you need to communicate what you have learned, to others in order to answer a research question. You may do so by builind a static or an interactive report, according to your needs. It is important to include plots and also explanation of what has been done.</p>
+<p>I like to create reports straight from <code>R</code>, that allows to include code in between text. For static reports, I use <a href="https://rmarkdown.tidyverse.org/"><code>Rmarkdown</code></a> package for both slides and reports, html outputs and pdf outputs; while for interactive reports, I use <a href="https://shiny.rstudio.com/"><code>Shiny</code></a>package.</p>
 </div>
 
 

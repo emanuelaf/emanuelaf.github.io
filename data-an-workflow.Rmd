@@ -20,6 +20,15 @@ The first thing to do is to import your data and get it in the right shape and f
 
 Importing data may be very easy, as you have the data in some file stored somewhere on your pc, as either a flat file or some specific common data format for data collectors such as STATA, SAS, etc. But the data import process may be complicated by the fact that you may have to retrive the data by connecting to a database or by accessing an API.
 
+When it comes to `R` there is a number of packages useful for importing different file formats. Here is a small ist of the main ones, some of which are part of the `tidyverse` and some not:
+
+- [`readr`](https://readr.tidyverse.org/) for flat files
+- [`readxl`](https://readxl.tidyverse.org/) for .xls and .xlsx files
+- [`haven`](https://haven.tidyverse.org/) for SPSS, Stata, and SAS data
+- [`httr`](https://github.com/r-lib/httr) for web APIs
+- [`DBI`](https://github.com/r-dbi/DBI) for relational databases
+
+
 
 #### _Manipulating data_
 
@@ -33,6 +42,14 @@ Moreover, data may not be all on the same files, so you may have to deal with di
 
 Note that this part may be fairly time consuming, but it is extremely important. This will be the base of your analysis and as many say "grabase in, garbage out", so one should pay lots of attention to this part.
 
+Again, when it comes to `R` there is a number of packages that may be used. I mainly use the following:
+
+- [`dplyr`](https://dplyr.tidyverse.org/) for creating new variables, delete rows, deal with missing data
+- [`forcats`](https://forcats.tidyverse.org/) for manipulating factors
+- [`stringr`](https://stringr.tidyverse.org/) for manipulating strings
+- [`lubridate`](https://lubridate.tidyverse.org/) for manipulating dates
+- [`tidyr`](https://tidyr.tidyverse.org/) for reshaping the dataset
+
 
 ### <span style="color:#fa6b62">__2) Data Analysis__</span>
 
@@ -43,14 +60,19 @@ Data Analysis is the fun part! Here is where your analytical skills come out the
 
 First you need to understand the data by for instance printing tables and visualising it. This part is important and may go into your final report and may already answer a number of questions.
 
+In `R` I mainly use the packages [`ggplot2`](https://ggplot2.tidyverse.org/), for general data visualisation and [`ggmap`](https://github.com/dkahle/ggmap) for plotting maps.
+
 
 #### _Modelling_
 
 Once data has been vizualized and understood, it is time to model the data in order to complete your analysis and answer more complicated questions that involve the interaction between more variables. The model may be simple comparison between the means of two or more groups or may be more sophisticated model.
+
+According to which model I am applying, I may use different packages. It is hard to give a list of the main ones because the models' universe is very very variagate!
 
 
 ### <span style="color:#6fa06a">__3) Reporting and Communicating__</span>    
 
 Once you have finished the analysis you need to communicate what you have learned, to others in order to answer a research question. You may do so by builind a static or an interactive report, according to your needs. It is important to include plots and also explanation of what has been done.
 
+I like to create reports straight from `R`, that allows to include code in between text. For static reports, I use [`Rmarkdown`](https://rmarkdown.tidyverse.org/) package for both slides and reports, html outputs and pdf outputs; while for interactive reports, I use [`Shiny` ](https://shiny.rstudio.com/)package.
 
