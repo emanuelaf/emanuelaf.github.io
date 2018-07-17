@@ -11,7 +11,7 @@
 
 
 
-<title>Elections report</title>
+<title>Italian elections results</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -191,7 +191,9 @@ $(document).ready(function () {
     <li>
       <a href="elections2.html">Elections</a>
     </li>
-    <li class="dropdown-header">Restaurant rating</li>
+    <li>
+      <a href="restaurants.html">Restaurant rating</a>
+    </li>
     <li>
       <a href="pred-sales.html">Predicting Sales</a>
     </li>
@@ -237,16 +239,16 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Elections report</h1>
+<h1 class="title toc-ignore">Italian elections results</h1>
 
 </div>
 
 
-<p>In one of my lessons I was to give students an overview on how to compile reports with rmarkdown. As Italians, when it gets to elections time, elections is the only thing we hear about in the news for months and decided to get them to work on the results of our elections.</p>
+<p>In this article I investigate the performance of Italian parties in the 2018 political elections. In particular I would like to focus on the left wing party (democratic party) that during the 2018 political elections seems to have undergone a severe decline.</p>
 <div id="data-preparation" class="section level2">
 <h2>Data Preparation</h2>
-<p>The data I will be using was downloaded from the <a href="http://dait.interno.gov.it/elezioni/open-data/dati-elezioni-politiche-4-marzo-2018">data section on the website of the Italian Interior Ministry</a>.</p>
-<p>I then translated into English the variables’ names and the so modified daaset is now available on my github repo <code>emanuelaf.github.io</code>.</p>
+<p>The data I will be using was downloaded from the <a href="http://dait.interno.gov.it/elezioni/open-data/dati-elezioni-politiche-4-marzo-2018">data section of the website of the Italian Interior Ministry</a>.</p>
+<p>I then translated into English the variables’ names and the so modified daaset is now available on my github repo <code>emanuelaf/emanuelaf.github.io</code>.</p>
 <div id="import-data-from-online-github-repo" class="section level3">
 <h3>Import data from online github repo</h3>
 <p>First of all we need to load the packages we’ll be using throughout the analysis:</p>
@@ -254,7 +256,13 @@ $(document).ready(function () {
 require(devtools)
 require(readxl)
 require(ggrepel)</code></pre>
-<p>Then we can download the data. The files can be downloaded straight from github and parsed to R as follows:</p>
+<p>Then we can download the data. We need to import two files:</p>
+<ul>
+<li><strong>camera_2018_italy.csv</strong> that contains the number of votes each party received in each electoral district</li>
+<li>__macro-aree_ that contains information on the macroarea each Italian region belongs to</li>
+</ul>
+<p>The first file contains the actual information on the number of votes to each party, while the second file contains additional info that may help us better understand the “geogrpahy” of the votes.</p>
+<p>Files can be downloaded straight from github and parsed to <code>R</code> as follows:</p>
 <pre class="r"><code>urlfile &lt;- &quot;https://raw.githubusercontent.com/emanuelaf/emanuelaf.github.io/master/camera_2018_italy.csv&quot;
 elections &lt;- read_csv(urlfile)
 
@@ -263,12 +271,13 @@ macroarea &lt;- read_csv(urlfile2)</code></pre>
 </div>
 <div id="data-manipulation" class="section level3">
 <h3>Data manipulation</h3>
-<p>The longest part in the data workflow is to get the data the way we want it. So first, let us put to lower cases the whole dataset:</p>
+<p>The longest part in the data workflow is to get the data the way we want it.</p>
+<p>As <code>R</code> is case sensitive, the first thing I usually do is to set the whole dataset to lower cases. Let us do this into two steps, first making all the variables lower case and then transforming the variales’ names themselves to lower cases:</p>
 <pre class="r"><code>elections &lt;- elections %&gt;%
   mutate_all(funs(tolower(.)))
 
 colnames(elections) &lt;- tolower(colnames(elections))</code></pre>
-<p>So that the dataset (with its first few columns) looks like this:</p>
+<p>The dataset (with its first few columns) looks like this:</p>
 <?xml version="1.0" encoding="UTF-8"?>
 <table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -480,11 +489,8 @@ partito democratico
 </tbody>
 </table>
 <p>with 20 variables collected on the 133068 Italian electoral districts.</p>
-<p>We need some more data manipulation in order to have data which is easier to treat.</p>
-<ol style="list-style-type: decimal">
-<li><p>The column <code>electoral_district</code>, contains the name of the discrict in which votes were counted. Each district is called by the region name and a number. We cam to extrapolate the info on the region, so that we can aggregate by region and then come up with region level information.</p></li>
-<li><p>Instead of looking at electoral district level data, we may want to aggragate data at region level and calculate the percentage of votes received by each party.</p></li>
-</ol>
+<p>We need some more data manipulation in order to have data which is easier to treat. In fact instead of looking at electoral district level data, we may want to aggragate data at region level and calculate the percentage of votes received by each party.</p>
+<p>Looking at our dataset, aggregating by region is possible. In fact the column <code>electoral_district</code>, contains the name of the discrict in which votes were counted. Each district is called by the region name and a number. We can manipulate the column containing the district name in order to get the region name, so that we can then aggregate by region and come up with region level information. The following code does so:</p>
 <pre class="r"><code>elections_region &lt;- elections %&gt;%
   separate(electoral_district, c(&quot;region&quot;, &quot;other&quot;), &quot; &quot;) %&gt;%
   group_by(region, party) %&gt;%
@@ -492,7 +498,7 @@ partito democratico
   mutate(perc_votes = round(votes/sum(votes)*100, 2)) %&gt;% 
   ungroup() %&gt;%
   left_join(macroarea)</code></pre>
-<p>So that our final dataset looks like this:</p>
+<p>And our final dataset looks like this:</p>
 <?xml version="1.0" encoding="UTF-8"?>
 <table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -623,10 +629,10 @@ centre
 </div>
 <div id="data-analysis" class="section level2">
 <h2>Data analysis</h2>
+<p>Let us know start answering questions on the left wing party which seems to have undergone a decline in the latest elections.</p>
 <div id="how-many-votes-for-the-democratic-party" class="section level3">
 <h3>How many votes for the Democratic Party?</h3>
-<p>Let us now focus on one party. For example we may focus on the Democratic Party that “won” the 2013 elections, but that did not do well in 2018.</p>
-<p>The percentage of votes the Democratic Party got in each region is the following:</p>
+<p>The Democratic Party that “won” the 2013 elections, but that did not do well in 2018. The percentage of votes the Democratic Party got in each region is the following:</p>
 <pre class="r"><code>tab1 &lt;- elections_region %&gt;%
   filter(party == &quot;partito democratico&quot;) %&gt;%
   select(-party) %&gt;%
@@ -640,17 +646,17 @@ tab1_b$region &lt;- reorder(tab1_b$region, tab1_b$perc_votes)
 ggplot(tab1_b) +
   geom_bar(aes(x = region, y = perc_votes, fill = macroarea), 
            stat = &quot;identity&quot;, col = &quot;black&quot;, alpha = 0.5) +
-   scale_y_continuous(labels = function(perc_votes) paste0(perc_votes, &quot;%&quot;)) +
+  scale_y_continuous(labels = function(perc_votes) paste0(perc_votes, &quot;%&quot;)) +
   coord_flip() +
   theme_bw() +
   theme(legend.position=&quot;bottom&quot;, axis.text.x=element_text(angle=45, hjust=1))</code></pre>
 <p><img src="elections2_files/figure-html/analisi%20partito-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>It seems that the democratic party is strong in central Italy, a bit less strong in the north of Italy, and definately not that appealing for the Southern Italy.</p>
+<p>It seems that the democratic party is strong in central Italy, a bit less strong in the north of Italy, and definately not that appealing in Southern Italy. Notice that Tuscany, followed by some other central regions, has always been a fairly “left wing” region and it is still the region in which the democratic party is strongest. However in the previous elections the democratic party had received more votes.</p>
 </div>
 <div id="those-that-did-not-vote-for-the-democratic-party-did-they-vote-for-another-left-wing-party" class="section level3">
 <h3>Those that did not vote for the democratic party, did they vote for another left wing party?</h3>
-<p>In other words, I would like to find out whether there are regions in which both the percentage of votes to the democratic party and the percentage of votes to another left wing party are high. By doing so I should identify left-wing regions where both percentages are high and righ wing regions in which both percentage are low. Or regions in which one of the two party has attracted most votes leavig the other one with none.</p>
-<p>At the time, the second biggest left wing party was called “liberi e uguali”.</p>
+<p>In other words, I would like to find out whether there are regions in which both the percentage of votes to the democratic party and the percentage of votes to another left wing party are high. By doing so I should identify left-wing regions where both percentages are high and right wing regions in which both percentage are low. Or regions in which one of the two party has attracted most votes leaving the other left wing party with none.</p>
+<p>The second biggest left wing party is called “liberi e uguali”:</p>
 <pre class="r"><code>tab2 &lt;- elections_region %&gt;%
   filter(party == &quot;liberi e uguali&quot;) %&gt;%
   select(-party) %&gt;%
@@ -664,21 +670,29 @@ ggplot(data = tab2, aes(x = perc_votes.party1, y = perc_votes.party2)) +
   scale_color_discrete(name=&quot;Macroarea&quot;) +
   geom_label_repel(aes(label = region, col = macroarea.party1), size = 3, show_guide=F) +
   theme_bw() +
-  theme(legend.position=&quot;bottom&quot;)</code></pre>
+  theme(legend.position=&quot;bottom&quot;)  </code></pre>
 <p><img src="elections2_files/figure-html/analisi%20partito2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The plot returns what we expected. Central Italian regions such as Tuscany and Emilia-Romagna are well known for being left wing regions and in fact both the Democratic Party and the second largest left wing party got quite a good percentage of votes, while other regions, such as Molise and Sicily, both left parties did not go well. Basilicata seems to play an exception and the other left wing party seems to have attracted the left wing voters.</p>
 </div>
-</div>
-<div id="mapping-the-votes" class="section level2">
-<h2>Mapping the votes</h2>
-<p>Last let us visualise on a map what is happening to the Italian peninsula. Using the development version of the package <code>mapIT</code> available on github, we plot the data. Notice that the <code>mapIT</code> function works with regions id, hence we better make sure that the regions are correctly identified.</p>
-<p>Here is the percentage of votes obtained by the Democratic Party on the Italian map:</p>
+<div id="mapping-the-votes" class="section level3">
+<h3>Mapping the votes</h3>
+<p>Last let us visualise on a map what is happening to the Italian peninsula. Using the development version of the package <code>mapIT</code> available on github, we plot the data.</p>
+<p>There are different ways of creating maps in <code>R</code>. In this case, each region is a polygon identified by the region name. If we want to plot data on the map, we need to give <code>R</code> a dataset with region values identified by the region name. The <code>mapIT()</code> function will match each regional value with its polygon and colour the polygon according to it.</p>
+<p>Hence we better make sure that the regions’ id in our dataset is the same as that recognised by the <code>mapIT()</code> function. The <code>mapIT()</code> function was developed so that blanks between words and alphanumeric characters are ignored. So, for example the region called “Trentino-Alto Adige” is correctly recognised even if it’s spelled ‘Trentino Alto Adige’ or ‘TrentinoAltoAdige’.</p>
+<p>However, some of our region names were truncated due to the procedure we adopted for extracting the names from the electoral district variable. The following code lines fix this:</p>
+<p>And here is the percentage of votes obtained by the Democratic Party on the Italian map:</p>
 <pre class="r"><code>require(mapIT)
 
 mapIT(perc_votes, region, data = data.frame(tab1),
       graphPar = list(low = &quot;#F5A9A9&quot;, high = &quot;#DF0101&quot;,
       show_guide = &quot;Percentage of votes&quot;))</code></pre>
 <p><img src="elections2_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>In this brief article we manipulated the dataset on Italian political elections, and printed plots and tables in order to investigate what happened to the democratic party during the latest elections.</p>
+<p>Note that using the same code, one could choose to focus on a different party and analyse its performance. Also, note that this is an official dataset, hence it comes equal every election. Once the variable names are translated into English, the same code still applies. Last, note that this article may easily be transformed into an interactive analysis where users choose one party to focus on and to switch to different years, after additional years’ elections data is downloaded.</p>
 </div>
 
 
