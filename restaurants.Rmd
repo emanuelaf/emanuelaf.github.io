@@ -7,19 +7,19 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, fig.align ='center', warning = FALSE, message = FALSE)
 ```
 
-In this post I play around with `R` to investigate the users' preferences on restaurants. Somewhere on the net, I found a set of 3 datasets containing information on users, restaurants on the users' ratings on those restaurants. In my `R` lessons, they often serve as an example of data manipulation using the `tidyverse` tools.
-
+In this post I play around with `R` to investigate the users' preferences on restaurants. Somewhere on the net, I found a set of 3 datasets containing information on restaurants, users' ratings and users who rated them. This is an interesting example because the information is spread on three different tables/datasets and in order to answer questions on users' preferences, we need to join such tables similarly to what you do with SQL.
 
 
 ## Data Preparation
 
-After we load the `R` packages we will need:
+Most of the data manipulation and visualisation will be done with the `tidyverse` package, more specifically we will use mainly `dplyr` and `ggplot2`. So first, let us load the whole `tidyverse`:
+
 
 ```{r}
 require(tidyverse)
 ```
 
-and the datasets:
+Now, using the `tidyverse` functions for data import, let us import the three tables:
 
 ```{r}
 chefmozcuisine <- read_delim("data/chefmozcuisine.csv", delim = ",", col_names = T)
@@ -27,8 +27,23 @@ userprofile <- read_delim("data/userprofile.csv", delim = ",", col_names = T)
 rating_final <- read_delim("data/rating_final.csv", delim = ",", col_names = T)
 ```
 
+The three tables are organised as follows:
 
-First we need to manipulate the data a bit. For example we want to make sure that IDs are character instead of numeric so that we do not accidentally calculate anything on them:
+* `chefmozcuisine` contains `r ncol(chefmozcuisine)` variables which refer to the characteristics of `r nrow(chefmozcuisine)` restaurants in the US. More specifically the variables are:
+    + `r names(chefmozcuisine)[1]` that univocally identifies each restaurants
+    + `r names(chefmozcuisine)[2]` that indicates the restaurants' type of cuisine 
+  
+* `userprofile` contains `r ncol(userprofile)` variables which refer to the characteristics of `r nrow(userprofile)` users. In addition to users' id, there are variables describing different habits including smoking and drinking habits
+
+* `rating_final` contains `r nrow(rating_final)` different ratings on the restaurants contained in `chefmozcuisine`. More specifically we have:
+    + `r names(rating_final)[1]` contains the users' id as given in `userprofile` table
+    + `r names(rating_final)[2]` is the restaurants' id as given in `chefmozcuisine` table
+    + `r names(rating_final)[3]` which is the overall rating
+    + `r names(rating_final)[4]` which is the food rating
+    + `r names(rating_final)[5]` which is the service rating
+
+
+Before we start with the analysis, we need to manipulate the data a bit. I am particularly interested into two things. As we will be joiing tables through the restaurants id and the  For example we want to make sure that IDs are character instead of numeric so that we do not accidentally calculate anything on them:
 
 ```{r}
 rating_final <- rating_final %>% mutate(placeID = as.character(placeID))
@@ -41,13 +56,22 @@ Another frequent issue is missing data. In these tabes missingness is coded as "
 userprofile <- userprofile %>% na_if("?")
 ```
 
-## Data exploration
+## Data analysis
 
-In order to be able to better understand and interpret the answers to our questions, in this section we may start understanding what kind of data we are working with is available: what kind of users and what kind of restaurants do we have in the datasets?
 
-Let us first focus on restaurants. The dataset contains the restaurants' id and the type of cusine. It contains info on `r nrow(chefmozcuisine)` different restaurants and there are `r length(unique(chefmozcuisine$Rcuisine))` different types of cuisine. Let us focus only on the 10 most frequent types of cusine:
+### Data exploration
 
-```{r}
+In order to be able to better understand and interpret the answers to our questions, in this section we may start understanding what kind of data we are working with is available: what kind of users are we looking at? and what kind of restaurants do we have in the datasets?
+
+
+#### What kind of restaurants are we looking at?
+
+Let us first focus on restaurants. The dataset contains the restaurants' id and the type of cuisine. It contains info on `r nrow(chefmozcuisine)` different restaurants and there are `r length(unique(chefmozcuisine$Rcuisine))` different types of cuisine. 
+
+Let us focus only on the 10 most frequent types of cusine:
+
+
+```{r, fig.height = 4, fig.width = 5}
 top10_cuisine <- chefmozcuisine %>% 
   group_by(Rcuisine) %>%
   summarise(freq = n()) %>%
@@ -64,69 +88,70 @@ ggplot(data = top10_cuisine) +
 
 ```
 
-Mexican seems much more popular than any other type of cusine as there are nearly 250 different restaurants.
+Mexican seems much more popular than any other type of cusine as there are nearly 250 different restaurants that do Mexican food.
+
+
+#### What kind of users are we looking at?
 
 The users' dataset contains info on `r nrow(userprofile)` users. Most of the users are students, either low or medium budget, does not smoke and like drinking when they go out. Let us visualise this information:
 
 ```{r}
-ggplot(data = userprofile) +
-  geom_bar(aes(x = activity, fill = activity), col = "black", alpha = 0.5)+
-  labs(y = "frequency")+
+ggplot(data = userprofile %>%
+         select(userID, activity, smoker, budget, drink_level) %>%
+         gather(key, value, -userID)) +
+  facet_wrap(~key, scales = "free_x") +
+  geom_bar(aes(x = value, fill = value), col = "black", alpha = 0.5)+
+  labs(y = "frequency", x = "")+
   theme_bw() +
-  theme(legend.position="", axis.text.x=element_text(angle=45, hjust=1))
-```
-
-```{r}
-ggplot(data = userprofile) +
-  geom_bar(aes(x = budget, fill = budget), col = "black", alpha = 0.5) +
-  labs(y = "frequency")+
-  theme_bw() +
-  theme(legend.position="", axis.text.x=element_text(angle=45, hjust=1))
-```
-
-```{r}
-ggplot(data = userprofile) +
-  geom_bar(aes(x = smoker, fill = smoker), col = "black", alpha = 0.5) +
-  labs(y = "frequency")+
-  theme_bw() +
-  theme(legend.position="", axis.text.x=element_text(angle=45, hjust=1))
-```
-
-```{r}
-ggplot(data = userprofile) +
-  geom_bar(aes(x = drink_level, fill = drink_level), col = "black", alpha = 0.5) +
-  labs(x = "", y = "frequency") +
-  theme_bw() +
-  theme(legend.position="", axis.text.x=element_text(angle=45, hjust=1))
+  theme(legend.position="", axis.text.x=element_text(angle=45, hjust=1)) 
 ```
 
 
-## Answering questions
+### Answering questions
 
 Now we are ready to combine all the tables and use them to answer questions. 
 
-Which cuisine is the best restaurant? (in terms of average rating)
+#### Which type of food is booked in the best restaurant? 
+
+The type of cuisine is contained in the table called `chefmozcuisine` while the restaurant rated the best is contained in the table called `rating_final`.
+
+First we need to aggregate the `rating_final` dataset by restaurant id. Then we calculate the average rating received by each restaurant and we sort by decreasing order. Notice that as there are some restaurants that have few reviews, we focus only on restaurants that received at least 20 reviews:
+
 
 ```{r}
-tab <- rating_final %>% 
+tab1 <- rating_final %>% 
   group_by(placeID) %>%
   summarise_at(vars(rating, food_rating, service_rating), 
                funs(mean, n())) %>%
   filter(rating_n >= 20) %>%
-  arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
-  left_join(chefmozcuisine) 
+  arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) 
+```
 
-knitr::kable(tab %>%
-    head(10), "html") %>%
+Last, using the restaurant id that univocally identifies restaurants, we add the food type:
+
+```{r}
+tab1_best <- tab1 %>%
+  left_join(chefmozcuisine) 
+```
+
+And three best rated restaurants are the following:
+
+```{r, echo = FALSE}
+
+knitr::kable(tab1_best %>%
+    head(3), "html") %>%
   kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 
 ```
 
 
-What is the best restaurant for smokers?
+
+#### What is the best restaurant for smokers?
+
+The answer to this question is similar to that above, but we need to filter by smoking habits. So we start by userprofile dataset and focus only on those users who smoke. Then we add all the reviews of those users by joining by `userID` which is present in both datasets. Then, we proceed as above: we group by restaurant id, we calculate the average rating, we sort by descending order and add information on the cuisine type by joining by restaurant id. This time we focus only on those restaurants that received at least 5 reviews: 
 
 ```{r}
-tab <- userprofile%>% 
+tab2 <- userprofile%>% 
   filter(smoker == "true") %>%
   left_join(rating_final) %>%
   group_by(placeID) %>%
@@ -136,16 +161,22 @@ tab <- userprofile%>%
   filter(rating_n >= 5) %>%
   arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
   left_join(chefmozcuisine) 
+```
 
-knitr::kable(tab %>%
-    head(10), "html") %>%
+The best three places to eat for smokers seems to be more casual places, like pubs, fast food and places with international food:
+
+```{r, echo = FALSE}
+knitr::kable(tab2 %>%
+    head(4), "html") %>%
   kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 ```
 
-What is the best restaurant for people with a low budget?
+#### What is the best restaurant for people with a low budget?
+
+Here the routine to get the answer is very similar from above, except that we focus on users that stated to have a low budget:
 
 ```{r}
-tab <- userprofile %>% 
+tab3 <- userprofile %>% 
   filter(budget == "low") %>%
   left_join(rating_final) %>%
   group_by(placeID) %>%
@@ -155,8 +186,41 @@ tab <- userprofile %>%
   filter(rating_n >= 5) %>%
   arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
   left_join(chefmozcuisine) 
+```
 
-knitr::kable(tab %>%
-    head(10), "html") %>%
+The favourite places to eat for people with low budget are similar to those of smokers:
+
+```{r, echo = FALSE}
+knitr::kable(tab3 %>%
+    head(3), "html") %>%
   kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
 ```
+
+Let us compare the answers of the three questions so that we can answer a fourth question: do smokers and low budget users have different tastes than overall users?
+
+Without using any statistical tests, let us just give a quick qualitative answer. Let us put together the results we found in the above three questions:
+
+```{r}
+tab1_best <- tab1_best %>% select(placeID_overall = placeID, Rcuisine_overall = Rcuisine) %>% head(4)
+tab2 <- tab2 %>% select(placeID_smoker = placeID, Rcuisine_smoker = Rcuisine) %>% head(4)
+tab3 <- tab3 %>% select(placeID_low = placeID, Rcuisine_low = Rcuisine) %>% head(4)
+
+tab_final <- bind_cols(tab1_best, tab2, tab3)
+
+```
+
+
+```{r, echo = FALSE}
+knitr::kable(tab_final, "html") %>%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = "center")
+```
+
+There seems to be some similarities in the tastes of smokers and of low budget users and they also do not seem too different from everyone's tastes.
+
+
+## Conclusion
+
+One of the things I like the most about `dplyr`, is that it allows to work with different tables, hence to keep the data tidy and organised. 
+
+This example could be further developed to create an interactive report (like a Shiny app), where, before going out to dinner, people can browse best restaurants according to their needs. I believe tripadvisor or other sites for reviewing restaurants work similarly to this!
+
