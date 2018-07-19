@@ -26,3 +26,14 @@ navbar:
         href: lln.html
       - text: "The Central Limit Theorem"  
         href: tcl.html
+  right:
+    - text: "Contact me"
+      icon: fa-envelope-o
+      href: mailto:furfaro.emanuela@gmail.com                   # CHANGE HERE 
+    - text: "GitHub"
+      icon: fa-github
+      href: https://github.com/emanuelaf       # CHANGE HERE 
+output:
+  html_document:
+    theme: flatly
+    css: style.css
