@@ -8,4 +8,4 @@ I like to see myself as a sort of _data detective_, where I use data to answer q
 
 As I do lots of teaching as well as lots of data analysis with `R`, I decided to create this website in which I collect and share some projects, some code and some of my lessons, that I hope may be of use to others.
 
-If you happen to be in Milan, you can find me every monday at [tango macao](http://www.macaomilano.org/spip.php?rubrique22), where we can talk about data analysis and statistics in between tandas ;) 
+If you happen to be in Milan, you can find me every monday night at [tango macao](http://www.macaomilano.org/spip.php?rubrique22), where we can talk about data analysis and statistics in between tandas ;) 

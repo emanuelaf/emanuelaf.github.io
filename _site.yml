@@ -3,8 +3,6 @@ output_dir: "."
 navbar:
   title: "Emanuela Furfaro"
   left:
-   - text: "Home"
-     href: index.html
    - text: "Data analysis"
      menu:
       - text: "The Data Workflow"
@@ -30,8 +28,11 @@ navbar:
     - text: "GitHub"
       icon: fa-github
       href: https://github.com/emanuelaf
-    - text: "Linkedin"
+    - text: "Email"
       icon: fa-envelope-o
+      href: mailto:furfaro.emanuela@gmail.com
+    - text: "Linkedin"
+      icon: fa-linkedin
       href: https://www.linkedin.com/in/emanuela-f/
 output:
   html_document:
