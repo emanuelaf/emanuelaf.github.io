@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Time series analysis: Predicting Sales</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Emanuela Furfaro</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data-an-workflow.html">The Data Workflow</a>
+    </li>
+    <li>
+      <a href="elections2.html">Elections</a>
+    </li>
+    <li>
+      <a href="restaurants.html">Restaurant rating</a>
+    </li>
+    <li>
+      <a href="pred-sales.html">Predicting Sales</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Visualisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="age-pyramid.html">Age pyramid</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Statistics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Asymptotic Theorems</li>
+    <li>
+      <a href="lln.html">The Law of Large numbers</a>
+    </li>
+    <li>
+      <a href="tcl.html">The Central Limit Theorem</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/emanuelaf">
+    <span class="fa fa-github"></span>
+     
+    GitHub
+  </a>
+</li>
+<li>
+  <a href="mailto:furfaro.emanuela@gmail.com">
+    <span class="fa fa-envelope-o"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/emanuela-f/">
+    <span class="fa fa-linkedin"></span>
+     
+    Linkedin
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Time series analysis: Predicting Sales</h1>
+
+</div>
+
+
+<p>In this article, I focus on time series analysis and their forecast with <code>R</code>. I will use two times series:</p>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://datamarket.com/data/set/22r0/sales-of-shampoo-over-a-three-year-period#!ds=22r0&amp;display=line">shampoo sales</a></p></li>
+<li><p><a href="https://datamarket.com/data/set/22kw/advertising-and-sales-data-36-consecutive-monthly-sales-and-advertising-expenditures-of-a-dietary-weight-control-product#!ds=22kw!2ekl&amp;display=line">advertising and sales data</a></p></li>
+</ol>
+<p>Both were downloaded from <a href="https://datamarket.com/data/list/?q=cat:edb%20provider:tsdl">datamarket website</a>.</p>
+<p>First we need to load the packages that will be used throughout the analysis. These are the usual <code>tidyverse</code>, for data manipulation and data visualisation, <code>lubridate</code> and <code>stringr</code> packages, for dealing with dates and strings, and the package <code>forecast</code> specific for time series analysis:</p>
+<pre class="r"><code>require(tidyverse)
+require(lubridate)
+require(stringr)
+require(forecast)</code></pre>
+<div id="shampoo-sales" class="section level1">
+<h1>1. Shampoo Sales</h1>
+<p>Let us first focus on shampoo sales. This dataset contains data on the sales of shampoo over a three year period. I downloaded the data and saved it on github so that it can be accesed straight from github and parsed to <code>R</code> as follows:</p>
+<pre class="r"><code>urlfile &lt;- &quot;https://raw.githubusercontent.com/emanuelaf/emanuelaf.github.io/master/data/sales-of-shampoo.csv&quot;
+shampoo_sales &lt;- read_csv(urlfile)</code></pre>
+<div id="data-preparation-and-manipulation" class="section level2">
+<h2><em>Data Preparation and Manipulation</em></h2>
+<p>The dataset we imported contains two variables and 36 observations:</p>
+<?xml version="1.0" encoding="UTF-8"?>
+<table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Month
+</th>
+<th style="text-align:right;">
+Sales of shampoo over a three year period
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1-01
+</td>
+<td style="text-align:right;">
+266.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1-02
+</td>
+<td style="text-align:right;">
+145.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1-03
+</td>
+<td style="text-align:right;">
+183.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1-04
+</td>
+<td style="text-align:right;">
+119.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1-05
+</td>
+<td style="text-align:right;">
+180.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1-06
+</td>
+<td style="text-align:right;">
+168.5
+</td>
+</tr>
+</tbody>
+</table>
+<p>When it comes to time series, the main data manipulation issue is usually related to the date and time format. Here the variable that indicates time is called <code>Month</code> and it is composed by a first part, before the <code>-</code>, that seems to indicate the year (year 1, year 2, year 3) and a second part, after the <code>-</code>, that indicates the month (month 1, month 2, etc). Did the software understand this format or did it not? We ask <code>R</code> for the format of the <code>Month</code> variable:</p>
+<pre class="r"><code>class(shampoo_sales$Month)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<p>And the answer is that <code>R</code> did not quite get what we are talking about. <code>R</code> believes it is a character.</p>
+<p>In order to make sure that the software will treat <code>Month</code> the way it should, let us do some small manipulations using the package <code>lubridate</code>. From my knowledge there is no year-month format in <code>R</code>, so once we tell <code>R</code> that we are dealing with dates, it will automatically add the day:</p>
+<pre class="r"><code>shampoo_sales &lt;- shampoo_sales %&gt;%
+  rename(time = Month, sales = `Sales of shampoo over a three year period`) %&gt;%
+  mutate(time = paste0(&quot;0&quot;, time)) %&gt;%
+  mutate(time = as.Date(parse_date_time(time, &quot;%y%m&quot;))) %&gt;% 
+  na.omit() 
+
+knitr::kable(head(shampoo_sales), &quot;html&quot;) %&gt;%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = &quot;center&quot;)</code></pre>
+<?xml version="1.0" encoding="UTF-8"?>
+<table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+time
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+2001-01-01
+</td>
+<td style="text-align:right;">
+266.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2001-02-01
+</td>
+<td style="text-align:right;">
+145.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2001-03-01
+</td>
+<td style="text-align:right;">
+183.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2001-04-01
+</td>
+<td style="text-align:right;">
+119.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2001-05-01
+</td>
+<td style="text-align:right;">
+180.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2001-06-01
+</td>
+<td style="text-align:right;">
+168.5
+</td>
+</tr>
+</tbody>
+</table>
+<p>Now the data seems ready for some visualisation and modelling.</p>
+</div>
+<div id="data-analysis" class="section level2">
+<h2><em>Data analysis</em></h2>
+<div id="data-visualisation" class="section level3">
+<h3>Data visualisation</h3>
+<p>First let us just plot the time series, showing the time on the x axis and the amount of sales on the y axis:</p>
+<pre class="r"><code>ggplot(shampoo_sales, aes(x = time, y = sales)) +
+  geom_line(col = &quot;hotpink&quot;) + ylim(0, 800) +
+  scale_x_date(date_labels = &quot;%y %b&quot;, date_breaks = &quot;2 month&quot;) +
+  theme_bw() + theme(legend.title = element_blank(),
+                     axis.text.x  = element_text(angle=45, vjust=0.5))</code></pre>
+<p><img src="pred-sales_files/figure-html/unnamed-chunk-6-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>Observing the above plot we can see that there seems to be fluctuations but there is an increasing linear trend. Also, it seems that knowing what happened at time <span class="math inline">\(t\)</span> may be informative on what will happen at time <span class="math inline">\(t+h\)</span>. But how far does the dependence go? Shampoo sales in May, depend only on those of April, or do they depend on the sales over the whole season? Or do they just depend on the sales of May in the previous year?</p>
+<p>In order to answer such questions, we need to build a model that is able to deal with such dependencies.</p>
+</div>
+<div id="modelling-time-series" class="section level3">
+<h3>Modelling time series</h3>
+<p>Standard statistical models assume indipendence of observations. In time series this assumption does not hold. What we want to model in time series is such dependence as the history untill time <span class="math inline">\(t\)</span> is the only thing we have to predict what will happen at time <span class="math inline">\(t+k\)</span>. We call such dependence <em>autocorrelation</em> meaning that each observation is related to itself at the previous time. If there is autocorrelation, we need to include the dependent variable suitably lagged as predictive variables in the model.</p>
+<p>The models used to model time series are ARIMA models. ARIMA models are the most general class of models for forecasting time series. They have three components:</p>
+<ul>
+<li>AR: the autoregressive component which includes lags of the dependent variable as predictive variables in the model</li>
+<li>I : the integration component which may be needed in order to obtain stationary (note that a series is stationary if it has the same statistical properties throughout time, i.e. same variance and mean)</li>
+<li>MA: the moving average component that means that lags of the errors are included in the model</li>
+</ul>
+<p>In general then, an ARIMA model can be considered as a special type of regression model in which the dependent variable has been stationarized (if necessary through the I-component) and the independent variables are all lags of the dependent variable (the AR-component) and/or lags of the errors (the MA-component).</p>
+<p>In general a model with AR(p) and MA(q) looks like this:</p>
+<p><span class="math display">\[
+Y_t = (\alpha_1 \cdot Y_{t-1} + ... \alpha_p \cdot Y_{t-p} ) + \epsilon_t + (\theta_1 \epsilon_{t-1} + ... \theta_q \epsilon_{t-q})
+\]</span></p>
+<p>While if we add the integration component of order <span class="math inline">\(h\)</span> for reaching stationarity, we model <span class="math inline">\(Y_t - Y_{t-1} ... - Y_{t-h}\)</span>.</p>
+<p>In addition to such components, there may be drifts that interpret a linar trend and/or exogenous variables that may help the prediction.</p>
+<p>Now, back to our example, let us look at the autocorrleation plots:</p>
+<pre class="r"><code>par(mfrow = c(1,2))
+acf(as.ts(shampoo_sales$sales), main = &quot;Sales&quot;)
+pacf(as.ts(shampoo_sales$sales), main = &quot;Sales&quot;)</code></pre>
+<p><img src="pred-sales_files/figure-html/unnamed-chunk-7-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>The first plot shows the autocorrelations. Each observation seems to be fairly correlated with the previous 4-5 observations. The partial autocorrelation at lag <span class="math inline">\(k\)</span> (represented in the second plot) is the autocorrelation between <span class="math inline">\(Y_t\)</span> and <span class="math inline">\(Y_{t−k}\)</span> not accounting for the other lags. Notice that by looking at this plot, it seems that the autocorrelation is only with the observation at time <span class="math inline">\(t-1\)</span> and maybe <span class="math inline">\(t-2\)</span>.</p>
+<p>From the time series plot in figure 1, we also expect to find a drift, i.e. some sort of linear trend component. Moreover, looking at figure 1, the time series did not seem stationary, i.e. the mean did not seem to be constant throughout time.</p>
+<p>Hence, we expect the software will suggest to use an ARIMA model with an autoregressive component of order 1 or 2, no moving average component, a stationarity adjustment and a drift.</p>
+<p>The <code>forecast</code> package in <code>R</code> contains a very useful function called <code>auto.arima</code> which helps us select the best ARIMA model. More specifically, it searches over all possible models within the order constraints provided and it returns the best ARIMA model according to AIC or BIC value. In our case, we will not set any contrainsts hence using the default:</p>
+<pre class="r"><code>arima1 &lt;- auto.arima(as.ts(shampoo_sales$sales))
+arima1</code></pre>
+<pre><code>## Series: as.ts(shampoo_sales$sales) 
+## ARIMA(2,1,0) with drift 
+## 
+## Coefficients:
+##           ar1      ar2    drift
+##       -1.0223  -0.3655  11.6504
+## s.e.   0.1674   0.1670   4.9068
+## 
+## sigma^2 estimated as 5033:  log likelihood=-197.81
+## AIC=403.63   AICc=404.96   BIC=409.85</code></pre>
+<p>The model <code>R</code> found is the one we expected from the graphical analysis: there is an autorogressive component of order 2, no moving average component and a drift.</p>
+</div>
+</div>
+<div id="forecasting" class="section level2">
+<h2><em>Forecasting</em></h2>
+<p>When we do prediction and forecasting we do not have information on the whole time series: we have observed up to time <span class="math inline">\(t\)</span> and we want to forecast ahead of <span class="math inline">\(t+k\)</span>.</p>
+<p>Suppose that we will use the model to predict one month at the time. In order to evaluate the performance of the model we split the dataset into a training set (with for example the first 30 observations), we fit the model (that will probably look like the one above) and then predict the 31st observation. Then we run the model on the first 31 observations, predict the 32nd and so on. If this works, then we may be quite sure that if we predict the 37th observation, we will not make a much larger error.</p>
+<p>So first we split the dataset, allowing for a varying index:</p>
+<pre class="r"><code>train_index &lt;- 30
+n_total &lt;- nrow(shampoo_sales)
+shampoo_sales_train1 &lt;- shampoo_sales[1:(train_index),]
+shampoo_sales_test &lt;- shampoo_sales[(train_index+1):n_total,]
+predicted &lt;- numeric(n_total-train_index)</code></pre>
+<p>Then we apply a for cycle that iterates model and estimates one month ahead:</p>
+<pre class="r"><code>for (i in 1:(n_total-train_index)) {
+  shampoo_sales_train &lt;- shampoo_sales[1:(train_index-1+i),]
+  arima_model &lt;- auto.arima(as.ts(shampoo_sales_train$sales))
+  pred &lt;- forecast(arima_model, 1)
+  predicted[i] &lt;- pred$mean
+}</code></pre>
+<p>We saved all the results in a vector that needs to be combined with the initial dataset containing all the real values. We hence build a dataset that contains the time, the observed data and the predicted data:</p>
+<pre class="r"><code>df_pred &lt;- tibble(obs = c(shampoo_sales_train1$sales, shampoo_sales_test$sales), 
+                  predicted = c(shampoo_sales_train1$sales, predicted), 
+                  time = shampoo_sales$time) </code></pre>
+<p>And then we plot the predictions and the observed values. :</p>
+<pre class="r"><code>ggplot(gather(df_pred, obs_pred, value, -time) %&gt;% 
+         mutate(obs_pred = factor(obs_pred, levels = c(&quot;predicted&quot;, &quot;obs&quot;))), 
+       aes(x = time, y = value, col = obs_pred, linetype = obs_pred)) +
+  geom_line() +
+  xlab(&quot;&quot;) + ylab(&quot;&quot;) +
+  scale_color_manual(values=c(&quot;black&quot;, &quot;hotpink&quot;)) +
+  scale_linetype_manual(values=c(2, 1)) +
+  scale_x_date(date_labels = &quot;%y %b&quot;, date_breaks = &quot;2 month&quot;) +
+  theme_bw() + theme(legend.title = element_blank(),
+                     axis.text.x  = element_text(angle=45, vjust=0.5))</code></pre>
+<p><img src="pred-sales_files/figure-html/unnamed-chunk-12-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>The predicted values do follow the general increasing trend but there is still discrepancies. However as we have no additional information other than the time series itself, this is may be the best we can do.</p>
+</div>
+</div>
+<div id="sales-forecasting-using-exogenous-covariates" class="section level1">
+<h1>2. Sales forecasting using exogenous covariates</h1>
+<p>In this second part of the article we work on a dataset containing 36 consecutive monthly sales and advertising expenditures of a dietary weight control product. The data was downloaded from <a href="https://datamarket.com/data/list/?q=cat:edb%20provider:tsdl">datamarket website</a> and it is now available straight from github and can be parsed to <code>R</code> as follows:</p>
+<pre class="r"><code>urlfile &lt;- &quot;https://raw.githubusercontent.com/emanuelaf/emanuelaf.github.io/master/data/advertising-and-sales-data-36-co.csv&quot;
+ads_sales &lt;- read_csv(urlfile)</code></pre>
+<p>Differently from before, we have exogenous information: we have data on advertising expenditures.</p>
+<div id="data-preparation-and-manipulation-1" class="section level2">
+<h2><em>Data Preparation and Manipulation</em></h2>
+<p>The imported dataset looks like this:</p>
+<?xml version="1.0" encoding="UTF-8"?>
+<table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Month
+</th>
+<th style="text-align:right;">
+Advertising
+</th>
+<th style="text-align:right;">
+Sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1-01
+</td>
+<td style="text-align:right;">
+12.0
+</td>
+<td style="text-align:right;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1-02
+</td>
+<td style="text-align:right;">
+20.5
+</td>
+<td style="text-align:right;">
+16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1-03
+</td>
+<td style="text-align:right;">
+21.0
+</td>
+<td style="text-align:right;">
+18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1-04
+</td>
+<td style="text-align:right;">
+15.5
+</td>
+<td style="text-align:right;">
+27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1-05
+</td>
+<td style="text-align:right;">
+15.3
+</td>
+<td style="text-align:right;">
+21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1-06
+</td>
+<td style="text-align:right;">
+23.5
+</td>
+<td style="text-align:right;">
+49
+</td>
+</tr>
+</tbody>
+</table>
+<p>Hence we have three variables containing information about the time stamp, the advertising expenditure and the sales which will be the dependent variable.</p>
+<p>As mentioned earlier, the first thing to do is to make sure that the date format is correct:</p>
+<pre class="r"><code>class(ads_sales$Month)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<p>As in the above example, <code>R</code> believes that the date variable is a character. Again, we need to use <code>lubridate</code> for fixing it:</p>
+<pre class="r"><code>ads_sales &lt;- ads_sales %&gt;%
+  rename(time = Month) %&gt;%
+  mutate(time = paste0(&quot;0&quot;, time)) %&gt;%
+  mutate(time = as.Date(parse_date_time(time, &quot;%y%m&quot;))) %&gt;% 
+  na.omit() 
+
+knitr::kable(head(shampoo_sales), &quot;html&quot;) %&gt;%
+  kableExtra::kable_styling(full_width = F, font_size = 11, position = &quot;center&quot;)</code></pre>
+<?xml version="1.0" encoding="UTF-8"?>
+<table class="table" style="font-size: 11px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+time
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+2001-01-01
+</td>
+<td style="text-align:right;">
+266.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2001-02-01
+</td>
+<td style="text-align:right;">
+145.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2001-03-01
+</td>
+<td style="text-align:right;">
+183.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2001-04-01
+</td>
+<td style="text-align:right;">
+119.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2001-05-01
+</td>
+<td style="text-align:right;">
+180.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2001-06-01
+</td>
+<td style="text-align:right;">
+168.5
+</td>
+</tr>
+</tbody>
+</table>
+<p>Now the data seems ready for some visualisation and modelling.</p>
+</div>
+<div id="data-analysis-1" class="section level2">
+<h2><em>Data analysis</em></h2>
+<div id="data-visualisation-1" class="section level3">
+<h3>Data Visualisation</h3>
+<p>Let us start by plotting the time series, showing the time on the x axis and the amount of sales on the y axis:</p>
+<pre class="r"><code>p1 &lt;- ggplot(gather(ads_sales, type, value, -time) %&gt;% 
+               mutate(type = factor(type, levels = c(&quot;Sales&quot;, &quot;Advertising&quot;))), 
+             aes(x = time, y = value, col = type)) +
+  geom_line() +   
+  xlab(&quot;&quot;) + ylab(&quot;&quot;) +
+  scale_color_manual(values=c(&quot;hotpink&quot;, &quot;orange&quot;)) +
+  scale_x_date(date_labels = &quot;%y %b&quot;, date_breaks = &quot;2 month&quot;) +
+  theme_bw() + theme(legend.title = element_blank(),
+                     axis.text.x  = element_text(angle=45, vjust=0.5))
+p1  </code></pre>
+<p><img src="pred-sales_files/figure-html/unnamed-chunk-17-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>Let us look at the plot focusing on sales. There seems to be systematic ups and downs during specific times of the year: winter and autumn are characterised by very little sales, with a down peak occuring always in december, while spring and summer are good times for sales.</p>
+<p>It also seems that advertisments peaks conicide with sales peaks, suggesting that advertisements may be related to sales increase. However, as we are looking at a dietary product this would mainly be advertised in spring and summer, when people are more worried about their body shape. Even if you wouldn’t advertise it, people may go and buy it during those months as they want to get ready for summer! This needs to be investigated by building a statistical model.</p>
+<p>Moreover I expect this time series to be stationary as, at first (human!) sight the average and variance seem constant throughout time.</p>
+</div>
+<div id="modelling-time-series-1" class="section level3">
+<h3>Modelling time series</h3>
+<p>In order to find out what is responsable for what (seasonality or ads?), we need to build a model. As explained earlier, when we work with time series, we use ARIMA models.</p>
+<p>Before we apply <code>auto.arima</code> function, that searches the best ARIMA model, let us look at the autocorrleation plots:</p>
+<pre class="r"><code>par(mfrow = c(1,2))
+acf(as.ts(ads_sales$Sales), main = &quot;Sales&quot;)
+pacf(as.ts(ads_sales$Sales), main = &quot;Sales&quot;)</code></pre>
+<p><img src="pred-sales_files/figure-html/unnamed-chunk-18-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>It looks like the dependent variable only slightly depends on the previous observation, but I this dependence does not seem significant. The autocorrolation plot shows a fast decreasing in autocorrelation, suggesting the presence of a moving average component.</p>
+<p>Moreover, there seems to be a slight seasonality: in fact the autocorrelation plots exhibit negative autocorrelation with observations around lag 6 and positive autocorrelation with observations at around lag 12. This suggests that, for example, that the behaviour of sales in june is opposite to that of sales in december-january but is similar to that of sales around june of the year before. Such seasonality is however very slight so I don’t think <code>auto.arima</code> function will find it statistically significant.</p>
+<p>As we did earlier in this article, we use the <code>auto.arima</code> function contained in the <code>forecast</code> package to find the best model:</p>
+<pre class="r"><code>arima1 &lt;- auto.arima(as.ts(ads_sales$Sales))
+arima1</code></pre>
+<pre><code>## Series: as.ts(ads_sales$Sales) 
+## ARIMA(0,0,1) with non-zero mean 
+## 
+## Coefficients:
+##          ma1     mean
+##       0.3532  28.1789
+## s.e.  0.1584   3.8999
+## 
+## sigma^2 estimated as 320.7:  log likelihood=-153.99
+## AIC=313.98   AICc=314.73   BIC=318.73</code></pre>
+<p>The chosen model, which was selected based on AIC or BIC index, does not contain the AR component (as mentioned earlier, the plot showed only a very slight dependence) and it does not contain the I-component (meaning that the series is stationary, as expected from the time series plot). It onlt contains a moving average component added.</p>
+<p>In order to qualitatively assess the goodness of the above model, let us compare the predicted values with the observed ones:</p>
+<pre class="r"><code>df &lt;- tibble(observed = ads_sales$Sales, predicted = as.numeric(arima1$fitted), time = ads_sales$time) %&gt;% 
+  mutate(abs_error = abs((observed - predicted)/observed*100))
+
+
+ggplot(gather(df %&gt;% select(-abs_error), obs_pred, value, -time), 
+       aes(x = time, y = value, col = obs_pred)) +
+  geom_line() +
+  xlab(&quot;&quot;) + ylab(&quot;&quot;) +
+  scale_color_manual(values=c(&quot;black&quot;, &quot;hotpink&quot;)) +
+  scale_x_date(date_labels = &quot;%y %b&quot;, date_breaks = &quot;2 month&quot;) +
+  theme_bw() + theme(legend.title = element_blank(),
+                     axis.text.x  = element_text(angle=45, vjust=0.5))</code></pre>
+<p><img src="pred-sales_files/figure-html/unnamed-chunk-20-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>It seems that the model cannot reach either the high peaks nor the low ones. This is fairly common when the arima model only uses information coming from the time series itself. However in this case we do have exogenous info, that is the investments in advertisment. Moreover, there are recurrent peaks in spring/summer time and down peaks in autumn/september, although they do not represent a proper seasonality. Hence we may add dummy variable for autumn/winter that forces the model to predict different values when the dummy is positive.</p>
+<p>First let us add a variable that indicates autumn and winter:</p>
+<pre class="r"><code>ads_sales &lt;- ads_sales %&gt;%
+  mutate(winter = as.factor(ifelse(month(time) &gt;= 9 | month(time) &lt;= 2, 1, 0)))</code></pre>
+<p>And now let us add this variable, together with the advertisment expenditure, in the arima model. This can easily be done using the parameter <code>xreg</code> of the <code>auto.arima</code> function:</p>
+<pre class="r"><code>arima2 &lt;- auto.arima(as.ts(ads_sales$Sales), 
+                     xreg = cbind(ads_sales$Advertising, ads_sales$winter))</code></pre>
+<p>Predicted values according to the new model are then plotted with the usual procedure:</p>
+<pre class="r"><code>df &lt;- tibble(observed = ads_sales$Sales, predicted = as.numeric(arima2$fitted), time = ads_sales$time) %&gt;% 
+  mutate(abs_error = abs((observed - predicted)/observed*100))
+
+ggplot(gather(df %&gt;% select(-abs_error), obs_pred, value, -time), 
+       aes(x = time, y = value, col = obs_pred)) +
+  geom_line() +
+  xlab(&quot;&quot;) + ylab(&quot;&quot;) +
+  scale_color_manual(values=c(&quot;black&quot;, &quot;hotpink&quot;)) +
+  scale_x_date(date_labels = &quot;%y %b&quot;, date_breaks = &quot;2 month&quot;) +
+  theme_bw() + theme(legend.title = element_blank(),
+                     axis.text.x  = element_text(angle=45, vjust=0.5))</code></pre>
+<p><img src="pred-sales_files/figure-html/unnamed-chunk-23-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>It does seem that things go much better! However the fitted model is no more an ARIMA:</p>
+<pre class="r"><code>arima2</code></pre>
+<pre><code>## Series: as.ts(ads_sales$Sales) 
+## Regression with ARIMA(0,0,0) errors 
+## 
+## Coefficients:
+##        xreg1     xreg2
+##       1.8062  -10.4637
+## s.e.  0.1850    2.9260
+## 
+## sigma^2 estimated as 176.1:  log likelihood=-143.13
+## AIC=292.26   AICc=293.01   BIC=297.01</code></pre>
+<p>In fact there is no autoregressive component and no moving average component. What happened then? ARIMA models are useful when we work with observations that are correlated, i.e. when <span class="math inline">\(y_t\)</span> is correlated with <span class="math inline">\(y_{t-k}\)</span>. If we include a regressor <span class="math inline">\(X\)</span>, we are wondering whether <span class="math inline">\(y_t | x_{t}\)</span> is correlated with <span class="math inline">\(y_{t-k} | x_{t-k}\)</span> (with <span class="math inline">\(k &gt; 0\)</span>). Saying that there is no autoregressive componenent means that given <span class="math inline">\(X\)</span>, <span class="math inline">\(y_t\)</span> does no more depend on <span class="math inline">\(y_{t-k}\)</span>. In our case this means that if we condition on advertisments, sales in month <span class="math inline">\(t\)</span> are independent of sales in the previous months.</p>
+</div>
+</div>
+<div id="prediction-and-forecasting" class="section level2">
+<h2><em>Prediction and forecasting</em></h2>
+<p>As explained in example <em>1)</em>, let us first split the dataset, allowing for a varying index and then we apply a for cycle that iterates model and estimates:</p>
+<pre class="r"><code>train_index &lt;- 30
+n_total &lt;- nrow(ads_sales)
+ads_sales_train1 &lt;- ads_sales[1:(train_index),]
+ads_sales_test &lt;- ads_sales[(train_index+1):n_total,]
+predicted &lt;- numeric(n_total-train_index)
+
+for (i in 1:(n_total-train_index)) {
+  ads_sales_train &lt;- ads_sales[1:(train_index-1+i),]
+  arima_model &lt;- auto.arima(as.ts(ads_sales_train$Sales), 
+                     xreg = cbind(ads_sales_train$winter, ads_sales_train$Advertising))
+  pred &lt;- forecast(arima_model, 1, xreg = cbind(ads_sales_test$winter[i], 
+                                                ads_sales_test$Advertising[i]))
+  predicted[i] &lt;- pred$mean
+}</code></pre>
+<p>Now let us plot the predictions:</p>
+<pre class="r"><code>df_pred &lt;- tibble(obs = c(ads_sales_train1$Sales, ads_sales_test$Sales), 
+                  predicted = c(ads_sales_train1$Sales, predicted), 
+                  time = ads_sales$time) 
+
+ggplot(gather(df_pred, obs_pred, value, -time) %&gt;% 
+         mutate(obs_pred = factor(obs_pred, levels = c(&quot;predicted&quot;, &quot;obs&quot;))), 
+       aes(x = time, y = value, col = obs_pred, linetype = obs_pred)) +
+  geom_line() +
+  xlab(&quot;&quot;) + ylab(&quot;&quot;) +
+  scale_color_manual(values=c(&quot;hotpink&quot;, &quot;black&quot;)) +
+  scale_linetype_manual(values=c(2, 1)) +
+  scale_x_date(date_labels = &quot;%y %b&quot;, date_breaks = &quot;2 month&quot;) +
+  theme_bw() + theme_bw() + theme(legend.title = element_blank(),
+                                  axis.text.x  = element_text(angle=45, vjust=0.5))</code></pre>
+<p><img src="pred-sales_files/figure-html/unnamed-chunk-26-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>In this article, we have seen how to deal with time series and how to use an ARIMA model for forecasting. The general idea is that time series models use information coming from the time series itself, i.e. coming from the so far observed values. However such models may not be able to see and to model high and low peaks. Hence, we can use either exogenous variables or add dummies to somehow force the model to fine tune at specific times.</p>
+<p>Moreover, notice that I have used the same routine for collecting observed and predicted values and then plotting them. A good idea, to avoid replicating the code, may be that of creating a set of functions that do that.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
