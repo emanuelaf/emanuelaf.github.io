@@ -1,7 +1,7 @@
 name: "my-website"
 output_dir: "."
 navbar:
-  title: "Emanuela Furfaro"
+  title: "About this website"
   left:
    - text: "Data analysis"
      menu:
@@ -15,6 +15,10 @@ navbar:
         href: pred-sales.html
    - text: "Data Visualisation"
      menu:
+      - text: "ggplot basics"
+        href: ggplot.html
+      - text: "Annoying things to do with ggplot"
+        href: annoying-ggplot.html
       - text: "Age pyramid"
         href: age-pyramid.html
    - text: "Statistics"

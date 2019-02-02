@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Data visualisation with GGplot</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">About this website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data-an-workflow.html">The Data Workflow</a>
+    </li>
+    <li>
+      <a href="elections2.html">Elections</a>
+    </li>
+    <li>
+      <a href="restaurants.html">Restaurant rating</a>
+    </li>
+    <li>
+      <a href="pred-sales.html">Predicting Sales</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Visualisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ggplot.html">ggplot basics</a>
+    </li>
+    <li>
+      <a href="annoying-ggplot.html">Annoying things to do with ggplot</a>
+    </li>
+    <li>
+      <a href="age-pyramid.html">Age pyramid</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Statistics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Asymptotic Theorems</li>
+    <li>
+      <a href="lln.html">The Law of Large numbers</a>
+    </li>
+    <li>
+      <a href="tcl.html">The Central Limit Theorem</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/emanuelaf">
+    <span class="fa fa-github"></span>
+     
+    GitHub
+  </a>
+</li>
+<li>
+  <a href="mailto:furfaro.emanuela@gmail.com">
+    <span class="fa fa-envelope-o"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/emanuela-f/">
+    <span class="fa fa-linkedin"></span>
+     
+    Linkedin
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data visualisation with GGplot</h1>
+
+</div>
+
+
+<p><code>ggplot2</code> is a very popular <code>R</code> package for data visualisation. In addition to making nice and readable plots, the code is neat and clear which is something to be taken into account when writing code. My coding experience has actually changed since I started using it! In this post, I give some basics of ggplot2 along with some tips on when and why using specific plots either than others.</p>
+<div id="why-data-visualisation" class="section level1">
+<h1>Why data visualisation</h1>
+<p>Let us start with a common dataset in <code>R</code>, the datset <code>iris</code>. We import it:</p>
+<pre class="r"><code>require(ggplot2)
+require(dplyr)
+data(iris)</code></pre>
+<p>and quickly remind its structure:</p>
+<pre class="r"><code>str(iris)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    150 obs. of  5 variables:
+##  $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+##  $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+##  $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+##  $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+##  $ Species     : Factor w/ 3 levels &quot;setosa&quot;,&quot;versicolor&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<p>To understand what’s in our data, we could first just show some descriptive statistics. First we will see some overall statistics on the four numeric variables and then we will see how such statistics change in the three species:</p>
+<pre class="r"><code>petal_length_univ_stats &lt;- iris %&gt;%
+                                summarise(n = n(),
+                                min = min(Petal.Length),
+                                first_qu = quantile(Petal.Length, 0.25),
+                                mean = mean(Petal.Length),
+                                median = median(Petal.Length),
+                                third_qu = quantile(Petal.Length, 0.75),
+                                max = max(Petal.Length),
+                                sd = sd(Petal.Length))
+petal_length_univ_stats</code></pre>
+<pre><code>##     n min first_qu  mean median third_qu max       sd
+## 1 150   1      1.6 3.758   4.35      5.1 6.9 1.765298</code></pre>
+<p>From this first univariate analysis, we may notice that the range of the petal length goes from 1 mm to 6.9 mm and the distribution seems skewed towards right (mean lower than the median), hence may not be normal which is an essential feature for statistical inference.</p>
+<p>However, all what we observe may change according to the Species. In fact we are considering three species all at once, let us group by species and rerun the descritive statistics.</p>
+<pre class="r"><code>petal_length_bivariate&lt;- iris %&gt;%
+                                group_by(Species) %&gt;%
+                                summarise(n = n(),
+                                min = min(Petal.Length),
+                                first_qu = quantile(Petal.Length, 0.25),
+                                mean = mean(Petal.Length),
+                                median = median(Petal.Length),
+                                third_qu = quantile(Petal.Length, 0.75),
+                                max = max(Petal.Length),
+                                sd = sd(Petal.Length))
+petal_length_bivariate</code></pre>
+<pre><code>## # A tibble: 3 x 9
+##   Species        n   min first_qu  mean median third_qu   max    sd
+##   &lt;fct&gt;      &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 setosa        50   1        1.4  1.46   1.5      1.58   1.9 0.174
+## 2 versicolor    50   3        4    4.26   4.35     4.6    5.1 0.470
+## 3 virginica     50   4.5      5.1  5.55   5.55     5.88   6.9 0.552</code></pre>
+<p>Among the many things we could observe, notice that the range varies a lot accoring to the species (the smallest petal of versicolor and virginica are higher than the largest setosa flower!), and the mean and medians are very close to each other within each group.</p>
+<p>The observations we have done by looking at these two tables, may become clear also to people that think they don’t like numbers, if we show them a nice plot. Let us go through this visually with <code>ggplot2</code> then!</p>
+</div>
+<div id="univariate-analysis" class="section level1">
+<h1>Univariate analysis</h1>
+<div id="histogram" class="section level2">
+<h2>Histogram</h2>
+<p>One effective way to represent a numeric variable is with a histogram where we clearly see, for example the shape of the distribution: is the distribution bell-shaped? Is it skewed? And this can be observed by anyone, even by non-technicians.</p>
+<p>The first thing we need to tell ggplot is where it’s going to get the data from. In fact any plot in ggplot starts with <code>ggplot(data = mydata)</code>, no matter what you want to do next. In our case:</p>
+<pre class="r"><code>ggplot(iris)</code></pre>
+<p>Then we should tell ggplot what to take and where to place it. Species? Petal.Length? On the x-axis? On the y-axis? Well, if we do want to represent what’s in the table, we should start with Petal.Length. We do this using the <code>aes()</code> function that can be placed inside the <code>ggplot()</code> function:</p>
+<pre class="r"><code>ggplot(iris, aes(x = Petal.Length))</code></pre>
+<p>Ok, now it’s time to say what we want <code>ggplot</code> to draw. We want a histogram then:</p>
+<pre class="r"><code>ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram()</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>The <code>aes()</code> function (aesthetics) takes variables so if we want to customise, for example the colour of our plot, we can do outside <code>aes()</code>. There are three “colour” parameters. One is for the filling of the bars, one is for the trasparency of the filling of the bars and one is for the outer line:</p>
+<pre class="r"><code>ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram(fill = &quot;hotpink&quot;, alpha = 0.7, col = &quot;blue&quot;)</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>We can clearly see that the distribution is skewed towards the left, as mentioned by looking at the first table, because close to 1 there are lots of flowers with these tiny little petals, while the majority of the flowers are around 5. It’s just as if the distribution was “two-belled” shapes, as if the data came from different types of flowers, which is actually the case as we have different species.</p>
+<p>Note that this (as well as all the other “ggplots”) is the same as doing:</p>
+<pre class="r"><code>ggplot(iris) +
+  geom_histogram(aes(x = Petal.Length), fill = &quot;hotpink&quot;, alpha = 0.7, col = &quot;blue&quot;)</code></pre>
+<p>But if you specify <code>aes()</code> twice, the <code>x</code> that will be printed is the one specified the second time. In other words, if the <code>geom_*</code> function does not contain the value for <code>x</code> and eventually <code>y</code>, the function will look for such values in the above <code>ggplot()</code> function.</p>
+</div>
+<div id="boxplot" class="section level2">
+<h2>Boxplot</h2>
+<p>Another way to represent numeric data could be to use boxplots. In ggplot it’s easier to create a boxplot given a specific factor variable than to create it for univariate analysis like we are doing now. However, it may be useful in some situations, the function for boxplots is <code>geom_boxplot</code>. This time we need two esthetics: x and y. On the y we would have the values of the petal length, while on the x-axis ggplot expects us to give a factor variable. If we do not have one, like in this case, we just have to give it a constant, otherwise it will throw and error:</p>
+<pre class="r"><code>ggplot(iris, aes(y = Petal.Length, x = 0)) +
+  geom_boxplot(fill = &quot;hotpink&quot;, alpha = 0.7, col = &quot;blue&quot;)</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-10-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>There are other slightly different ways to do a boxplot. In our boxplot we just have most of the distribution in the actual box and whiskers just indicate there is more. The “two-belled” shape that we could see from the histogram is not highlighted. A violin plot for example, allows to better see the distribution of our variable:</p>
+<pre class="r"><code>ggplot(iris, aes(y = Petal.Length, x = 0)) +
+  geom_violin(fill = &quot;hotpink&quot;, alpha = 0.7, col = &quot;blue&quot;)</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Here hiding the x-ticks and the x-axis label may be important as we specified just to avoid errors in <code>ggplot()</code> but they do not help plot readbility. In order to customise the axis check out the article on <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
+</div>
+<div id="barplot" class="section level2">
+<h2>Barplot</h2>
+<p>So far we represented a numeric variable, but what about factor variables such as Species? We may want to represent it with a barplot:</p>
+<pre class="r"><code>ggplot(iris, aes(x = Species)) +
+  geom_bar(fill = &quot;hotpink&quot;, alpha = 0.7, col = &quot;blue&quot;)</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>There is the same number of observations in all species, so the plot is not very informative.</p>
+<p>There is no default function for making pi charts, but as many people like them, I will show how to do it in a separate post.</p>
+<p>What if we wanted to colour each bar with a different colour? This is fairly easy, we just add the parameter <code>fill = Species</code> as aesthetics and get rid of the colour specification in <code>geom_bar</code>:</p>
+<pre class="r"><code>ggplot(iris, aes(x = Species, fill = Species)) +
+  geom_bar()</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-13-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>In order to customise the colours check out the article on <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
+</div>
+</div>
+<div id="adding-more-variables-to-the-plot-bivariate-and-more-analysis" class="section level1">
+<h1>Adding more variables to the plot: Bivariate (and more!) analysis</h1>
+<p>As done in the introduction, we may want to visualise our data “given” a specific variable. For instance, just like we did with the initial descriptive tables, we may want to visualise the length of petals, given species, as we suspect that different species have diffent petal length.</p>
+<div id="histogram-1" class="section level2">
+<h2>Histogram</h2>
+<p>Let us first reproduce the histogram of petal length dividing the data by species. We could do this in many different ways. One way could just be colouring the histogram according to the species:</p>
+<pre class="r"><code>ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15) </code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-14-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>It is now very clear that setosa’s petals are much shorter than versicolor’s and virginicas’s. It is also clear that versicolor and virginica are fairly similar.</p>
+<p>When some species overlap, this plot is not very effective because bars may hide each other. One thing that I prefer is to use the <code>facet_grid</code> function that divide the data by <code>Species</code> and create one histogram for each species. In this case we could either use the colours or not:</p>
+<pre class="r"><code>ggplot(data = iris, aes(x = Petal.Length, fill = Species, col = Species)) +
+  geom_histogram(alpha = 0.7, bins = 15) +
+  facet_grid(rows = vars(Species))</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-15-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>To see how to customise colours and how to hide the legend, please refer to the article on <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
+</div>
+<div id="boxplot-1" class="section level2">
+<h2>Boxplot</h2>
+<p>A better way to visualise the shape of the distribution along with its quantiles is boxplots. The code for it is straightforward:</p>
+<pre class="r"><code>ggplot(data = iris, aes(x = Species, y = Petal.Length, fill = Species)) +
+  geom_boxplot(alpha = 0.7) </code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>This straight way shows that petal lengths overlap between virginica and setosa. More specifically, the top side of the box indicates the 0.75 percentile, i.e. the top 25%, while the lower side of the box indicates the 0.25 quantile, i.e. the lowest 25%. Hence, the 25% longest petals of versicolor overlap with the 25 % of the shortest petals of virginica. Even a non-expert eye can see it now that the statistics have been visualised :)</p>
+</div>
+<div id="scatterplot" class="section level2">
+<h2>Scatterplot</h2>
+<p>So far we have analysed one numeric characteristics, the length of petals, given the species. Suppose now we want to see how the length of petals covariates with another measure of the flowers size. For example, we expect longer petals to be also wider. We show thi using a scatterplot where we may represent, for instance, petal width on the x-axis and petal length on the y-axis:</p>
+<pre class="r"><code>ggplot(data = iris) +
+  geom_point(aes(x = Petal.Width, y = Petal.Length))</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>As there seems to a be a linear relationship between the two measures, let us also plot of a linear function, i.e. a regression function, that links the two quantities:</p>
+<pre class="r"><code>ggplot(data = iris) +
+  geom_point(aes(x = Petal.Width, y = Petal.Length)) +
+  geom_smooth(aes(x = Petal.Width, y = Petal.Length), method = &quot;lm&quot;, se = FALSE)</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-18-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>The <code>geom_smooth()</code> function adds a smoothing function to the plot. In particular we asked to use a linear model by specifying <code>lm</code> as a method and we asked not to show standard errors of the estimates by setting <code>se = FALSE</code>. In order to extract the equation of the linear function and to add other types of functions check out the article on <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
+<p>We could also visualise on the same plot a third dimension, for example species. We can do this by coloring points according to their species:</p>
+<pre class="r"><code>ggplot(data = iris) +
+  geom_point(aes(x = Petal.Width, y = Petal.Length, col = Species)) +
+  geom_smooth(aes(x = Petal.Width, y = Petal.Length), method = &quot;lm&quot;, se = FALSE)</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-19-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>And then we could add even a fourth dimension, by playing around with the size parameter. For example we could make larger dots when the <code>Sepal.Width</code> is larger:</p>
+<pre class="r"><code>ggplot(data = iris) +
+  geom_point(aes(x = Petal.Width, y = Petal.Length, col = Species, size = Sepal.Width)) +
+  geom_smooth(aes(x = Petal.Width, y = Petal.Length), method = &quot;lm&quot;, se = FALSE)</code></pre>
+<p><img src="ggplot_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>In this post I have given some basics of the <em>grammar of graphics</em>. There is a number of packages built on top of it to the extent that a whole website for <a href="http://www.ggplot2-exts.org/gallery/">ggplot extentions</a> exist! For more advanced ggplot2 and more plots customisation, read the article on <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
+<P ALIGN="RIGHT">
+<font size="3"> <em>This article was written by Emanuela Furfaro.</em></font>
+</P>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
