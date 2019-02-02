@@ -1,5 +1,5 @@
 ---
-title: "Data visualisation with GGplot"
+title: "Data visualisation with ggplot"
 ---
 
 ```{r setup, include=FALSE}
@@ -98,6 +98,8 @@ ggplot(iris, aes(x = Petal.Length)) +
 
 We can clearly see that the distribution is skewed towards the left, as mentioned by looking at the first table, because close to 1 there are lots of flowers with these tiny little petals, while the majority of the flowers are around 5. It's just as if the distribution was "two-belled" shapes, as if the data came from different types of flowers, which is actually the case as we have different species.
 
+Note that ggplot has a particular default _style_ for plots that includes a gray background and a grid. One may not like it and it is possible to change it by specifying a different _theme_. Check out the  [ggplot2 official website](https://ggplot2.tidyverse.org/reference/ggtheme.html) to browse the different themes or learn [how to make your own](https://emanuelaf.github.io/your-ggplot-theme.html).
+
 Note that this (as well as all the other "ggplots") is the same as doing:
 
 ```{r, fig.show = "hide"}
@@ -124,7 +126,7 @@ ggplot(iris, aes(y = Petal.Length, x = 0)) +
   geom_violin(fill = "hotpink", alpha = 0.7, col = "blue")
 ```
 
-Here hiding the x-ticks and the x-axis label may be important as we specified just to avoid errors in `ggplot()` but they do not help plot readbility. In order to customise the axis check out the article on [annoying things to do with ggplot](file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html).
+Here hiding the x-ticks and the x-axis label may be important as we specified just to avoid errors in `ggplot()` but they do not help plot readbility. In order to customise the axis check out the article on [annoying things to do with ggplot](https://emanuelaf.github.io/annoying-ggplot.html).
 
 ## Barplot
 
@@ -146,7 +148,7 @@ ggplot(iris, aes(x = Species, fill = Species)) +
   geom_bar()
 ```
 
-In order to customise the colours check out the article on [annoying things to do with ggplot](file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html).
+In order to customise the colours check out the article on [annoying things to do with ggplot](https://emanuelaf.github.io/annoying-ggplot.html).
 
 
 # Adding more variables to the plot: Bivariate (and more!) analysis
@@ -173,7 +175,7 @@ ggplot(data = iris, aes(x = Petal.Length, fill = Species, col = Species)) +
   facet_grid(rows = vars(Species))
 ```
 
-To see how to customise colours and how to hide the legend, please refer to the article on [annoying things to do with ggplot](file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html).
+To see how to customise colours and how to hide the legend, please refer to the article on [annoying things to do with ggplot](https://emanuelaf.github.io/annoying-ggplot.html).
 
 ## Boxplot
 
@@ -205,7 +207,7 @@ ggplot(data = iris) +
   geom_smooth(aes(x = Petal.Width, y = Petal.Length), method = "lm", se = FALSE)
 ```
 
-The `geom_smooth()` function adds a smoothing function to the plot. In particular we asked to use a linear model by specifying `lm` as a method and we asked not to show standard errors of the estimates by setting `se = FALSE`. In order to extract the equation of the linear function and to add other types of functions check out the article on [annoying things to do with ggplot](file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html).
+The `geom_smooth()` function adds a smoothing function to the plot. In particular we asked to use a linear model by specifying `lm` as a method and we asked not to show standard errors of the estimates by setting `se = FALSE`. In order to extract the equation of the linear function and to add other types of functions check out the article on [annoying things to do with ggplot](https://emanuelaf.github.io/annoying-ggplot.html).
 
 We could also visualise on the same plot a third dimension, for example species. We can do this by coloring points according to their species:
 
@@ -229,7 +231,7 @@ ggplot(data = iris) +
 
 # Conclusion
 
-In this post I have given some basics of the _grammar of graphics_. There is a number of packages built on top of it to the extent that a whole website for [ggplot extentions](http://www.ggplot2-exts.org/gallery/) exist! For more advanced ggplot2 and more plots customisation, read the article on [annoying things to do with ggplot](file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html).
+In this post I have given some basics of the _grammar of graphics_. There is a number of packages built on top of it to the extent that a whole website for [ggplot extentions](http://www.ggplot2-exts.org/gallery/) exist! For more advanced ggplot2 and more plots customisation, read the article on [annoying things to do with ggplot](https://emanuelaf.github.io/annoying-ggplot.html).
 
 
 

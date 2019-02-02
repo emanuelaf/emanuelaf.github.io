@@ -11,7 +11,7 @@
 
 
 
-<title>Data visualisation with GGplot</title>
+<title>Data visualisation with ggplot</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -264,7 +264,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Data visualisation with GGplot</h1>
+<h1 class="title toc-ignore">Data visualisation with ggplot</h1>
 
 </div>
 
@@ -337,6 +337,7 @@ petal_length_bivariate</code></pre>
   geom_histogram(fill = &quot;hotpink&quot;, alpha = 0.7, col = &quot;blue&quot;)</code></pre>
 <p><img src="ggplot_files/figure-html/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>We can clearly see that the distribution is skewed towards the left, as mentioned by looking at the first table, because close to 1 there are lots of flowers with these tiny little petals, while the majority of the flowers are around 5. It’s just as if the distribution was “two-belled” shapes, as if the data came from different types of flowers, which is actually the case as we have different species.</p>
+<p>Note that ggplot has a particular default <em>style</em> for plots that includes a gray background and a grid. One may not like it and it is possible to change it by specifying a different <em>theme</em>. Check out the <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">ggplot2 official website</a> to browse the different themes or learn <a href="https://emanuelaf.github.io/your-ggplot-theme.html">how to make your own</a>.</p>
 <p>Note that this (as well as all the other “ggplots”) is the same as doing:</p>
 <pre class="r"><code>ggplot(iris) +
   geom_histogram(aes(x = Petal.Length), fill = &quot;hotpink&quot;, alpha = 0.7, col = &quot;blue&quot;)</code></pre>
@@ -352,7 +353,7 @@ petal_length_bivariate</code></pre>
 <pre class="r"><code>ggplot(iris, aes(y = Petal.Length, x = 0)) +
   geom_violin(fill = &quot;hotpink&quot;, alpha = 0.7, col = &quot;blue&quot;)</code></pre>
 <p><img src="ggplot_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>Here hiding the x-ticks and the x-axis label may be important as we specified just to avoid errors in <code>ggplot()</code> but they do not help plot readbility. In order to customise the axis check out the article on <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
+<p>Here hiding the x-ticks and the x-axis label may be important as we specified just to avoid errors in <code>ggplot()</code> but they do not help plot readbility. In order to customise the axis check out the article on <a href="https://emanuelaf.github.io/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
 </div>
 <div id="barplot" class="section level2">
 <h2>Barplot</h2>
@@ -366,7 +367,7 @@ petal_length_bivariate</code></pre>
 <pre class="r"><code>ggplot(iris, aes(x = Species, fill = Species)) +
   geom_bar()</code></pre>
 <p><img src="ggplot_files/figure-html/unnamed-chunk-13-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>In order to customise the colours check out the article on <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
+<p>In order to customise the colours check out the article on <a href="https://emanuelaf.github.io/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
 </div>
 </div>
 <div id="adding-more-variables-to-the-plot-bivariate-and-more-analysis" class="section level1">
@@ -384,7 +385,7 @@ petal_length_bivariate</code></pre>
   geom_histogram(alpha = 0.7, bins = 15) +
   facet_grid(rows = vars(Species))</code></pre>
 <p><img src="ggplot_files/figure-html/unnamed-chunk-15-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>To see how to customise colours and how to hide the legend, please refer to the article on <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
+<p>To see how to customise colours and how to hide the legend, please refer to the article on <a href="https://emanuelaf.github.io/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
 </div>
 <div id="boxplot-1" class="section level2">
 <h2>Boxplot</h2>
@@ -405,7 +406,7 @@ petal_length_bivariate</code></pre>
   geom_point(aes(x = Petal.Width, y = Petal.Length)) +
   geom_smooth(aes(x = Petal.Width, y = Petal.Length), method = &quot;lm&quot;, se = FALSE)</code></pre>
 <p><img src="ggplot_files/figure-html/unnamed-chunk-18-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>The <code>geom_smooth()</code> function adds a smoothing function to the plot. In particular we asked to use a linear model by specifying <code>lm</code> as a method and we asked not to show standard errors of the estimates by setting <code>se = FALSE</code>. In order to extract the equation of the linear function and to add other types of functions check out the article on <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
+<p>The <code>geom_smooth()</code> function adds a smoothing function to the plot. In particular we asked to use a linear model by specifying <code>lm</code> as a method and we asked not to show standard errors of the estimates by setting <code>se = FALSE</code>. In order to extract the equation of the linear function and to add other types of functions check out the article on <a href="https://emanuelaf.github.io/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
 <p>We could also visualise on the same plot a third dimension, for example species. We can do this by coloring points according to their species:</p>
 <pre class="r"><code>ggplot(data = iris) +
   geom_point(aes(x = Petal.Width, y = Petal.Length, col = Species)) +
@@ -420,7 +421,7 @@ petal_length_bivariate</code></pre>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>In this post I have given some basics of the <em>grammar of graphics</em>. There is a number of packages built on top of it to the extent that a whole website for <a href="http://www.ggplot2-exts.org/gallery/">ggplot extentions</a> exist! For more advanced ggplot2 and more plots customisation, read the article on <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
+<p>In this post I have given some basics of the <em>grammar of graphics</em>. There is a number of packages built on top of it to the extent that a whole website for <a href="http://www.ggplot2-exts.org/gallery/">ggplot extentions</a> exist! For more advanced ggplot2 and more plots customisation, read the article on <a href="https://emanuelaf.github.io/annoying-ggplot.html">annoying things to do with ggplot</a>.</p>
 <P ALIGN="RIGHT">
 <font size="3"> <em>This article was written by Emanuela Furfaro.</em></font>
 </P>
