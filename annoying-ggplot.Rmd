@@ -1,5 +1,8 @@
 ---
 title: "Annoying things to do with `ggplot2`"
+output:
+  html_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
@@ -193,7 +196,7 @@ ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
 ```
 
 
-## Barplots issues
+## Barplots
 
 Here are some issues I often encounter when I work with barplots.
 

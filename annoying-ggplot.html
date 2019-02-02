@@ -268,6 +268,23 @@ $(document).ready(function () {
 
 </div>
 
+<div id="TOC">
+<ul>
+<li><a href="#add-title">Add title</a></li>
+<li><a href="#change-colours">Change colours</a><ul>
+<li><a href="#use-rcolorbrewer-palettes">Use RColorBrewer palettes</a></li>
+<li><a href="#manually-change-colours">Manually change colours</a></li>
+</ul></li>
+<li><a href="#change-the-default-order-of-categories">Change the default order of categories</a></li>
+<li><a href="#modify-axis">Modify axis</a></li>
+<li><a href="#customise-legend">Customise legend</a></li>
+<li><a href="#customise-font-in-legend-axis-and-title">Customise font in legend, axis and title</a></li>
+<li><a href="#barplots">Barplots</a><ul>
+<li><a href="#barplot-with-given-bar-length">Barplot with given bar length</a></li>
+<li><a href="#pie-chart">Pie chart</a></li>
+</ul></li>
+</ul>
+</div>
 
 <p>After learning the <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">basic syntax</a>, there is a number of things that are bit tricky (and often annoying!) to do with <code>ggplot2</code>. By “tricky” I just mean a number of things to customise which can make your plots look much nicer, but are easy to forget! This post is a collection of ggplot customisation that I often do and that I often forget how to do, hoping it can serve as a reference to others as well as to myself.</p>
 <p>All throughout the post I will work with the well known <code>iris</code> dataset:</p>
@@ -411,8 +428,8 @@ ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
 # use axis.text.x and axis.text.y to change axis separately</code></pre>
 <p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-11-1.png" width="288" style="float:left" style="display: block; margin: auto;" /><img src="annoying-ggplot_files/figure-html/unnamed-chunk-11-2.png" width="288" style="float:left" style="display: block; margin: auto;" /><img src="annoying-ggplot_files/figure-html/unnamed-chunk-11-3.png" width="288" style="float:left" style="display: block; margin: auto;" /></p>
 </div>
-<div id="barplots-issues" class="section level2">
-<h2>Barplots issues</h2>
+<div id="barplots" class="section level2">
+<h2>Barplots</h2>
 <p>Here are some issues I often encounter when I work with barplots.</p>
 <div id="barplot-with-given-bar-length" class="section level3">
 <h3>Barplot with given bar length</h3>
