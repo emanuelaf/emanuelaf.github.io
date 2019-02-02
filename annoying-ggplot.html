@@ -269,29 +269,176 @@ $(document).ready(function () {
 </div>
 
 
-<div id="annoying-things-to-do-with-ggplot2" class="section level2">
-<h2>Annoying things to do with <code>ggplot2</code></h2>
-<p>Beside the basic syntax there is a number of things that are bit tricky to do with <code>ggplot2</code>. By “tricky” I just mean a number of things that are not essential but that make your plots look much nicer and often take a long time to do.</p>
-<div id="customise-axis-font-and-size" class="section level3">
-<h3>Customise axis font and size</h3>
+<p>After learning the <a href="file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html">basic syntax</a>, there is a number of things that are bit tricky (and often annoying!) to do with <code>ggplot2</code>. By “tricky” I just mean a number of things to customise which can make your plots look much nicer, but are easy to forget! This post is a collection of ggplot customisation that I often do and that I often forget how to do, hoping it can serve as a reference to others as well as to myself.</p>
+<p>All throughout the post I will work with the well known <code>iris</code> dataset:</p>
+<pre class="r"><code>require(ggplot2)
+require(dplyr)
+data(iris)</code></pre>
+<div id="add-title" class="section level2">
+<h2>Add title</h2>
+<p>There are different ways to add a title in ggplot2. One way is that of using <code>labs()</code> function and specify the title there:</p>
+<pre class="r"><code>ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15) +
+  labs(title = &quot;My title&quot;)</code></pre>
+<p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-2-1.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
-<div id="customise-title-font-and-size" class="section level3">
-<h3>Customise title font and size</h3>
+<div id="change-colours" class="section level2">
+<h2>Change colours</h2>
+<p>One of the first things I wanted to change in ggplot was the default colours. Suppose for example we want to colour the histogram of <code>Petal.Length</code> according to the species, just like we did above:</p>
+<pre class="r"><code>ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15) </code></pre>
+<p>There are different ways to do it. Here we see two ways of doing it, one using the color brewer palettes given by <code>R</code> and one way of doing it manually. To see more details on this, among the many websites that discuss this topic, I like <a href="http://www.sthda.com/english/wiki/ggplot2-colors-how-to-change-colors-automatically-and-manually">this one</a>.</p>
+<p>First, note that we are working on the <code>fill</code> aesthetics, we will refer to the <code>scale_fill_*</code> functions. If the colour we want to customise is given in the <code>col</code> aesthetics or in th <code>alpha</code> aesthetics for example, we will use the <code>scale_colour_*</code> and <code>scale_alpha_*</code> functions respectively.</p>
+<div id="use-rcolorbrewer-palettes" class="section level3">
+<h3>Use RColorBrewer palettes</h3>
+<p>If we want to use a colour palette as provided by the <code>RColorBrewer</code> package, the <code>ggplot</code> function that allows us to it is:</p>
+<pre class="r"><code>ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15)  +
+  scale_fill_brewer(palette = &quot;Greens&quot;)</code></pre>
+<p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Given the factor order, it will assign the lightest colour to the first one and the darkest to the last one. If we want to change it, we may just use the <code>direction</code> parameter:</p>
+<pre class="r"><code>ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15)  +
+  scale_fill_brewer(palette = &quot;Greens&quot;, direction = -1)</code></pre>
+<p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Palettes of gray can be used with the function <code>scale_fill_gray()</code>.</p>
 </div>
-<div id="customise-colours" class="section level3">
-<h3>Customise colours</h3>
+<div id="manually-change-colours" class="section level3">
+<h3>Manually change colours</h3>
+<p>In order to manually change colours we will use <code>scale_fill_manual()</code> function. There are different ways to specify colours in <code>R</code>, such as using their name, their number, their rgb or their hex code.</p>
+<pre class="r"><code>ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15)  +
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;))</code></pre>
+<p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
-<div id="customise-legend" class="section level3">
-<h3>Customise legend</h3>
 </div>
-<div id="overlapping-differerent-datasets" class="section level3">
-<h3>Overlapping differerent datasets</h3>
+<div id="change-the-default-order-of-categories" class="section level2">
+<h2>Change the default order of categories</h2>
+<p>If you do not like the default order of the categories (here it is the alphadetical order so setosa, versicolor and virginica), you need to order the factor the way you like and then use ggplot on it. Alternatively you can specify levels in the ggplot function itself:</p>
+<pre class="r"><code>ggplot(data = iris, aes(x = Petal.Length, fill = factor(Species, levels = c(&quot;virginica&quot;, &quot;versicolor&quot;, &quot;setosa&quot;)))) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15)  +
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;))</code></pre>
 </div>
-<div id="setting-axis-scales" class="section level3">
-<h3>Setting axis scales</h3>
+<div id="modify-axis" class="section level2">
+<h2>Modify axis</h2>
+<p>To modify axis title, we use the <code>labs()</code> function, while in order to modify axis ticks, we use specific arguments in the <code>theme()</code> function:</p>
+<pre class="r"><code># Change axis title
+ggplot(data = iris, aes(y = Petal.Length, x = 0)) +
+  geom_boxplot(alpha = 0.7, fill = &quot;hotpink&quot;) +
+  labs(x = &quot;&quot;, y = &quot;Petal length&quot;)
+
+# Hide axis text
+ggplot(data = iris, aes(y = Petal.Length, x = 0)) +
+  geom_boxplot(alpha = 0.7, fill = &quot;hotpink&quot;) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank())
+
+# Hide axis ticks
+ggplot(data = iris, aes(y = Petal.Length, x = 0)) +
+  geom_boxplot(alpha = 0.7, fill = &quot;hotpink&quot;) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.ticks.x = element_blank())</code></pre>
+<p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-8-1.png" width="288" style="float:left" style="display: block; margin: auto;" /><img src="annoying-ggplot_files/figure-html/unnamed-chunk-8-2.png" width="288" style="float:left" style="display: block; margin: auto;" /><img src="annoying-ggplot_files/figure-html/unnamed-chunk-8-3.png" width="288" style="float:left" style="display: block; margin: auto;" /></p>
 </div>
+<div id="customise-legend" class="section level2">
+<h2>Customise legend</h2>
+<p>You can change the legend name, move it into a different place (for example at the bottom) or hide it:</p>
+<pre class="r"><code># Change legend name
+ggplot(data = iris, aes(y = log(Petal.Length), x = Species, fill = Species)) +
+  geom_boxplot(alpha = 0.7)  +
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;), name = &quot;&quot;) 
+
+# Change legend position
+ggplot(data = iris, aes(y = log(Petal.Length), x = Species, fill = Species)) +
+  geom_boxplot(alpha = 0.7)  +
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;)) +
+  theme(legend.position = &quot;bottom&quot;)
+
+# Hide legend
+ggplot(data = iris, aes(y = log(Petal.Length), x = Species, fill = Species)) +
+  geom_boxplot(alpha = 0.7)  +
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;)) +
+  theme(legend.position = &quot;&quot;)</code></pre>
+<p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-9-1.png" width="288" style="float:left" style="display: block; margin: auto;" /><img src="annoying-ggplot_files/figure-html/unnamed-chunk-9-2.png" width="288" style="float:left" style="display: block; margin: auto;" /><img src="annoying-ggplot_files/figure-html/unnamed-chunk-9-3.png" width="288" style="float:left" style="display: block; margin: auto;" /></p>
+</div>
+<div id="customise-font-in-legend-axis-and-title" class="section level2">
+<h2>Customise font in legend, axis and title</h2>
+<p>All these customisations can easily be done with the <code>theme()</code> function, which allows to customize the non-data components of plots. Let us start with legend and title:</p>
+<pre class="r"><code># Change legend&#39;s title font and size
+ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15)  +
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;)) +
+  theme(legend.title = element_text(size = 20, face = &quot;italic&quot;, colour = &quot;red&quot;))
+
+# Change legend&#39;s categories font and size
+ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15)  +
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;)) +
+  theme(legend.text = element_text(size = 20, face = &quot;italic&quot;, colour = &quot;red&quot;))
+
+# Change title&#39;s font and size
+ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15)  +
+  labs(title = &quot;Histogram of petal length&quot;) + 
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;)) +
+  theme(plot.title = element_text(size = 10, face = &quot;bold&quot;, colour = &quot;red&quot;))</code></pre>
+<p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-10-1.png" width="288" style="float:left" style="display: block; margin: auto;" /><img src="annoying-ggplot_files/figure-html/unnamed-chunk-10-2.png" width="288" style="float:left" style="display: block; margin: auto;" /><img src="annoying-ggplot_files/figure-html/unnamed-chunk-10-3.png" width="288" style="float:left" style="display: block; margin: auto;" /></p>
+<p>Similarly, axis names and labels can be customised:</p>
+<pre class="r"><code># Change axis&#39;s title font and size
+ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15)  +
+  labs(title = &quot;Histogram of petal length&quot;) + 
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;)) +
+  theme(axis.title = element_text(size = 10, face = &quot;bold&quot;, colour = &quot;red&quot;)) 
+# use axis.title.x and axis.title.y to change axis separately
+
+# Change all titles at once
+ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15)  +
+  labs(title = &quot;Histogram of petal length&quot;) + 
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;)) +
+  theme(title = element_text(size = 10, face = &quot;bold&quot;, colour = &quot;red&quot;))
+
+
+# Rotate axis&#39;s labels, change font and size
+ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
+  geom_histogram(col = &quot;black&quot;, alpha = 0.7, bins = 15)  +
+  labs(title = &quot;Histogram of petal length&quot;) + 
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;)) +
+  theme(axis.text = element_text(size = 10, face = &quot;bold&quot;, colour = &quot;red&quot;, angle = 45))
+# use axis.text.x and axis.text.y to change axis separately</code></pre>
+<p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-11-1.png" width="288" style="float:left" style="display: block; margin: auto;" /><img src="annoying-ggplot_files/figure-html/unnamed-chunk-11-2.png" width="288" style="float:left" style="display: block; margin: auto;" /><img src="annoying-ggplot_files/figure-html/unnamed-chunk-11-3.png" width="288" style="float:left" style="display: block; margin: auto;" /></p>
+</div>
+<div id="barplots-issues" class="section level2">
+<h2>Barplots issues</h2>
+<p>Here are some issues I often encounter when I work with barplots.</p>
 <div id="barplot-with-given-bar-length" class="section level3">
 <h3>Barplot with given bar length</h3>
+<p>Often we have a table with proportions or with aggregate data already on it. Hence we do not want the barplot to count and aggrgate the data but we just want it to plot as it is. In order to get this, we need to adjust the <code>stat</code> parameter. As default it is set to <code>stat = &quot;count&quot;</code>, but what we want in this case is actually “identity”:</p>
+<pre class="r"><code>iris_aggr &lt;- iris %&gt;%
+  group_by(Species) %&gt;%
+  summarise(prop = round(n()/nrow(iris), 3))
+
+ggplot(iris_aggr, aes(x = Species, y = prop, fill = Species)) +
+  geom_bar(stat = &quot;identity&quot;, alpha = 0.7)</code></pre>
+<p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pie-chart" class="section level3">
+<h3>Pie chart</h3>
+<p>The pie chart is not one of the available functions in <code>ggplot</code>. Hence in order to get one we need to work a bit on the plot. It is basically a barplot, but we need to “reshape” it. First we build a barplot and then we will tweak it to make it circular:</p>
+<pre class="r"><code># Use the width = 1 to make it occupy the whole plot
+bplot &lt;- ggplot(iris_aggr, aes(x = &quot;&quot;, y = prop, fill = Species)) +
+  geom_bar(stat = &quot;identity&quot;, width = 1)  +
+  scale_fill_manual(values = c(&quot;hotpink&quot;, &quot;violet&quot;, &quot;darkviolet&quot;)) 
+
+# Reshape coordinates to make it round and get rid of axis ticks and labels
+bplot +  
+  coord_polar(&quot;y&quot;, start=0) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +
+  theme(axis.text.x=element_blank())</code></pre>
+<p><img src="annoying-ggplot_files/figure-html/unnamed-chunk-13-1.png" width="480" style="display: block; margin: auto;" /></p>
 <P ALIGN="RIGHT">
 <font size="3"> <em>This article was written by Emanuela Furfaro.</em></font>
 </P>
