@@ -114,3 +114,4 @@ So here is a nice and neat age pyramid :)
 
 The next step will be to pack the routine into a function so that every time I need to do an age pyramid, that happens quite often working with demographers!, I can do it with a single line code. But this will be the topic of a different article ;)
 
+<P ALIGN=RIGHT> <font size="3"> _This article was written by Emanuela Furfaro._</font> </P>

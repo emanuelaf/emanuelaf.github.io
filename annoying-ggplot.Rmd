@@ -1,0 +1,43 @@
+---
+title: "Annoying things to do with `ggplot2`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align ='center', warning = FALSE, message = FALSE,
+                      fig.height = 4, fig.width = 5)
+```
+
+
+## Annoying things to do with `ggplot2`
+
+Beside the basic syntax there is a number of things that are bit tricky to do with `ggplot2`. By "tricky" I just mean a number of things that are not essential but that make your plots look much nicer and often take a long time to do.
+
+### Customise axis font and size
+
+
+
+### Customise title font and size
+
+
+
+### Customise colours
+
+
+
+### Customise legend
+
+
+
+### Overlapping differerent datasets
+
+
+
+### Setting axis scales
+
+
+
+### Barplot with given bar length
+
+
+
+<P ALIGN=RIGHT> <font size="3"> _This article was written by Emanuela Furfaro._</font> </P>
