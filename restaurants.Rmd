@@ -224,3 +224,4 @@ One of the things I like the most about `dplyr`, is that it allows to work with 
 
 This example could be further developed to create an interactive report (like a Shiny app), where, before going out to dinner, people can browse best restaurants according to their needs. I believe tripadvisor or other sites for reviewing restaurants work similarly to this!
 
+<P ALIGN=RIGHT> <font size="3"> _This article was written by Emanuela Furfaro._</font> </P>

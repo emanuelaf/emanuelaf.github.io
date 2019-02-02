@@ -190,3 +190,4 @@ In this brief article we manipulated the dataset on Italian political elections,
 
 Note that using the same code, one could choose to focus on a different party and analyse its performance. Also, note that this is an official dataset, hence it comes equal every election. Once the variable names are translated into English, the same code still applies. Last, note that this article may easily be transformed into an interactive analysis where users choose one party to focus on and to switch to different years, after additional years' elections data is downloaded.
 
+<P ALIGN=RIGHT> <font size="3"> _This article was written by Emanuela Furfaro._</font> </P>

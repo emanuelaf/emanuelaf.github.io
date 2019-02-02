@@ -173,7 +173,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Emanuela Furfaro</a>
+      <a class="navbar-brand" href="index.html">About this website</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -205,6 +205,12 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ggplot.html">ggplot basics</a>
+    </li>
+    <li>
+      <a href="annoying-ggplot.html">Annoying things to do with ggplot</a>
+    </li>
     <li>
       <a href="age-pyramid.html">Age pyramid</a>
     </li>
@@ -816,6 +822,9 @@ ggplot(gather(df_pred, obs_pred, value, -time) %&gt;%
 <h1>Conclusion</h1>
 <p>In this article, we have seen how to deal with time series and how to use an ARIMA model for forecasting. The general idea is that time series models use information coming from the time series itself, i.e. coming from the so far observed values. However such models may not be able to see and to model high and low peaks. Hence, we can use either exogenous variables or add dummies to somehow force the model to fine tune at specific times.</p>
 <p>Moreover, notice that I have used the same routine for collecting observed and predicted values and then plotting them. A good idea, to avoid replicating the code, may be that of creating a set of functions that do that.</p>
+<P ALIGN="RIGHT">
+<font size="3"> <em>This article was written by Emanuela Furfaro.</em></font>
+</P>
 </div>
 
 

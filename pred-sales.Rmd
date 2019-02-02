@@ -387,3 +387,5 @@ In this article, we have seen how to deal with time series and how to use an ARI
 
 Moreover, notice that I have used the same routine for collecting observed and predicted values and then plotting them. A good idea, to avoid replicating the code, may be that of creating a set of functions that do that.
 
+
+<P ALIGN=RIGHT> <font size="3"> _This article was written by Emanuela Furfaro._</font> </P>

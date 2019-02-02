@@ -84,3 +84,4 @@ ggplot(data = sim, aes(x = n, y = obs_proportion))+
 
 
 
+<P ALIGN=RIGHT> <font size="3"> _This article was written by Emanuela Furfaro._</font> </P>

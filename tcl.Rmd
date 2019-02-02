@@ -83,3 +83,5 @@ ggplot(mean_x %>%
   theme_bw()
 
 ```
+
+<P ALIGN=RIGHT> <font size="3"> _This article was written by Emanuela Furfaro._</font> </P>
