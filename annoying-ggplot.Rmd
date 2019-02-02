@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.align ='center', warning = FALSE, message
                       fig.height = 4, fig.width = 5)
 ```
 
-After learning the [basic syntax](file:///home/emanuela/io/website/emanuelafurfaro/annoying-ggplot.html), there is a number of things that are bit tricky (and often annoying!) to do with `ggplot2`. By "tricky" I just mean a number of things to customise which can make your plots look much nicer, but are easy to forget! This post is a collection of ggplot customisation that I often do and that I often forget how to do, hoping it can serve as a reference to others as well as to myself.
+After learning the [basic syntax](ggplot.html), there is a number of things that are bit tricky (and often annoying!) to do with `ggplot2`. By "tricky" I just mean a number of things to customise which can make your plots look much nicer, but are easy to forget! This post is a collection of ggplot customisation that I often do and that I often forget how to do, hoping it can serve as a reference to others as well as to myself.
 
 All throughout the post I will work with the well known `iris` dataset:
 
