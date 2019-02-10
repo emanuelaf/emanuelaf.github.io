@@ -232,7 +232,10 @@ bplot +
   theme(axis.text.x=element_blank())
 ```
 
+## Conclusion
 
+In this article I collected a number of customisation to do with `ggplot2` that I often have to do when I create a plot and I never remember how to do. It is just some customisations, but I may add more as I find some other useful, but boring and hard to remember!, things to customise in `ggplot2`.
 
+My advice is that, when you are doing lots of customisation and it is always the same customisation, it may be more useful to create [your `theme`](own-ggplot-theme.html) so that you don't always have to specify all the little options.
 
 <P ALIGN=RIGHT> <font size="3"> _This article was written by Emanuela Furfaro._</font> </P>

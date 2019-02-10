@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Crate your own theme with ggplot2</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">About this website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data-an-workflow.html">The Data Workflow</a>
+    </li>
+    <li>
+      <a href="elections2.html">Elections</a>
+    </li>
+    <li>
+      <a href="restaurants.html">Restaurant rating</a>
+    </li>
+    <li>
+      <a href="pred-sales.html">Predicting Sales</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Visualisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ggplot.html">ggplot basics</a>
+    </li>
+    <li>
+      <a href="annoying-ggplot.html">Annoying things to do with ggplot</a>
+    </li>
+    <li>
+      <a href="age-pyramid.html">Age pyramid</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Statistics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Asymptotic Theorems</li>
+    <li>
+      <a href="lln.html">The Law of Large numbers</a>
+    </li>
+    <li>
+      <a href="tcl.html">The Central Limit Theorem</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/emanuelaf">
+    <span class="fa fa-github"></span>
+     
+    GitHub
+  </a>
+</li>
+<li>
+  <a href="mailto:furfaro.emanuela@gmail.com">
+    <span class="fa fa-envelope-o"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/emanuela-f/">
+    <span class="fa fa-linkedin"></span>
+     
+    Linkedin
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Crate your own theme with <code>ggplot2</code></h1>
+
+</div>
+
+
+<p>Plots created with <code>ggplot2</code> have a fairly distinctive default look with grey background and white gridlines. It is possible to change it by using the different themes available in<code>ggplot</code>, but still sometimes there are some default options that we always want to get rid of and that every time we need to specify.</p>
+<p>In these cases I feel the need to customise the output to the point that I’d better just create my own theme! In this post I am going to give an example of how to create your own theme.</p>
+<div id="what-happens-when-we-call-a-specific-ggtheme-function" class="section level2">
+<h2>What happens when we call a specific <code>ggtheme</code> function</h2>
+<p>When we want to change the default theme, for example to the black and white theme, we just add at the end of the plot <code>theme_bw()</code>. So basically a theme is just a function with a number of arguments set by default, such as background color, size and style of axis text and labels, legend, etc.</p>
+<p>Text style, legend, labels, background color, etc, are specified in the function <code>theme()</code>. Hence in order to create our own one, it is enough to define a function <code>my_theme</code> that calls the generic <code>theme()</code> function and where we define all the parameters as we like.</p>
+</div>
+<div id="create-your-own-theme" class="section level2">
+<h2>Create your own theme</h2>
+<p>Let us start with a nice default <code>ggplot2</code> plot. For instance, we consider the usual <code>iris</code> dataset and we plot a histogram of <code>Petal.Length</code>:</p>
+<pre class="r"><code>require(ggplot2)
+data(iris)
+
+ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram() </code></pre>
+<p><img src="own-ggplot-theme_files/figure-html/unnamed-chunk-1-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Suppose that, for the presentation we are giving we want a blue theme with a light blue background and all blue text. Also we want to modify gridlines and more. For example we want a theme with the following characteristics:</p>
+<ol style="list-style-type: decimal">
+<li>lightblue background</li>
+<li>a darker blue border around the plot</li>
+<li>only main dotted gridlines in a darkblue</li>
+<li>axis text in italic and darkblue</li>
+<li>all text in “Times New Roman” and darkblue</li>
+<li>legend at the bottom by default</li>
+</ol>
+<p>We will call this theme <code>blue_theme</code>. All we will need to do, is identify which arguments of the <code>theme()</code> function allows us to do which things.</p>
+<p>If you explore <code>?theme</code>, you can get a complete overview of all the different arguments. We will use the <code>panel.*</code> arguments for all the things that regard the plot’s panel. So basically <em>(1)</em>, <em>(2)</em> and <em>(3)</em>. The <code>axis.*</code> arguments will allow to modify axis text, ticks, etc. And <code>legend.position</code> will be used to modify the position at the bottom.</p>
+<p>More specifically here is what we use:</p>
+<pre class="r"><code>blue_theme &lt;- function() {
+  theme(
+    # add border 1)
+    panel.border = element_rect(colour = &quot;blue&quot;, fill = NA, linetype = 2),
+    # color background 2)
+    panel.background = element_rect(fill = &quot;aliceblue&quot;),
+    # modify grid 3)
+    panel.grid.major.x = element_line(colour = &quot;steelblue&quot;, linetype = 3, size = 0.5),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.y =  element_line(colour = &quot;steelblue&quot;, linetype = 3, size = 0.5),
+    panel.grid.minor.y = element_blank(),
+    # modify text, axis and colour 4) and 5)
+    axis.text = element_text(colour = &quot;steelblue&quot;, face = &quot;italic&quot;, family = &quot;Times New Roman&quot;),
+    axis.title = element_text(colour = &quot;steelblue&quot;, family = &quot;Times New Roman&quot;),
+    axis.ticks = element_line(colour = &quot;steelblue&quot;),
+    # legend at the bottom 6)
+    legend.position = &quot;bottom&quot;
+  )
+}</code></pre>
+<p>Now let’s test it on the <code>iris</code> dataset:</p>
+<pre class="r"><code>ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram(fill = &quot;steelblue&quot;, col = &quot;steelblue4&quot;) +
+  blue_theme()</code></pre>
+<p><img src="own-ggplot-theme_files/figure-html/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
+<div id="modify-the-default-colour-of-the-histograms-bins" class="section level2">
+<h2>Modify the default colour of the histograms’ bins</h2>
+<p>You may have notice that in our theme we modified the plot’s look but we did not modify the colour of the bins. We changed it when we created the plot as we always do with ggplot.</p>
+<p>I looked into it for a fair bit of time, but I did not find a good way to do. I found the <code>update_geom_defaults()</code> function but it seems to me that it does not work exactly the way I would assumed.</p>
+<p>I assumed there would be a function to change the default colours, such as <code>update_geom_defaults()</code> and then there was another one to revert back to the default when needed. However, apparently once I change the default colour with the <code>update_geom_defaults()</code>, the new default stay unless I detach <code>ggplot2</code> and then load it back, or I have to manually set back the default colours.</p>
+<p>So for instance, suppose we want to change the default <code>darkgray</code> bins of the histogram into <code>steelblue</code>. I could first save the original default colours:</p>
+<pre class="r"><code>old &lt;- ggplot2:::check_subclass(&quot;bar&quot;, &quot;Geom&quot;)$default_aes
+old</code></pre>
+<pre><code>## Aesthetic mapping: 
+## * `colour`   -&gt; NA
+## * `fill`     -&gt; &quot;grey35&quot;
+## * `size`     -&gt; 0.5
+## * `linetype` -&gt; 1
+## * `alpha`    -&gt; NA</code></pre>
+<p><code>old</code> is a list that contains all the default specificatio for the <code>aesthetics</code> in ggplot2.</p>
+<p>In order to modify the default colours and, for instance, alpha, in all of the upcoming plots we can run the following:</p>
+<pre class="r"><code>update_geom_defaults(&quot;bar&quot;, list(fill = &quot;steelblue&quot;, alpha = 0.6, colour = &quot;blue&quot;))</code></pre>
+<p>then we could run our plot without having to specify the colours:</p>
+<pre class="r"><code>ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram() +
+  blue_theme()</code></pre>
+<p><img src="own-ggplot-theme_files/figure-html/unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>However now the default colours have been permanently changed. In fact if we look at the default aesthetics options for bars, they are now different:</p>
+<pre class="r"><code>ggplot2:::check_subclass(&quot;bar&quot;, &quot;Geom&quot;)$default_aes</code></pre>
+<pre><code>## $fill
+## [1] &quot;steelblue&quot;
+## 
+## $alpha
+## [1] 0.6
+## 
+## $colour
+## [1] &quot;blue&quot;
+## 
+## $size
+## [1] 0.5
+## 
+## $linetype
+## [1] 1</code></pre>
+<p>As we have saved the old default, we can again use the <code>update_geom_defaults()</code> function and assign the options saved in the <code>old</code> object</p>
+<pre class="r"><code>update_geom_defaults(&quot;bar&quot;, old)</code></pre>
+<p>Now, if we run the plot with our new <code>blue_theme()</code> but we do not specify bins colours, we will get the usual old <code>ggplot2</code> default options:</p>
+<pre class="r"><code>ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram() +
+  blue_theme()</code></pre>
+<p><img src="own-ggplot-theme_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>This post contains an example of how to create a customised theme in ggplot2. This may be useful when you are doing many plots and every time you customise them so that they look the same. It will save you lots of code lines and also lots of error as every time you want to change something to a plot, if you do not have your own theme, you have to go and manually change it for all the plots.</p>
+<p>To learn more about all the different things you can custmise in your own theme check out the <a href="https://ggplot2.tidyverse.org/reference/theme.html">help for the theme() function</a>.</p>
+<P ALIGN="RIGHT">
+<font size="3"> <em>This article was written by Emanuela Furfaro.</em></font>
+</P>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
