@@ -19,6 +19,8 @@ navbar:
         href: ggplot.html
       - text: "Annoying things to do with ggplot"
         href: annoying-ggplot.html
+      - text: "Create your customised ggtheme"
+        href: own-ggplot-theme.html
       - text: "Age pyramid"
         href: age-pyramid.html
    - text: "Statistics"
