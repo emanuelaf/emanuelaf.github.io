@@ -23,13 +23,6 @@ navbar:
         href: own-ggplot-theme.html
       - text: "Age pyramid"
         href: age-pyramid.html
-   - text: "Statistics"
-     menu:
-      - text: "Asymptotic Theorems"
-      - text: "The Law of Large numbers"
-        href: lln.html
-      - text: "The Central Limit Theorem"  
-        href: tcl.html
   right:
     - text: "GitHub"
       icon: fa-github
