@@ -8,9 +8,9 @@ I am a Post Doc Researcher in Social Statistics and Demography in Milan, and I a
 
 I like to see myself as a sort of _data detective_, where I use data to answer questions, to solve mysteries, to investigate pheonomena. In order to investigate and give the proofs of my findings, I mainly use `R`. I also like to teach _data detective_ skills, either to professionals or to students... more or less interested -.-'.
 
-As I do lots of teaching as well as lots of data analysis with `R`, I decided to create this website in which I collect and share some projects, some code and some of my lessons, that I hope may be of use to others.
+As I do lots of teaching as well as lots of data analysis with `R`, I decided to create this website in which I collect and share some projects, some code and some of my lessons, that I hope may be of use for others.
 
-If you happen to be in Milan, you can find me every monday night at [tango macao](http://www.macaomilano.org/spip.php?rubrique22), where we can talk about data analysis and statistics in between tandas ;) 
+In my spare time, I love to dance tango and here is my favourite tango place in my hometown Milan, Italy [tango macao](http://www.macaomilano.org/spip.php?rubrique22) ;) 
 
 </div>
 

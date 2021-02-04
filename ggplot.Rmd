@@ -234,7 +234,7 @@ ggplot(data = iris) +
 
 # Conclusion
 
-In this post I have given some basics of the _grammar of graphics_. There is a number of packages built on top of it to the extent that a whole website for [ggplot extentions](http://www.ggplot2-exts.org/gallery/) exist! 
+In this post I have given some basics of the _grammar of graphics_. There is a number of packages built on top of it to the extent that a whole website for [ggplot extentions](https://exts.ggplot2.tidyverse.org/) exist! 
 
 For more advanced ggplot2 and more plots customisation, read the article on [annoying things to do with ggplot](annoying-ggplot.html).
 

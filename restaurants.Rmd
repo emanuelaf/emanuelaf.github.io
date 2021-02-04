@@ -155,8 +155,8 @@ tab2 <- userprofile%>%
   filter(smoker == "true") %>%
   left_join(rating_final) %>%
   group_by(placeID) %>%
-  summarise_at(vars(rating_mean = rating, food_rating_mean = food_rating, 
-                    service_rating_mean = service_rating), 
+  summarise_at(vars(rating = rating, food_rating = food_rating, 
+                    service_rating = service_rating), 
                funs(mean, n())) %>%
   filter(rating_n >= 5) %>%
   arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
@@ -180,8 +180,8 @@ tab3 <- userprofile %>%
   filter(budget == "low") %>%
   left_join(rating_final) %>%
   group_by(placeID) %>%
-  summarise_at(vars(rating_mean = rating, food_rating_mean = food_rating, 
-                    service_rating_mean = service_rating), 
+  summarise_at(vars(rating = rating, food_rating = food_rating, 
+                    service_rating = service_rating), 
                funs(mean, n())) %>%
   filter(rating_n >= 5) %>%
   arrange(desc(rating_mean), desc(food_rating_mean), desc(service_rating_mean)) %>%
