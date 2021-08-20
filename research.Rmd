@@ -77,8 +77,8 @@ The use of Bayesian methodology in population studies has become more and more c
 
 I also enjoy organizing conferences, seminars, and meetups on R and Statistics. I was part of the Organizing Committee for e-Rum2020, the 2020 European R Users Meeting which takes place every two years. Together with the rest of the Organizing Committee, we published a brief paper where we talk about our experience in turning the event into the first R conference being held completely online.
 
-* Fortuna M., Vitalini F., Signorelli M., Furfaro E. [...] (2020) e-Rum2020: how we turned a physical conference into a successful virtual event. The R Journal, 12(2):416, December 2020.
+* Fortuna M., Vitalini F., Signorelli M., Furfaro E. [...] (2020) e-Rum2020: how we turned a physical conference into a successful virtual event. *The R Journal, 12(2):416, December 2020.*
 
 After a couple of years of experience in teaching Statistics, I published a short textbook that I used for my students in Italy.
 
-* Furfaro E. (2018) Textbook in Italian - Appunti di Inferenza Statistica per le Scienze Sociali. EDUCatt, Milano. 
+* Furfaro E. (2018) Textbook in Italian - Appunti di Inferenza Statistica per le Scienze Sociali. *EDUCatt, Milano.*
