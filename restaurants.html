@@ -23,6 +23,7 @@
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -277,6 +278,30 @@ $(document).ready(function () {
       <ul class="nav navbar-nav">
         <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Research
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="research.html">Research</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Teaching
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="teaching.html">Teaching</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Data analysis
      
     <span class="caret"></span>
@@ -365,13 +390,13 @@ userprofile &lt;- read_delim(&quot;data/userprofile.csv&quot;, delim = &quot;,&q
 rating_final &lt;- read_delim(&quot;data/rating_final.csv&quot;, delim = &quot;,&quot;, col_names = T)</code></pre>
 <p>The three tables are organised as follows:</p>
 <ul>
-<li><code>chefmozcuisine</code> contains 2 variables which refer to the characteristics of 916 restaurants in the US. More specifically the variables are:
+<li><p><code>chefmozcuisine</code> contains 2 variables which refer to the characteristics of 916 restaurants in the US. More specifically the variables are:</p>
 <ul>
 <li>placeID that univocally identifies each restaurants</li>
 <li>Rcuisine that indicates the restaurants’ type of cuisine</li>
 </ul></li>
 <li><p><code>userprofile</code> contains 19 variables which refer to the characteristics of 138 users. In addition to users’ id, there are variables describing different habits including smoking and drinking habits</p></li>
-<li><code>rating_final</code> contains 1161 different ratings on the restaurants contained in <code>chefmozcuisine</code>. More specifically we have:
+<li><p><code>rating_final</code> contains 1161 different ratings on the restaurants contained in <code>chefmozcuisine</code>. More specifically we have:</p>
 <ul>
 <li>userID contains the users’ id as given in <code>userprofile</code> table</li>
 <li>placeID is the restaurants’ id as given in <code>chefmozcuisine</code> table</li>

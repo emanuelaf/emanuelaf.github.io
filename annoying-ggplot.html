@@ -276,6 +276,30 @@ $(document).ready(function () {
       <ul class="nav navbar-nav">
         <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Research
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="research.html">Research</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Teaching
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="teaching.html">Teaching</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Data analysis
      
     <span class="caret"></span>
@@ -518,7 +542,7 @@ ggplot(data = iris, aes(x = Petal.Length, fill = Species)) +
 <p>Here are some issues I often encounter when I work with barplots.</p>
 <div id="barplot-with-given-bar-length" class="section level3">
 <h3>Barplot with given bar length</h3>
-<p>Often we have a table with proportions or with aggregate data already on it. Hence we do not want the barplot to count and aggrgate the data but we just want it to plot as it is. In order to get this, we need to adjust the <code>stat</code> parameter. As default it is set to <code>stat = &quot;count&quot;</code>, but what we want in this case is actually “identity”:</p>
+<p>Often we have a table with proportions or with aggregate data already on it. Hence we do not want the barplot to count and aggrgate the data but we just want it to plot as it is. In order to get this, we need to adjust the <code>stat</code> parameter. As default it is set to <code>stat = "count"</code>, but what we want in this case is actually “identity”:</p>
 <pre class="r"><code>iris_aggr &lt;- iris %&gt;%
   group_by(Species) %&gt;%
   summarise(prop = round(n()/nrow(iris), 3))

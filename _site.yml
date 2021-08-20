@@ -3,6 +3,14 @@ output_dir: "."
 navbar:
   title: "About this website"
   left:
+   - text: "Research"
+     menu:
+      - text: "Research"
+        href: research.html
+   - text: "Teaching"
+     menu:
+      - text: "Teaching"
+        href: teaching.html
    - text: "Data analysis"
      menu:
       - text: "The Data Workflow"

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Research</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">About this website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Research
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="research.html">Research</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Teaching
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="teaching.html">Teaching</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data-an-workflow.html">The Data Workflow</a>
+    </li>
+    <li>
+      <a href="elections2.html">Elections</a>
+    </li>
+    <li>
+      <a href="restaurants.html">Restaurant rating</a>
+    </li>
+    <li>
+      <a href="pred-sales.html">Predicting Sales</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Visualisation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ggplot.html">ggplot basics</a>
+    </li>
+    <li>
+      <a href="annoying-ggplot.html">Annoying things to do with ggplot</a>
+    </li>
+    <li>
+      <a href="own-ggplot-theme.html">Create your customised ggtheme</a>
+    </li>
+    <li>
+      <a href="age-pyramid.html">Age pyramid</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/emanuelaf">
+    <span class="fa fa-github"></span>
+     
+    GitHub
+  </a>
+</li>
+<li>
+  <a href="mailto:furfaro.emanuela@gmail.com">
+    <span class="fa fa-envelope-o"></span>
+     
+    Email
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com/in/emanuela-f/">
+    <span class="fa fa-linkedin"></span>
+     
+    Linkedin
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Research</h1>
+
+</div>
+
+
+<p>Here are my main research projects, starting fro the oldest ones (my PhD thesis), and then continuing on with more recent ones.</p>
+<div id="sampling-methodology" class="section level3">
+<h3>Sampling Methodology</h3>
+<p>My dissertation and my PhD work focused on the development of a sampling methodology for estimating the prevalence of a rare and clustered trait. Our inspirational example was the TB prevalence surveys conducted by the World Health Organization in developing countries. We proposed a sampling design along with an unbiased estimator for the prevalence. We used R to implement our algorithms for selecting the sample and for calculating the desired population estimates. The proposed methodology is an original one which draws on the concepts of list-sequential sampling, adaptive sampling and Poisson sampling, and it achieves the goals of oversampling cases, exploiting the traits characterization and controlling the final sample size.</p>
+<p><strong>Publications</strong></p>
+<ul>
+<li><p>Mecatti F., Sismanidis C., Furfaro E., Conti P. (Under review) Sequential Adaptive strategy for population-based sampling of a rare and clustered disease. <a href="https://github.com/emanuelaf/posa">Code</a></p></li>
+<li><p>Andreis F., Furfaro E., Mecatti F. (2017) Methodological perspectives for surveying rare and clustered population: towards a sequentially adaptive approach. <em>In: Perna C., Pratesi M., Ruiz-Gazen A. (Eds) Studies in theoretical and applied statistics.</em></p></li>
+<li><p>Furfaro E. (2017) A sequential adaptive approach for surveying rare and clustered populations. <em>PhD Thesis.</em></p></li>
+<li><p>Furfaro E., Mecatti F. (2016). New perspectives in sampling rare and clustered populations. <em>In Proceedings of the Joint Statistical Meeting 2016, Survey Research Methods Section.</em></p></li>
+<li><p>Furfaro E. (2016). Dealing with under-coverage bias via Dual/Multiple Frame designs: a simulation study for telephone surveys. <em>In Pratesi M., Perna C. (Eds) Proceedings of SIS 2016.</em></p></li>
+</ul>
+<p><strong>Oral Presentations</strong></p>
+<ul>
+<li><p><em>Aug. 2016, Chicago, Illinois</em> - JSM 2016 Meeting of the American Statistical Association - New perspectives in sampling rare and clustered populations.</p></li>
+<li><p><em>June 2016, Rome, Italy</em> - SIS 2016 Conference of the Italian Statistical Society. Dealing with under-coverage bias via Dual/Multiple Frame designs: a simulation study for telephone surveys.</p></li>
+</ul>
+</div>
+<div id="ego-centered-support-networks-through-the-use-of-survey-data" class="section level3">
+<h3>Ego-centered support networks through the use of survey data</h3>
+<p>This project was developed during my PostDoc and it concerned the study of support through an ego-centered network perspective. We use large scale survey data not designed for the study of ego-centered networks, thus the use of the data at hand is not always straightforward, and, if necessary we proposed the use of different solutions for solving the encountered challenges.</p>
+<p><strong>Publications</strong></p>
+<ul>
+<li><p>Furfaro E., Pelle E., Rivellini G., Zaccarin S. (2021). Constructing personal networks in the light of Covid-19 containment measures. <em>Accepted at Genus.</em></p></li>
+<li><p>Furfaro E., Pelle E., Rivellini G., Zaccarin S. (2021). Ego-centered Support Networks: a Cross-national European Comparison. <em>Preface XIX 1 Plenary Sessions, 479.</em></p></li>
+<li><p>Pelle E., Zaccarin S., Furfaro E., Rivellini G. (2021) Support provided by older people in Italy: a hierarchical analysis of ego networks controlling for alter-alter overlapping. <em>Statistical Methods &amp; Applications, 1-26.</em></p></li>
+<li><p>Furfaro E., Rivellini G., Terzera L. (2020) Social Support Networks for Childcare Among Foreign Women in Italy. <em>Social Indicators Research 151: 181-204.</em></p></li>
+</ul>
+<p><strong>Oral Presentations</strong></p>
+<ul>
+<li><p><em>May 2021, Online</em> - PAA 2021 Meeting of the Population Association of America. Ego-centered Support Networks: a Cross-national European Comparison.</p></li>
+<li><p><em>June 2018, Brussels, Belgium</em> - EPC 2018 European Population Conference. Social Support Networks for Childcare Among Foreign Women in Italy.</p></li>
+</ul>
+</div>
+<div id="bayesian-demography" class="section level3">
+<h3>Bayesian Demography</h3>
+<p>The use of Bayesian methodology in population studies has become more and more common. In this project we use Bayesian modeling for understanding the determinants and for forecasting human migration flows. We consider both international migrations and migration flows within administrative units of the same country.</p>
+<p><strong>Publications</strong></p>
+<ul>
+<li>Castelletti, F., &amp; Furfaro, E. (2019). Analysing international migration flows: a Bayesian network approach. <em>In SIS2019 (pp. 757-762). Springer.</em></li>
+</ul>
+<p><strong>Oral Presentations</strong></p>
+<ul>
+<li><p><em>May 2021, Online</em> - PAA 2021 Meeting of the Population Association of America. Bayesian Estimation of internal migration flows using Italian Population Registers.</p></li>
+<li><p><em>February 2020, Seattle, Washington</em> - Working Group of Applied Bayesian Statistics, Dep. of Statistics, University of Washington. Bayesian Estimation of internal migration flows.</p></li>
+</ul>
+</div>
+<div id="divulgation-activity" class="section level3">
+<h3>Divulgation activity</h3>
+<p>I also enjoy organizing conferences, seminars, and meetups on R and Statistics. I was part of the Organizing Committee for e-Rum2020, the 2020 European R Users Meeting which takes place every two years. Together with the rest of the Organizing Committee, we published a brief paper where we talk about our experience in turning the event into the first R conference being held completely online.</p>
+<ul>
+<li>Fortuna M., Vitalini F., Signorelli M., Furfaro E. […] (2020) e-Rum2020: how we turned a physical conference into a successful virtual event. The R Journal, 12(2):416, December 2020.</li>
+</ul>
+<p>After a couple of years of experience in teaching Statistics, I published a short textbook that I used for my students in Italy.</p>
+<ul>
+<li>Furfaro E. (2018) Textbook in Italian - Appunti di Inferenza Statistica per le Scienze Sociali. EDUCatt, Milano.</li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

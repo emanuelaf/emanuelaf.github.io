@@ -4,13 +4,17 @@ title: "Emanuela Furfaro"
 
 <div class = "row">
 <div class = "col-md-8">
-I am a Post Doc Researcher in Social Statistics and Demography in Milan, and I am also a private consultant for predictive data analaysis, data visualisation and reporting. 
 
-I like to see myself as a sort of _data detective_, where I use data to answer questions, to solve mysteries, to investigate pheonomena. In order to investigate and give the proofs of my findings, I mainly use `R`. I also like to teach _data detective_ skills, either to professionals or to students... more or less interested -.-'.
+I am a Visiting Assistant Professor in the [Department of Statistics](https://statistics.ucdavis.edu/) at the University of California, Davis. Prior to joining UC Davis, I was a PostDoc in [Social Statistics and Demography at the Catholic University of Milan, Italy](https://docenti.unicatt.it/ppd2/en/docenti/59462/emanuela-furfaro/didattica), and I was also a freelance consultant for predictive data analysis, data visualisation and reporting. 
 
-As I do lots of teaching as well as lots of data analysis with `R`, I decided to create this website in which I collect and share some projects, some code and some of my lessons, that I hope may be of use for others.
 
-In my spare time, I love to dance tango and here is my favourite tango place in my hometown Milan, Italy [tango macao](http://www.macaomilano.org/spip.php?rubrique22) ;) 
+I am a Statistician and my research interests lie primarily at the intersection of Statistics, Demography and the Social Sciences. I like to study a problem using data to analyze reality, to find patterns, make informed decisions, and possibly predictions. 
+
+
+Since for my research, teaching and consulting activity, I mainly use `R`, this website was originally created to collect and share some small projects, some `R` code and some of my lessons, that I hope may be of use for others, but you can also find an overview of my [research](research.html) and of my most recent [teaching experience](research.html).
+
+
+In my spare time, I love dancing tango. My favourite tango place in my hometown Milan, Italy, is called [tango macao](http://www.macaomilano.org/spip.php?rubrique22). Still looking for my favourite tango place in California :)
 
 </div>
 

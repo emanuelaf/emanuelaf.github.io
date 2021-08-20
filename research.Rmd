@@ -1,0 +1,84 @@
+---
+title: "Research"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Here are my main research projects, starting fro the oldest ones (my PhD thesis), and then continuing on with more recent ones.
+
+### Sampling Methodology 
+
+My dissertation and my PhD work focused on the development of a sampling methodology for estimating the prevalence of a rare and clustered trait. Our inspirational example was the TB prevalence surveys conducted by the World Health Organization in developing countries. We proposed a sampling design along with an unbiased estimator for the prevalence. We used R to implement our algorithms for selecting the sample and for calculating the desired population estimates. The proposed methodology is an original one which draws on the concepts of list-sequential sampling, adaptive sampling and Poisson sampling, and it achieves the goals of oversampling cases, exploiting the traits characterization and controlling the final sample size. 
+
+**Publications**
+
+* Mecatti F., Sismanidis C., Furfaro E., Conti P.  (Under review) Sequential Adaptive strategy for population-based sampling of a rare and clustered disease. [Code](https://github.com/emanuelaf/posa)
+
+* Andreis F., Furfaro E., Mecatti F. (2017) Methodological perspectives for surveying rare and clustered population: towards a sequentially adaptive approach. *In: Perna C., Pratesi M., Ruiz-Gazen A. (Eds) Studies in theoretical and applied statistics.*
+
+* Furfaro E. (2017) A sequential adaptive approach for surveying rare and clustered populations. *PhD Thesis.*
+
+* Furfaro E., Mecatti F. (2016). New perspectives in sampling rare and clustered populations. *In Proceedings of the Joint Statistical Meeting 2016, Survey Research Methods Section.*
+
+* Furfaro E. (2016). Dealing with under-coverage bias via Dual/Multiple Frame designs: a simulation study for telephone surveys. *In Pratesi M., Perna C. (Eds) Proceedings of SIS 2016.*
+
+
+**Oral Presentations**
+
+* *Aug. 2016, Chicago, Illinois* - JSM 2016 Meeting of the American Statistical Association - New perspectives in sampling rare and clustered populations.
+
+* *June 2016, Rome, Italy* - SIS 2016 Conference of the Italian Statistical Society. Dealing with under-coverage bias via Dual/Multiple Frame designs: a simulation study for telephone surveys.
+
+
+
+### Ego-centered support networks through the use of survey data
+
+This project was developed during my PostDoc and it concerned the study of support through an ego-centered network perspective. We use large scale survey data not designed for the study of ego-centered networks, thus the use of the data at hand is not always straightforward, and, if necessary we proposed the use of different solutions for solving the encountered challenges.
+
+**Publications**
+
+* Furfaro E., Pelle E., Rivellini G., Zaccarin S. (2021). Constructing personal networks in the light of Covid-19 containment measures. *Accepted at Genus.*
+
+* Furfaro E., Pelle E., Rivellini G., Zaccarin S. (2021). Ego-centered Support Networks: a Cross-national European Comparison. *Preface XIX 1 Plenary Sessions, 479.*
+
+* Pelle E., Zaccarin S., Furfaro E., Rivellini G. (2021) Support provided by older people in Italy: a hierarchical analysis of ego networks controlling for alter-alter overlapping. *Statistical Methods \& Applications, 1-26.*
+
+* Furfaro E., Rivellini G., Terzera L. (2020) Social Support Networks for Childcare Among Foreign Women in Italy. *Social Indicators Research 151: 181-204.*
+
+
+**Oral Presentations**
+
+* *May 2021, Online* - PAA 2021 Meeting of the Population Association of America. Ego-centered Support Networks: a Cross-national European Comparison.
+
+
+* *June 2018, Brussels, Belgium* - EPC 2018 European Population Conference. Social Support Networks for Childcare Among Foreign Women in Italy.
+
+
+### Bayesian Demography
+
+The use of Bayesian methodology in population studies has become more and more common. In this project we use Bayesian modeling for understanding the determinants and for forecasting human migration flows. We consider both international migrations and migration flows within administrative units of the same country.
+
+**Publications**
+
+* Castelletti, F., \& Furfaro, E. (2019). Analysing international migration flows: a Bayesian network approach. *In SIS2019 (pp. 757-762). Springer.*
+
+**Oral Presentations**
+
+* *May 2021, Online* - PAA 2021 Meeting of the Population Association of America. Bayesian Estimation of internal migration flows using Italian Population Registers.
+
+* *February 2020, Seattle, Washington* - Working Group of Applied Bayesian Statistics, Dep. of Statistics, University of Washington. Bayesian Estimation of internal migration flows.
+
+
+
+### Divulgation activity 
+
+I also enjoy organizing conferences, seminars, and meetups on R and Statistics. I was part of the Organizing Committee for e-Rum2020, the 2020 European R Users Meeting which takes place every two years. Together with the rest of the Organizing Committee, we published a brief paper where we talk about our experience in turning the event into the first R conference being held completely online.
+
+* Fortuna M., Vitalini F., Signorelli M., Furfaro E. [...] (2020) e-Rum2020: how we turned a physical conference into a successful virtual event. The R Journal, 12(2):416, December 2020.
+
+After a couple of years of experience in teaching Statistics, I published a short textbook that I used for my students in Italy.
+
+* Furfaro E. (2018) Textbook in Italian - Appunti di Inferenza Statistica per le Scienze Sociali. EDUCatt, Milano. 

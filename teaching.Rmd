@@ -1,0 +1,26 @@
+---
+title: "Teaching"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Current
+
+* Fall 2021: *STA 141A*, Fundamentals of Statistical Data Science, UC Davis
+* Spring 2022: *STA 141A*, Fundamentals of Statistical Data Science, UC Davis
+* Spring 2022: *STA 106*, Applied Statistical Methods: Analysis of variance, UC Davis
+
+## Previously taught
+
+* Spring 2021: *STA 141A*, Fundamentals of Statistical Data Science, UC Davis
+* Spring 2021: *STA 131A*, Introduction to Probability Theory, UC Davis
+* Fall 2020: *STA 103*, Applied Statistics for Business and Economics, UC Davis
+* Fall 2020: *Statistical Inference* (undergrad level), Universita' Cattolica del Sacro Cuore, Milan, Italy
+* Fall 2020: *Research Methodology* (undergrad level), Universita' Cattolica del Sacro Cuore, Milan, Italy
+* Fall 2019: *Statistical Inference* (undergrad level), Universita' Cattolica del Sacro Cuore, Milan, Italy
+* Spring 2019: *R for Data Science* (grad level), Universita' degli Studi di Milano-Bicocca, Milan, Italy
+* Fall 2018: *Statistical Inference* (undergrad level), Universita' Cattolica del Sacro Cuore, Milan, Italy
+* Fall 2017: *Statistical Inference* (undergrad level), Universita' Cattolica del Sacro Cuore, Milan, Italy
