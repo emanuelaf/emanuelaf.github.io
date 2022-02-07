@@ -316,9 +316,6 @@ $(document).ready(function () {
     <li>
       <a href="restaurants.html">Restaurant rating</a>
     </li>
-    <li>
-      <a href="pred-sales.html">Predicting Sales</a>
-    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -379,7 +376,7 @@ $(document).ready(function () {
 </div>
 
 
-<p>In this post I play around with <code>R</code> to investigate the users’ preferences on restaurants. Somewhere on the net, I found a set of 3 datasets containing information on restaurants, users’ ratings and users who rated them. This is an interesting example because the information is spread on three different tables/datasets and in order to answer questions on users’ preferences, we need to join such tables similarly to what you do with SQL.</p>
+<p>In this post I play around with <code>R</code> to investigate the users’ preferences on restaurants. I found a set of 3 data sets containing information on restaurants, users’ ratings and users who rated them. This is an interesting example because the information is spread on three different tables/data sets and in order to answer questions on users’ preferences, we need to join such tables similarly to what you do with SQL.</p>
 <div id="data-preparation" class="section level2">
 <h2>Data Preparation</h2>
 <p>Most of the data manipulation and visualisation will be done with the <code>tidyverse</code> package, more specifically we will use mainly <code>dplyr</code> and <code>ggplot2</code>. So first, let us load the whole <code>tidyverse</code>:</p>
@@ -415,10 +412,10 @@ chefmozcuisine &lt;- chefmozcuisine %&gt;% mutate(placeID = as.character(placeID
 <h2>Data analysis</h2>
 <div id="data-exploration" class="section level3">
 <h3>Data exploration</h3>
-<p>In order to be able to better understand and interpret the answers to our questions, in this section we may start understanding what kind of data we are working with is available: what kind of users are we looking at? and what kind of restaurants do we have in the datasets?</p>
+<p>In order to be able to better understand and interpret the answers to our questions, in this section we may start understanding what kind of data we are working with is available: what kind of users are we looking at? and what kind of restaurants do we have in the data sets?</p>
 <div id="what-kind-of-restaurants-are-we-looking-at" class="section level4">
 <h4>What kind of restaurants are we looking at?</h4>
-<p>Let us first focus on restaurants. The dataset contains the restaurants’ id and the type of cuisine. It contains info on 916 different restaurants and there are 59 different types of cuisine.</p>
+<p>Let us first focus on restaurants. The data set contains the restaurants’ id and the type of cuisine. It contains info on 916 different restaurants and there are 59 different types of cuisine.</p>
 <p>Let us focus only on the 10 most frequent types of cusine:</p>
 <pre class="r"><code>top10_cuisine &lt;- chefmozcuisine %&gt;% 
   group_by(Rcuisine) %&gt;%
@@ -438,7 +435,7 @@ ggplot(data = top10_cuisine) +
 </div>
 <div id="what-kind-of-users-are-we-looking-at" class="section level4">
 <h4>What kind of users are we looking at?</h4>
-<p>The users’ dataset contains info on 138 users. Most of the users are students, either low or medium budget, does not smoke and like drinking when they go out. Let us visualise this information:</p>
+<p>The users’ data set contains info on 138 users. Most of the users are students, either low or medium budget, does not smoke and like drinking when they go out. Let us visualise this information:</p>
 <pre class="r"><code>ggplot(data = userprofile %&gt;%
          select(userID, activity, smoker, budget, drink_level) %&gt;%
          gather(key, value, -userID)) +
@@ -453,10 +450,10 @@ ggplot(data = top10_cuisine) +
 <div id="answering-questions" class="section level3">
 <h3>Answering questions</h3>
 <p>Now we are ready to combine all the tables and use them to answer questions.</p>
-<div id="which-type-of-food-is-booked-in-the-best-restaurant" class="section level4">
-<h4>Which type of food is booked in the best restaurant?</h4>
+<div id="which-type-of-food-is-served-in-the-top-restaurants" class="section level4">
+<h4>Which type of food is served in the top restaurants?</h4>
 <p>The type of cuisine is contained in the table called <code>chefmozcuisine</code> while the restaurant rated the best is contained in the table called <code>rating_final</code>.</p>
-<p>First we need to aggregate the <code>rating_final</code> dataset by restaurant id. Then we calculate the average rating received by each restaurant and we sort by decreasing order. Notice that as there are some restaurants that have few reviews, we focus only on restaurants that received at least 20 reviews:</p>
+<p>First we need to aggregate the <code>rating_final</code> data set by restaurant id. Then we calculate the average rating received by each restaurant and we sort by decreasing order. Notice that as there are some restaurants that have few reviews, we focus only on restaurants that received at least 20 reviews:</p>
 <pre class="r"><code>tab1 &lt;- rating_final %&gt;% 
   group_by(placeID) %&gt;%
   summarise_at(vars(rating, food_rating, service_rating), 
@@ -580,7 +577,7 @@ Bar
 </div>
 <div id="what-is-the-best-restaurant-for-smokers" class="section level4">
 <h4>What is the best restaurant for smokers?</h4>
-<p>The answer to this question is similar to that above, but we need to filter by smoking habits. So we start by userprofile dataset and focus only on those users who smoke. Then we add all the reviews of those users by joining by <code>userID</code> which is present in both datasets. Then, we proceed as above: we group by restaurant id, we calculate the average rating, we sort by descending order and add information on the cuisine type by joining by restaurant id. This time we focus only on those restaurants that received at least 5 reviews:</p>
+<p>The answer to this question is similar to that above, but we need to filter by smoking habits. So we start by userprofile data set and focus only on those users who smoke. Then we add all the reviews of those users by joining by <code>userID</code> which is present in both data sets. Then, we proceed as above: we group by restaurant id, we calculate the average rating, we sort by descending order and add information on the cuisine type by joining by restaurant id. This time we focus only on those restaurants that received at least 5 reviews:</p>
 <pre class="r"><code>tab2 &lt;- userprofile%&gt;% 
   filter(smoker == &quot;true&quot;) %&gt;%
   left_join(rating_final) %&gt;%
@@ -974,6 +971,7 @@ Chinese
 <h2>Conclusion</h2>
 <p>One of the things I like the most about <code>dplyr</code>, is that it allows to work with different tables, hence to keep the data tidy and organised.</p>
 <p>This example could be further developed to create an interactive report (like a Shiny app), where, before going out to dinner, people can browse best restaurants according to their needs. I believe tripadvisor or other sites for reviewing restaurants work similarly to this!</p>
+<p>One last comment: in this article I am calculating the average rating, although rating is not technically a quantitative variable.</p>
 <P ALIGN="RIGHT">
 <font size="3"> <em>This article was written by Emanuela Furfaro.</em></font>
 </P>

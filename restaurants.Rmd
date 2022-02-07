@@ -7,7 +7,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, fig.align ='center', warning = FALSE, message = FALSE)
 ```
 
-In this post I play around with `R` to investigate the users' preferences on restaurants. Somewhere on the net, I found a set of 3 datasets containing information on restaurants, users' ratings and users who rated them. This is an interesting example because the information is spread on three different tables/datasets and in order to answer questions on users' preferences, we need to join such tables similarly to what you do with SQL.
+In this post I play around with `R` to investigate the users' preferences on restaurants. I found a set of 3 data sets containing information on restaurants, users' ratings and users who rated them. This is an interesting example because the information is spread on three different tables/data sets and in order to answer questions on users' preferences, we need to join such tables similarly to what you do with SQL.
 
 
 ## Data Preparation
@@ -61,12 +61,12 @@ userprofile <- userprofile %>% na_if("?")
 
 ### Data exploration
 
-In order to be able to better understand and interpret the answers to our questions, in this section we may start understanding what kind of data we are working with is available: what kind of users are we looking at? and what kind of restaurants do we have in the datasets?
+In order to be able to better understand and interpret the answers to our questions, in this section we may start understanding what kind of data we are working with is available: what kind of users are we looking at? and what kind of restaurants do we have in the data sets?
 
 
 #### What kind of restaurants are we looking at?
 
-Let us first focus on restaurants. The dataset contains the restaurants' id and the type of cuisine. It contains info on `r nrow(chefmozcuisine)` different restaurants and there are `r length(unique(chefmozcuisine$Rcuisine))` different types of cuisine. 
+Let us first focus on restaurants. The data set contains the restaurants' id and the type of cuisine. It contains info on `r nrow(chefmozcuisine)` different restaurants and there are `r length(unique(chefmozcuisine$Rcuisine))` different types of cuisine. 
 
 Let us focus only on the 10 most frequent types of cusine:
 
@@ -93,7 +93,7 @@ Mexican seems much more popular than any other type of cusine as there are nearl
 
 #### What kind of users are we looking at?
 
-The users' dataset contains info on `r nrow(userprofile)` users. Most of the users are students, either low or medium budget, does not smoke and like drinking when they go out. Let us visualise this information:
+The users' data set contains info on `r nrow(userprofile)` users. Most of the users are students, either low or medium budget, does not smoke and like drinking when they go out. Let us visualise this information:
 
 ```{r}
 ggplot(data = userprofile %>%
@@ -111,11 +111,11 @@ ggplot(data = userprofile %>%
 
 Now we are ready to combine all the tables and use them to answer questions. 
 
-#### Which type of food is booked in the best restaurant? 
+#### Which type of food is served in the top restaurants? 
 
 The type of cuisine is contained in the table called `chefmozcuisine` while the restaurant rated the best is contained in the table called `rating_final`.
 
-First we need to aggregate the `rating_final` dataset by restaurant id. Then we calculate the average rating received by each restaurant and we sort by decreasing order. Notice that as there are some restaurants that have few reviews, we focus only on restaurants that received at least 20 reviews:
+First we need to aggregate the `rating_final` data set by restaurant id. Then we calculate the average rating received by each restaurant and we sort by decreasing order. Notice that as there are some restaurants that have few reviews, we focus only on restaurants that received at least 20 reviews:
 
 
 ```{r}
@@ -148,7 +148,7 @@ knitr::kable(tab1_best %>%
 
 #### What is the best restaurant for smokers?
 
-The answer to this question is similar to that above, but we need to filter by smoking habits. So we start by userprofile dataset and focus only on those users who smoke. Then we add all the reviews of those users by joining by `userID` which is present in both datasets. Then, we proceed as above: we group by restaurant id, we calculate the average rating, we sort by descending order and add information on the cuisine type by joining by restaurant id. This time we focus only on those restaurants that received at least 5 reviews: 
+The answer to this question is similar to that above, but we need to filter by smoking habits. So we start by userprofile data set and focus only on those users who smoke. Then we add all the reviews of those users by joining by `userID` which is present in both data sets. Then, we proceed as above: we group by restaurant id, we calculate the average rating, we sort by descending order and add information on the cuisine type by joining by restaurant id. This time we focus only on those restaurants that received at least 5 reviews: 
 
 ```{r}
 tab2 <- userprofile%>% 
@@ -223,5 +223,7 @@ There seems to be some similarities in the tastes of smokers and of low budget u
 One of the things I like the most about `dplyr`, is that it allows to work with different tables, hence to keep the data tidy and organised. 
 
 This example could be further developed to create an interactive report (like a Shiny app), where, before going out to dinner, people can browse best restaurants according to their needs. I believe tripadvisor or other sites for reviewing restaurants work similarly to this!
+
+One last comment: in this article I am calculating the average rating, although rating is not technically a quantitative variable.
 
 <P ALIGN=RIGHT> <font size="3"> _This article was written by Emanuela Furfaro._</font> </P>
